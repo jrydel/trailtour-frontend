@@ -6,10 +6,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
 
-import MapBox from '../components/MapBox';
+import MapComponent from '../components/MapComponent';
 import SegmentsDialog from '../components/SegmentsDialog';
 import SegmnetsTable from '../components/SegmentsTable';
 import { UserContext } from '../AppContext';
+import { useFetch } from "../core/useFetch";
+
+import { useSnackbar } from 'notistack';
 
 const countryData = {
     0: {
@@ -17,7 +20,7 @@ const countryData = {
         coordinates: {
             latitude: 49.8037633,
             longitude: 15.4749126,
-            zoom: 6
+            zoom: 7
         }
     },
     1: {
@@ -25,33 +28,10 @@ const countryData = {
         coordinates: {
             latitude: 48.6737532,
             longitude: 19.696058,
-            zoom: 6.3
+            zoom: 7
         }
     }
 }
-
-const tempTableData = [
-    {
-        id: 123456798,
-        name: "INOV-8 TRAILTOUR 2020",
-        country: "cz",
-        distance: 4655,
-        elevation: 45,
-        latitude: 49.8313800,
-        longitude: 18.0424469,
-        type: "Asfalt"
-    },
-    {
-        id: 987654321,
-        name: "INOV-8 TRAILTOUR 2020",
-        country: "sk",
-        distance: 8456,
-        elevation: 235,
-        latitude: 48.7349500,
-        longitude: 19.6162383,
-        type: "Terén"
-    }
-]
 
 const initFormData = {
     id: "",
@@ -67,9 +47,9 @@ const initFormData = {
 
 const SegmentsPage = props => {
 
-    const { session } = React.useContext(UserContext);
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    const [tableData, setTabledata] = React.useState(tempTableData);
+    const { session } = React.useContext(UserContext);
 
     const [countryTab, setCountryTab] = React.useState(0);
     const [selectedCountry, setSelectedCountry] = React.useState(countryData[countryTab]);
@@ -78,15 +58,52 @@ const SegmentsPage = props => {
     const [modalTitle, setModalTitle] = React.useState("");
     const [formData, setFormData] = React.useState(initFormData);
 
+    const [tableData, triggerFetch] = useFetch('http://localhost:8080/getSegments', {}, []);
+
     const openModal = (title, rowData) => {
         setModalTitle(title);
         setFormData(rowData);
         setModalShow(true);
     }
-
-    const modalSubmit = (formData) => {
-        setTabledata(tableData => [...tableData, formData]);
+    const closeModal = () => {
+        setModalTitle(null);
+        setFormData(initFormData);
         setModalShow(false);
+    }
+    const showSnackbar = (message, variant) => enqueueSnackbar(message, { variant: variant });
+
+    const deleteSegment = (rowData) => {
+        fetch('http://localhost:8080/deleteSegment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(rowData)
+        })
+            .then(res => {
+                if (!res.ok) {
+                    return new Error("asdasd");
+                }
+            })
+            .then(closeModal)
+            .then(showSnackbar("Segment byl smazán.", "success"))
+            .then(triggerFetch)
+            .catch((error) => showSnackbar(error, "error"));
+    }
+
+    const saveSegment = (formData) => {
+        fetch('http://localhost:8080/saveSegment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        })
+            .then(res => {
+                if (!res.ok) {
+                    return new Error("asdasd");
+                }
+            })
+            .then(closeModal)
+            .then(showSnackbar("Segment byl uložen.", "success"))
+            .then(triggerFetch)
+            .catch((error) => showSnackbar(error, "error"));
     }
 
     const handleCountryTabChange = (event, value) => {
@@ -94,19 +111,18 @@ const SegmentsPage = props => {
         setSelectedCountry(countryData[value]);
     };
 
-    const filteredData = tableData.filter((entry) => entry.country === selectedCountry.country);
+    const filteredData = tableData.data.filter((entry) => entry.country === selectedCountry.country);
 
     return (
         <>
             <Grid item xs={12} >
-                <MapBox
+                <MapComponent
                     viewport={
                         {
                             height: "400px",
                             width: "100%",
-                            latitude: selectedCountry.coordinates.latitude,
-                            longitude: selectedCountry.coordinates.longitude,
-                            zoom: selectedCountry.coordinates.zoom,
+                            center: [selectedCountry.coordinates.latitude, selectedCountry.coordinates.longitude],
+                            zoom: selectedCountry.coordinates.zoom
                         }
                     }
                     data={filteredData}
@@ -132,14 +148,19 @@ const SegmentsPage = props => {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <SegmnetsTable admin={session.role === "admin"} tableData={filteredData} onRowEditClick={openModal} />
+                <SegmnetsTable
+                    admin={session.role === "admin"}
+                    tableData={filteredData}
+                    onRowEditClick={openModal}
+                    onRowDeleteClick={deleteSegment}
+                />
             </Grid>
             <SegmentsDialog
                 title={modalTitle}
                 show={modalShow}
                 data={formData}
-                onClose={() => setModalShow(false)}
-                onSubmit={modalSubmit}
+                onClose={closeModal}
+                onSubmit={saveSegment}
             ></SegmentsDialog>
         </>
     );

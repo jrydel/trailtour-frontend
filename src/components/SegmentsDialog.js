@@ -159,7 +159,7 @@ const SegmentsDialog = props => {
                         />
                     </div>
                     <DialogActions>
-                        <Button onClick={props.onSubmit} color="primary">
+                        <Button onClick={props.onClose} color="primary">
                             Zrušit
                             </Button>
                         <Button type="submit" color="primary">

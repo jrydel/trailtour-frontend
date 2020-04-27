@@ -21,18 +21,6 @@ const useStyles = makeStyles({
     }
 });
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData("INOV-8 TRAILTOUR 2020 CZ #2", 159, 6.0, "Terén"),
-    createData("INOV-8 TRAILTOUR 2020 CZ #2", 159, 6.0, "Terén"),
-    createData("INOV-8 TRAILTOUR 2020 CZ #2", 159, 6.0, "Terén"),
-    createData("INOV-8 TRAILTOUR 2020 CZ #2", 159, 6.0, "Terén"),
-    createData("INOV-8 TRAILTOUR 2020 CZ #2", 159, 6.0, "Terén")
-];
-
 const SegmnetsTable = props => {
     const classes = useStyles();
 
@@ -65,7 +53,7 @@ const SegmnetsTable = props => {
                             <TableCell align="left">{row.type}</TableCell>
                             {props.admin && <TableCell align="right">
                                 <Button variant="contained" color="primary" onClick={() => props.onRowEditClick("Upravit segment", row)} style={{ marginRight: 5 }}>Upravit</Button>
-                                <Button variant="contained" color="secondary" style={{ marginRight: 5 }}>Smazat</Button>
+                                <Button variant="contained" color="secondary" onClick={() => props.onRowDeleteClick(row)} style={{ marginRight: 5 }}>Smazat</Button>
                             </TableCell>}
                         </TableRow>
                     ))}
