@@ -91,7 +91,7 @@ const SegmentsPage = props => {
         setSelectedCountry(countryData[value]);
     };
 
-    const filteredData = apiData.data.filter((entry) => entry.country === selectedCountry.country);
+    const tableData = apiData.data.filter(entry => entry.country === selectedCountry.country);
 
     return (
         <>
@@ -105,7 +105,7 @@ const SegmentsPage = props => {
                             zoom: selectedCountry.coordinates.zoom
                         }
                     }
-                    data={filteredData}
+                    data={tableData}
                 />
             </Grid>
             <Grid container direction="row" justify="space-between" alignItems="center" item xs={12}>
@@ -133,7 +133,7 @@ const SegmentsPage = props => {
                 ) : (
                         <SegmnetsTable
                             admin={session.role === "admin"}
-                            tableData={filteredData}
+                            data={tableData}
                             onRowEditClick={openModal}
                             onRowDeleteClick={deleteSegment}
                         />

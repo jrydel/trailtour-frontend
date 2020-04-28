@@ -22,6 +22,11 @@ const useStyles = makeStyles({
 const SegmnetsTable = props => {
     const classes = useStyles();
 
+    const [data, setData] = React.useState(props.data);
+    React.useEffect(() => {
+        setData(props.data);
+    }, [props.data]);
+
     const onTableRowClick = (event, row) => {
     }
 
@@ -38,7 +43,7 @@ const SegmnetsTable = props => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {props.tableData.map((row, index) => (
+                    {data.map((row, index) => (
                         <TableRow
                             key={index}
                             onClick={(event) => onTableRowClick(event, row)}

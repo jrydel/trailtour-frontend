@@ -25,7 +25,7 @@ export const useFetch = (url, initData, errorCallback) => {
                 }
             })
             .then(data => setPartData({ data: data, loading: false }))
-            .catch(error => { console.log(error); errorCallback("Nepodařilo se načíst data."); });
+            .catch(error => { console.log(error); errorCallback("Nepodařilo se načíst data.") });
     }
 
     React.useEffect(get, [trigger]);
