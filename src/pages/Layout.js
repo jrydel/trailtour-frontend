@@ -2,15 +2,15 @@ import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
-import { Grid, Box, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 
 import { SnackbarProvider } from 'notistack';
 
 import Header from '../components/Header';
 import LoginPage from './LoginPage';
-import SegmentsPage from './SegmentsPage';
 import NoMatch from './NoMatch';
 import { UserContext } from "../AppContext";
+import SegmentsPage from './SegmentsPage';
 
 const PrivateRoute = ({ authenticated, children, ...rest }) => {
     return (
@@ -35,17 +35,11 @@ const PrivateRoute = ({ authenticated, children, ...rest }) => {
 const Layout = () => {
     const { session } = React.useContext(UserContext);
 
-    const [alertData, setAlertData] = React.useState({
-        open: false,
-        severity: "success",
-        text: ""
-    });
-
     const routes = [
         {
             path: "/segmenty",
             pageTitle: "Segmenty",
-            pageContent: <SegmentsPage setAlertData={setAlertData} />
+            pageContent: <SegmentsPage />
         },
         {
             path: "*",
@@ -64,6 +58,7 @@ const Layout = () => {
                         vertical: 'top',
                         horizontal: 'center',
                     }}
+                    autoHideDuration={3000}
                 >
                     <Grid container direction="row">
                         <Grid item xs={12} >

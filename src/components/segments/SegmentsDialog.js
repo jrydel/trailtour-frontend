@@ -29,15 +29,33 @@ const SegmentsDialog = props => {
     const [selectedCountry, setSelectedCountry] = React.useState();
     const { register, handleSubmit, errors, getValues, setValue, reset } = useForm();
 
-    React.useEffect(() => {
+    const resetForm = () => {
         reset(props.data);
-        register({ name: "country" }, { required: true });
+        register({ name: "country" }, { required: true, validate: validateCountry });
         setSelectedCountry(props.data.country);
-    }, [props.data])
-
-    React.useEffect(() => {
+    }
+    const resetCountrySelect = () => {
         setValue("country", selectedCountry);
-    }, [selectedCountry])
+    }
+
+    React.useEffect(resetForm, [props.data])
+    React.useEffect(resetCountrySelect, [selectedCountry])
+
+    const validateCountry = value => {
+        return value !== "";
+    }
+
+    const validateLatitude = (value) => {
+        return isFinite(value) && Math.abs(value) <= 90;
+    }
+
+    const validateLongitude = (value) => {
+        return isFinite(value) && Math.abs(value) <= 180;
+    }
+
+    const validateNumber = (value) => {
+        return isFinite(value);
+    }
 
     return (
         <Dialog open={props.show} onClose={props.onClose} aria-labelledby="form-dialog-title">
@@ -54,7 +72,8 @@ const SegmentsDialog = props => {
                             className={classes.textField}
                             inputRef={
                                 register({
-                                    required: true
+                                    required: true,
+                                    pattern: /^\d+$/
                                 })
                             }
                             error={errors.id}
@@ -76,14 +95,10 @@ const SegmentsDialog = props => {
                             select
                             label="Země"
                             value={selectedCountry}
-                            onChange={(event) => { setSelectedCountry(event.target.value) }}
+                            onChange={event => setSelectedCountry(event.target.value)}
                             variant="outlined"
                             fullWidth
                             className={classes.textField}
-                            inputRef={
-                                register({
-                                    required: true
-                                })}
                             error={errors.country}
                         >
                             <MenuItem key={"cz"} value={"cz"}>CZ</MenuItem>
@@ -100,7 +115,8 @@ const SegmentsDialog = props => {
                             }}
                             inputRef={
                                 register({
-                                    required: true
+                                    required: true,
+                                    validate: validateNumber
                                 })}
                             error={errors.distance}
                         />
@@ -115,7 +131,8 @@ const SegmentsDialog = props => {
                             }}
                             inputRef={
                                 register({
-                                    required: true
+                                    required: true,
+                                    validate: validateNumber
                                 })}
                             error={errors.elevation}
                         />
@@ -140,7 +157,8 @@ const SegmentsDialog = props => {
                             className={classes.textField}
                             inputRef={
                                 register({
-                                    required: true
+                                    required: true,
+                                    validate: validateLatitude
                                 })}
                             error={errors.latitude}
                         />
@@ -153,7 +171,8 @@ const SegmentsDialog = props => {
                             className={classes.textField}
                             inputRef={
                                 register({
-                                    required: true
+                                    required: true,
+                                    validate: validateLongitude
                                 })}
                             error={errors.longitude}
                         />
@@ -168,7 +187,7 @@ const SegmentsDialog = props => {
                     </DialogActions>
                 </DialogContent>
             </form>
-        </Dialog>
+        </Dialog >
     )
 }
 

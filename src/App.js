@@ -5,6 +5,15 @@ import Cookies from 'universal-cookie';
 import Layout from './pages/Layout';
 import { CssBaseline } from '@material-ui/core';
 
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: { main: "#0288d1" },
+    secondary: { main: '#d81b60' },
+  }
+});
+
 const App = () => {
   const cookies = new Cookies();
   const sessionCookie = cookies.get("session");
@@ -13,7 +22,9 @@ const App = () => {
   return (
     <UserContext.Provider value={{ session, setSession }}>
       <CssBaseline />
-      <Layout />
+      <ThemeProvider theme={theme}>
+        <Layout />
+      </ThemeProvider>
     </UserContext.Provider >
   );
 }

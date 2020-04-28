@@ -5,12 +5,13 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import MapComponent from '../components/MapComponent';
-import SegmentsDialog from '../components/SegmentsDialog';
-import SegmnetsTable from '../components/SegmentsTable';
+import SegmentsDialog from '../components/segments/SegmentsDialog';
+import SegmnetsTable from '../components/segments/SegmentsTable';
 import { UserContext } from '../AppContext';
-import { useFetch } from "../core/useFetch";
+import { useFetch, postApiRequest } from "../core/FetchApi";
 
 import { useSnackbar } from 'notistack';
 
@@ -44,10 +45,11 @@ const initFormData = {
     longitude: ""
 }
 
+const API_URL = "https://api.orank.cz/trailtour";
 
 const SegmentsPage = props => {
 
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
     const { session } = React.useContext(UserContext);
 
@@ -58,7 +60,7 @@ const SegmentsPage = props => {
     const [modalTitle, setModalTitle] = React.useState("");
     const [formData, setFormData] = React.useState(initFormData);
 
-    const [tableData, triggerFetch] = useFetch('http://localhost:8080/getSegments', {}, []);
+    const [apiData, triggerApiData] = useFetch(API_URL + "/getSegments", [], error => showSnackbar(error, "error"));
 
     const openModal = (title, rowData) => {
         setModalTitle(title);
@@ -73,37 +75,15 @@ const SegmentsPage = props => {
     const showSnackbar = (message, variant) => enqueueSnackbar(message, { variant: variant });
 
     const deleteSegment = (rowData) => {
-        fetch('http://localhost:8080/deleteSegment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(rowData)
-        })
-            .then(res => {
-                if (!res.ok) {
-                    return new Error("asdasd");
-                }
-            })
-            .then(closeModal)
-            .then(showSnackbar("Segment byl smazán.", "success"))
-            .then(triggerFetch)
-            .catch((error) => showSnackbar(error, "error"));
+        postApiRequest(API_URL + "/deleteSegment", rowData, error => showSnackbar(error, "error"), () => showSnackbar("Segment byl smazán.", "success"));
+        triggerApiData();
+        closeModal();
     }
 
     const saveSegment = (formData) => {
-        fetch('http://localhost:8080/saveSegment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        })
-            .then(res => {
-                if (!res.ok) {
-                    return new Error("asdasd");
-                }
-            })
-            .then(closeModal)
-            .then(showSnackbar("Segment byl uložen.", "success"))
-            .then(triggerFetch)
-            .catch((error) => showSnackbar(error, "error"));
+        postApiRequest(API_URL + "/saveSegment", formData, error => showSnackbar(error, "error"), () => showSnackbar("Segment byl uložen.", "success"));
+        triggerApiData();
+        closeModal();
     }
 
     const handleCountryTabChange = (event, value) => {
@@ -111,7 +91,7 @@ const SegmentsPage = props => {
         setSelectedCountry(countryData[value]);
     };
 
-    const filteredData = tableData.data.filter((entry) => entry.country === selectedCountry.country);
+    const filteredData = apiData.data.filter((entry) => entry.country === selectedCountry.country);
 
     return (
         <>
@@ -148,12 +128,17 @@ const SegmentsPage = props => {
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <SegmnetsTable
-                    admin={session.role === "admin"}
-                    tableData={filteredData}
-                    onRowEditClick={openModal}
-                    onRowDeleteClick={deleteSegment}
-                />
+                {apiData.loading ? (
+                    <CircularProgress />
+                ) : (
+                        <SegmnetsTable
+                            admin={session.role === "admin"}
+                            tableData={filteredData}
+                            onRowEditClick={openModal}
+                            onRowDeleteClick={deleteSegment}
+                        />
+                    )
+                }
             </Grid>
             <SegmentsDialog
                 title={modalTitle}
