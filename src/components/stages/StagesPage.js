@@ -1,11 +1,11 @@
 import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { useSnackbar } from 'notistack';
 
@@ -15,6 +15,11 @@ import { useFetch } from "../FetchApi";
 import { API_URL } from '../../AppContext';
 import { TableComponent } from '../TableComponent';
 
+const useStyles = makeStyles((theme) => ({
+    item: {
+        marginTop: theme.spacing(2)
+    }
+}));
 
 const countryData = {
     0: {
@@ -36,6 +41,8 @@ const countryData = {
 }
 
 const StagesPage = props => {
+
+    const classes = useStyles();
 
     // snackbar
     const { enqueueSnackbar } = useSnackbar();
@@ -59,31 +66,36 @@ const StagesPage = props => {
     const tableColumns = [
         { name: 'number', title: 'Číslo' },
         { name: 'name', title: 'Název' },
-        { name: 'distance', title: 'Délka' },
-        { name: 'elevation', title: 'Převýšení' },
         { name: 'type', title: 'Typ' },
-    ]
+        { name: 'distance', title: 'Délka (km)' },
+        { name: 'elevation', title: 'Převýšení (m)' }
+    ];
+    const tableColumnExtensions = [
+        { columnName: 'number', align: "center" },
+        { columnName: 'name', align: "center", width: 400 },
+        { columnName: 'type', align: "center" },
+        { columnName: 'distance', align: "center" },
+        { columnName: 'elevation', align: "center" }
+    ];
     const tableSort = [{ columnName: "number", direction: "asc" }];
     const tableData = apiData.data.filter(entry => entry.country === selectedCountry.country);
 
     const pageContent = (
         <>
-            <Grid item xs={12} >
-                <Box display={{ xs: "none", md: "block" }}>
-                    <MapComponent
-                        viewport={
-                            {
-                                height: "400px",
-                                width: "100%",
-                                center: [selectedCountry.coordinates.latitude, selectedCountry.coordinates.longitude],
-                                zoom: selectedCountry.coordinates.zoom
-                            }
+            <Grid item xs >
+                <MapComponent
+                    viewport={
+                        {
+                            height: "400px",
+                            width: "100%",
+                            center: [selectedCountry.coordinates.latitude, selectedCountry.coordinates.longitude],
+                            zoom: selectedCountry.coordinates.zoom
                         }
-                        data={tableData}
-                    />
-                </Box>
+                    }
+                    data={tableData}
+                />
             </Grid>
-            <Grid item>
+            <Grid item xs className={classes.item}>
                 <Paper square>
                     <Tabs
                         value={countryTab}
@@ -96,9 +108,7 @@ const StagesPage = props => {
                         <Tab label="SK" />
                     </Tabs>
                 </Paper>
-            </Grid>
-            <Grid item xs={12}>
-                {apiData.loading ? <CircularProgress /> : <TableComponent rows={tableData} columns={tableColumns} sort={tableSort} />}
+                {apiData.loading ? <CircularProgress /> : <TableComponent rows={tableData} columns={tableColumns} sort={tableSort} columnExtensions={tableColumnExtensions} />}
             </Grid>
         </>
     )

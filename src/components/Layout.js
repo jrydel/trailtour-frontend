@@ -2,7 +2,7 @@ import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
-import { Grid, Typography } from '@material-ui/core';
+import { Container, Grid, Typography } from '@material-ui/core';
 
 import { SnackbarProvider } from 'notistack';
 
@@ -46,27 +46,20 @@ const Layout = () => {
                 <Redirect exact from="/" to="/etapy" />
                 <Route path="/login" render={({ location }) => session.login ? <Redirect to={{ pathname: "/", state: { from: location } }} /> : <LoginPage />} />
 
-                <SnackbarProvider
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }}
-                    autoHideDuration={3000}
-                >
-                    <Grid container direction="row">
-                        <Grid item xs={12} >
-                            <Header />
-                        </Grid>
-                        <Grid item xs={12} container direction="row">
-                            <Grid item xs={2} />
-                            <Grid item xs={8} container direction="column" spacing={5} >
-                                <Grid item />
+                <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center", }} autoHideDuration={3000} >
+                    <Header />
+                    <Grid container direction="row" >
+                        <Grid item xs />
+                        <Grid item xs={11} md={8} container direction="column">
+                            <Grid item xs />
+                            <Grid item xs container direction="column" >
                                 <Switch>
                                     {privateRoutes}
                                 </Switch>
                             </Grid>
-                            <Grid item xs={2} />
+                            <Grid item xs />
                         </Grid>
+                        <Grid item xs />
                     </Grid>
                 </SnackbarProvider>
             </Switch>
