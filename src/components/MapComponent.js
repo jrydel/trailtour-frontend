@@ -15,7 +15,7 @@ const MapComponent = props => {
                 props.data.map((marker, key) =>
                     <Marker key={key} position={[marker.latitude, marker.longitude]} >
                         <Popup>
-                            {marker.name}
+                            {marker.number + " - " + marker.name}
                         </Popup>
                     </Marker>
                 )

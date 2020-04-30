@@ -54,6 +54,7 @@ const StagesPage = props => {
     const handleCountryTabChange = (event, value) => {
         setCountryTab(value);
         setSelectedCountry(countryData[value]);
+
     };
 
     // api data
@@ -64,20 +65,14 @@ const StagesPage = props => {
     );
 
     const tableColumns = [
-        { name: 'number', title: 'Číslo' },
-        { name: 'name', title: 'Název' },
-        { name: 'type', title: 'Typ' },
-        { name: 'distance', title: 'Délka (km)' },
-        { name: 'elevation', title: 'Převýšení (m)' }
+        { id: 'number', type: "number", label: 'Číslo', align: "center" },
+        { id: 'name', label: 'Název', align: "left" },
+        { id: 'type', label: 'Typ', align: "left" },
+        { id: 'distance', type: "number", label: 'Délka (m)', align: "right" },
+        { id: 'elevation', type: "number", label: 'Převýšení (m)', align: "right" },
+        { id: "temp" }
     ];
-    const tableColumnExtensions = [
-        { columnName: 'number', align: "center" },
-        { columnName: 'name', align: "center", width: 400 },
-        { columnName: 'type', align: "center" },
-        { columnName: 'distance', align: "center" },
-        { columnName: 'elevation', align: "center" }
-    ];
-    const tableSort = [{ columnName: "number", direction: "asc" }];
+    const tableSort = { id: "number", direction: "asc" };
     const tableData = apiData.data.filter(entry => entry.country === selectedCountry.country);
 
     const pageContent = (
@@ -108,7 +103,9 @@ const StagesPage = props => {
                         <Tab label="SK" />
                     </Tabs>
                 </Paper>
-                {apiData.loading ? <CircularProgress /> : <TableComponent rows={tableData} columns={tableColumns} sort={tableSort} columnExtensions={tableColumnExtensions} />}
+            </Grid>
+            <Grid item xs className={classes.item}>
+                {apiData.loading ? <CircularProgress /> : <TableComponent rows={tableData} columns={tableColumns} sort={tableSort} />}
             </Grid>
         </>
     )
