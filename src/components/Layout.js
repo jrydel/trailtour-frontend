@@ -51,13 +51,9 @@ const Layout = () => {
                     <Grid container direction="row" >
                         <Grid item xs />
                         <Grid item xs={11} md={8} container direction="column">
-                            <Grid item xs />
-                            <Grid item xs container direction="column" >
-                                <Switch>
-                                    {privateRoutes}
-                                </Switch>
-                            </Grid>
-                            <Grid item xs />
+                            <Switch>
+                                {privateRoutes}
+                            </Switch>
                         </Grid>
                         <Grid item xs />
                     </Grid>

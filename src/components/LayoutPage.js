@@ -22,6 +22,7 @@ const LayoutPage = props => {
             <Grid item xs className={classes.item}>
                 {props.pageContent}
             </Grid>
+            <Grid item xs className={classes.item} />
         </>
     )
 }
