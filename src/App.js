@@ -2,10 +2,10 @@ import React from 'react';
 
 import { UserContext } from "./AppContext";
 import Cookies from 'universal-cookie';
-import Layout from './pages/Layout';
 import { CssBaseline } from '@material-ui/core';
 
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Layout from './components/Layout';
 
 const theme = createMuiTheme({
   palette: {

@@ -7,12 +7,11 @@ import { Grid, Typography } from '@material-ui/core';
 import { SnackbarProvider } from 'notistack';
 
 import Header from '../components/Header';
-import LoginPage from './LoginPage';
+import LoginPage from './LoginPage.js';
 import NoMatch from './NoMatch';
 import { UserContext } from "../AppContext";
-import SegmentsPage from './segment/SegmentsPage';
-import SegmentPage from './segment/SegmentPage';
-import AthletesPage from './athlete/AthletesPage';
+import StagesPage from './stages/StagesPage';
+import StagePage from './stage/StagePage';
 
 const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
     <Route
@@ -36,9 +35,8 @@ const Layout = () => {
     const { session } = React.useContext(UserContext);
 
     const privateRoutes = [
-        <PrivateRoute path={"/segmenty"} component={SegmentsPage} authenticated={session.login} />,
-        <PrivateRoute path={"/zavodnici"} component={AthletesPage} authenticated={session.login} />,
-        <PrivateRoute path={"/segment/:id"} component={SegmentPage} authenticated={session.login} />,
+        <PrivateRoute path={"/etapy"} component={StagesPage} authenticated={session.login} />,
+        <PrivateRoute path={"/etapa/:id"} component={StagePage} authenticated={session.login} />,
         <PrivateRoute component={NoMatch} authenticated={session.login} />
     ]
 

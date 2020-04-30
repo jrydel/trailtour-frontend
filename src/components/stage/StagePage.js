@@ -1,13 +1,11 @@
 import React from "react";
 
-import LayoutPage from "../LayoutPage";
 import { Link } from "@material-ui/core";
+import LayoutPage from "../LayoutPage";
 
-const SegmentPage = props => {
+const StagePage = props => {
 
     const segmentId = props.match.params.id;
-
-    const pageTitle = "Segment " + segmentId;
 
     const pageComment = (
         <Link href={"http://strava.com/segments/" + segmentId} target="_blank" rel="noreferrer">
@@ -16,9 +14,9 @@ const SegmentPage = props => {
     );
 
     return (
-        <LayoutPage pageTitle={"Segment"} pageComment={pageComment}></LayoutPage>
+        <LayoutPage pageTitle={"Etapa"} pageComment={pageComment}></LayoutPage>
     );
 
 }
 
-export default SegmentPage;
+export default StagePage;

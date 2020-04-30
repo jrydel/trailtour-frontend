@@ -1,30 +1,19 @@
-import React from "react";
+import React, { useState } from 'react';
 
 import Paper from '@material-ui/core/Paper';
-import { Table, TableContainer, TableHead, TableBody, TableCell, TableRow } from "@material-ui/core";
+import { SortingState, IntegratedSorting, } from '@devexpress/dx-react-grid';
+import { Grid, Table, TableHeaderRow, } from '@devexpress/dx-react-grid-material-ui';
 
-import MUIDataTable from "mui-datatables";
-
-const TableComponent = props => {
+export const TableComponent = props => {
 
     return (
-        <MUIDataTable
-            data={props.tableData}
-            columns={props.tableHeader}
-            options={{
-                selectableRows: "none",
-                rowsPerPage: 10,
-                rowsPerPageOptions: [10, 15, 30],
-                sort: true,
-                filter: false,
-                search: true,
-                print: false,
-                download: false,
-                viewColumns: false,
-                responsive: "scrollFullHeightFullWidth"
-            }}
-        />
+        <Paper>
+            <Grid rows={props.rows} columns={props.columns} >
+                <SortingState defaultSorting={props.sort} />
+                <IntegratedSorting />
+                <Table />
+                <TableHeaderRow showSortingControls />
+            </Grid>
+        </Paper>
     );
-}
-
-export default TableComponent;
+};
