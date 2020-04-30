@@ -22,45 +22,40 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const validateCountry = value => {
+    return value !== "";
+}
+
+const validateLatitude = (value) => {
+    return isFinite(value) && Math.abs(value) <= 90;
+}
+
+const validateLongitude = (value) => {
+    return isFinite(value) && Math.abs(value) <= 180;
+}
+
+const validateNumber = (value) => {
+    return isFinite(value);
+}
+
 const SegmentsDialog = props => {
 
     const classes = useStyles();
+    const { register, handleSubmit, errors, getValues, setValue, reset, control } = useForm({
+        defaultValues: props.data
+    });
 
-    const [selectedCountry, setSelectedCountry] = React.useState();
-    const { register, handleSubmit, errors, getValues, setValue, reset } = useForm();
+    console.log(getValues());
 
-    const resetForm = () => {
+    React.useEffect(() => {
         reset(props.data);
         register({ name: "country" }, { required: true, validate: validateCountry });
-        setSelectedCountry(props.data.country);
-    }
-    const resetCountrySelect = () => {
-        setValue("country", selectedCountry);
-    }
-
-    React.useEffect(resetForm, [props.data])
-    React.useEffect(resetCountrySelect, [selectedCountry])
-
-    const validateCountry = value => {
-        return value !== "";
-    }
-
-    const validateLatitude = (value) => {
-        return isFinite(value) && Math.abs(value) <= 90;
-    }
-
-    const validateLongitude = (value) => {
-        return isFinite(value) && Math.abs(value) <= 180;
-    }
-
-    const validateNumber = (value) => {
-        return isFinite(value);
-    }
+    }, [props.data]);
 
     return (
-        <Dialog open={props.show} onClose={props.onClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">{props.title}</DialogTitle>
-            <form onSubmit={handleSubmit(() => props.onSubmit(getValues()))} noValidate autoComplete="off" >
+        <Dialog open={props.show} onClose={props.onClose}>
+            <DialogTitle>{props.title}</DialogTitle>
+            <form onSubmit={handleSubmit(() => props.onSubmit(getValues()))} noValidate >
                 <DialogContent>
                     <div className={classes.layout} >
                         <TextField
@@ -74,8 +69,7 @@ const SegmentsDialog = props => {
                                 register({
                                     required: true,
                                     pattern: /^\d+$/
-                                })
-                            }
+                                })}
                             error={errors.id}
                         />
                         <TextField
@@ -94,8 +88,8 @@ const SegmentsDialog = props => {
                             name="country"
                             select
                             label="Země"
-                            value={selectedCountry}
-                            onChange={event => setSelectedCountry(event.target.value)}
+                            value={getValues("country")}
+                            onChange={e => setValue("country", e.target.value)}
                             variant="outlined"
                             fullWidth
                             className={classes.textField}

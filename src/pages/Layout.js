@@ -10,41 +10,36 @@ import Header from '../components/Header';
 import LoginPage from './LoginPage';
 import NoMatch from './NoMatch';
 import { UserContext } from "../AppContext";
-import SegmentsPage from './SegmentsPage';
+import SegmentsPage from './segment/SegmentsPage';
+import SegmentPage from './segment/SegmentPage';
+import AthletesPage from './athlete/AthletesPage';
 
-const PrivateRoute = ({ authenticated, children, ...rest }) => {
-    return (
-        <Route
-            {...rest}
-            render={({ location }) =>
-                authenticated ? (
-                    children
-                ) : (
-                        <Redirect
-                            to={{
-                                pathname: "/login",
-                                state: { from: location }
-                            }}
-                        />
-                    )
-            }
-        />
-    );
-}
+const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
+    <Route
+        {...rest}
+        render={props =>
+            authenticated ? (
+                <Component {...props} />
+            ) : (
+                    <Redirect
+                        to={{
+                            pathname: "/login",
+                            state: { from: props.location }
+                        }}
+                    />
+                )
+        }
+    />
+);
 
 const Layout = () => {
     const { session } = React.useContext(UserContext);
 
-    const routes = [
-        {
-            path: "/segmenty",
-            pageTitle: "Segmenty",
-            pageContent: <SegmentsPage />
-        },
-        {
-            path: "*",
-            pageContent: <NoMatch />
-        }
+    const privateRoutes = [
+        <PrivateRoute path={"/segmenty"} component={SegmentsPage} authenticated={session.login} />,
+        <PrivateRoute path={"/zavodnici"} component={AthletesPage} authenticated={session.login} />,
+        <PrivateRoute path={"/segment/:id"} component={SegmentPage} authenticated={session.login} />,
+        <PrivateRoute component={NoMatch} authenticated={session.login} />
     ]
 
     return (
@@ -69,18 +64,7 @@ const Layout = () => {
                             <Grid item xs={8} container direction="column" spacing={5} >
                                 <Grid item />
                                 <Switch>
-                                    {routes.map((route, key) =>
-                                        <PrivateRoute key={key} path={route.path} authenticated={session.login}>
-                                            <Grid item>
-                                                <Typography variant={"h4"}>{route.pageTitle}</Typography>
-                                            </Grid>
-                                            <Grid item>
-                                                <Grid container direction="row" spacing={1}>
-                                                    {route.pageContent}
-                                                </Grid>
-                                            </Grid>
-                                        </PrivateRoute >
-                                    )}
+                                    {privateRoutes}
                                 </Switch>
                             </Grid>
                             <Grid item xs={2} />

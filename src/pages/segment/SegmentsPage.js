@@ -7,11 +7,12 @@ import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import MapComponent from '../components/MapComponent';
-import SegmentsDialog from '../components/segments/SegmentsDialog';
-import SegmnetsTable from '../components/segments/SegmentsTable';
-import { UserContext } from '../AppContext';
-import { useFetch, postApiRequest } from "../core/FetchApi";
+import LayoutPage from '../LayoutPage';
+import MapComponent from '../../components/MapComponent';
+import SegmentsDialog from '../../components/segment/SegmentsDialog';
+import SegmnetsTable from '../../components/segment/SegmentsTable';
+import { UserContext } from '../../AppContext';
+import { useFetch, postApiRequest } from "../../core/FetchApi";
 
 import { useSnackbar } from 'notistack';
 
@@ -34,7 +35,7 @@ const countryData = {
     }
 }
 
-const initFormData = {
+const initForm = {
     id: "",
     name: "",
     country: "",
@@ -49,51 +50,70 @@ const API_URL = "https://api.orank.cz/trailtour";
 
 const SegmentsPage = props => {
 
-    const { enqueueSnackbar } = useSnackbar();
-
+    // session
     const { session } = React.useContext(UserContext);
 
+    // snackbar
+    const { enqueueSnackbar } = useSnackbar();
+    const showSnackbar = (message, variant) => enqueueSnackbar(message, { variant: variant });
+
+    // country
     const [countryTab, setCountryTab] = React.useState(0);
     const [selectedCountry, setSelectedCountry] = React.useState(countryData[countryTab]);
+    const handleCountryTabChange = (event, value) => {
+        setCountryTab(value);
+        setSelectedCountry(countryData[value]);
+    };
 
+    // dialog form
+    const [formData, setFormData] = React.useState(initForm);
     const [modalShow, setModalShow] = React.useState(false);
     const [modalTitle, setModalTitle] = React.useState("");
-    const [formData, setFormData] = React.useState(initFormData);
-
-    const [apiData, triggerApiData] = useFetch(API_URL + "/getSegments", [], error => showSnackbar(error, "error"));
-
+    const openSegment = (rowData) => {
+        console.log(rowData);
+    }
     const openModal = (title, rowData) => {
         setModalTitle(title);
         setFormData(rowData);
         setModalShow(true);
     }
     const closeModal = () => {
-        setModalTitle(null);
-        setFormData(initFormData);
+        setModalTitle("");
+        setFormData(initForm);
         setModalShow(false);
     }
-    const showSnackbar = (message, variant) => enqueueSnackbar(message, { variant: variant });
 
-    const deleteSegment = (rowData) => {
-        postApiRequest(API_URL + "/deleteSegment", rowData, error => showSnackbar(error, "error"), () => showSnackbar("Segment byl smazán.", "success"));
-        triggerApiData();
-        closeModal();
-    }
-
-    const saveSegment = (formData) => {
-        postApiRequest(API_URL + "/saveSegment", formData, error => showSnackbar(error, "error"), () => showSnackbar("Segment byl uložen.", "success"));
-        triggerApiData();
-        closeModal();
-    }
-
-    const handleCountryTabChange = (event, value) => {
-        setCountryTab(value);
-        setSelectedCountry(countryData[value]);
-    };
-
+    // api data
+    const [apiData, trigger] = useFetch(
+        API_URL + "/getSegments",
+        [],
+        error => showSnackbar(error, "error")
+    );
     const tableData = apiData.data.filter(entry => entry.country === selectedCountry.country);
 
-    return (
+    // segment actions
+    const saveSegment = async (formData) => {
+        await postApiRequest(
+            API_URL + "/saveSegment",
+            formData,
+            () => showSnackbar("Segment byl uložen.", "success"),
+            error => showSnackbar("Segment se nepodařilo uložit.", "error"));
+        trigger();
+        closeModal();
+    }
+
+    const deleteSegment = async (rowData) => {
+        await postApiRequest(
+            API_URL + "/deleteSegment",
+            rowData,
+            () => showSnackbar("Segment byl smazán.", "success"),
+            error => showSnackbar("Segment se nepodařilo smazat.", "error")
+        );
+        trigger();
+        closeModal();
+    }
+
+    const pageContent = (
         <>
             <Grid item xs={12} >
                 <MapComponent
@@ -124,7 +144,7 @@ const SegmentsPage = props => {
                     </Paper>
                 </Grid>
                 <Grid item>
-                    {session.role === "admin" && <Button variant="contained" color="primary" onClick={() => openModal("Vytvořit segment", initFormData)}>Vytvořit</Button>}
+                    {session.role === "admin" && <Button variant="contained" color="primary" onClick={() => openModal("Vytvořit segment", formData)}>Vytvořit</Button>}
                 </Grid>
             </Grid>
             <Grid item xs={12}>
@@ -134,6 +154,7 @@ const SegmentsPage = props => {
                         <SegmnetsTable
                             admin={session.role === "admin"}
                             data={tableData}
+                            onRowOpenClick={openSegment}
                             onRowEditClick={openModal}
                             onRowDeleteClick={deleteSegment}
                         />
@@ -148,6 +169,10 @@ const SegmentsPage = props => {
                 onSubmit={saveSegment}
             ></SegmentsDialog>
         </>
+    )
+
+    return (
+        <LayoutPage pageTitle={"Segmenty"} pageContent={pageContent} />
     );
 }
 

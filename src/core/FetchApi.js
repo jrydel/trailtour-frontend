@@ -3,37 +3,33 @@ import React from 'react';
 export const useFetch = (url, initData, errorCallback) => {
 
     const [value, setValue] = React.useState({
-        data: initData,
-        loading: false
+        loading: false,
+        data: initData
     });
-    const [trigger, setTrigger] = React.useState(false);
-    const triggerFetch = () => setTrigger(!trigger);
 
-    const setPartData = partData => setValue({ ...value, ...partData });
+    const [apiTrigger, setApiTrigger] = React.useState(false);
+    const trigger = () => setApiTrigger(!apiTrigger);
 
-    const get = () => {
-        setPartData({ loading: true });
+    React.useEffect(() => {
+        setValue({ loading: true, data: initData })
         fetch(url, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error();
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
                 } else {
-                    return response.json();
+                    throw new Error("Fetch returned: " + res.status);
                 }
             })
-            .then(data => setPartData({ data: data, loading: false }))
-            .catch(error => { console.log(error); errorCallback("Nepodařilo se načíst data.") });
-    }
+            .then(json => setValue({ loading: false, data: json }));
+    }, [apiTrigger]);
 
-    React.useEffect(get, [trigger]);
-
-    return [value, triggerFetch];
+    return [value, trigger]
 }
 
-export const postApiRequest = async (url, data, errorCallback, successCallback) => {
+export const postApiRequest = async (url, data, successCallback, errorCallback) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -42,10 +38,9 @@ export const postApiRequest = async (url, data, errorCallback, successCallback) 
         });
         if (!response.ok) {
             throw Error();
-        } else {
-            successCallback();
         }
-    } catch (err) {
-        errorCallback("Nepodařilo se zpracovat data.");
+        successCallback();
+    } catch (error) {
+        errorCallback(error);
     }
 }

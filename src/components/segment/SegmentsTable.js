@@ -9,6 +9,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 
+import Link from "react-router-dom/Link";
+
 const useStyles = makeStyles({
 
     table: {
@@ -16,16 +18,14 @@ const useStyles = makeStyles({
     },
     tableHead: {
         fontWeight: "bold"
+    },
+    updateButton: {
+        color: "green"
     }
 });
 
 const SegmnetsTable = props => {
     const classes = useStyles();
-
-    const [data, setData] = React.useState(props.data);
-    React.useEffect(() => {
-        setData(props.data);
-    }, [props.data]);
 
     const onTableRowClick = (event, row) => {
     }
@@ -43,7 +43,7 @@ const SegmnetsTable = props => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map((row, index) => (
+                    {props.data.map((row, index) => (
                         <TableRow
                             key={index}
                             onClick={(event) => onTableRowClick(event, row)}
@@ -54,15 +54,18 @@ const SegmnetsTable = props => {
                             <TableCell align="left">{row.distance}</TableCell>
                             <TableCell align="left">{row.elevation}</TableCell>
                             <TableCell align="left">{row.type}</TableCell>
-                            {props.admin && <TableCell align="right">
-                                <Button variant="contained" color="primary" onClick={() => props.onRowEditClick("Upravit segment", row)} style={{ marginRight: 5 }}>Upravit</Button>
-                                <Button variant="contained" color="secondary" onClick={() => props.onRowDeleteClick(row)} style={{ marginRight: 5 }}>Smazat</Button>
-                            </TableCell>}
+                            <TableCell align="right">
+                                <Link component={Button} to={"/segment/" + row.id} variant="contained" color="primary" style={{ marginRight: 5 }}>Zobrazit</Link>
+                                {props.admin && <>
+                                    <Button variant="contained" color="primary" onClick={() => props.onRowEditClick("Upravit segment", row)} style={{ marginRight: 5, backgroundColor: "#ffa41b" }}>Upravit</Button>
+                                    <Button variant="contained" color="secondary" onClick={() => props.onRowDeleteClick(row)} style={{ marginRight: 5, backgroundColor: "#c02739" }}>Smazat</Button>
+                                </>}
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-        </TableContainer>
+        </TableContainer >
     );
 }
 
