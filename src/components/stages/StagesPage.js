@@ -139,7 +139,7 @@ const StagesPage = props => {
                     </Box>
                     {session.role === "admin" &&
                         <Box>
-                            <Button variant="contained" color="primary" className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
+                            <Button variant="contained" color="primary" disabled={apiData.error} className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
                         </Box>
                     }
                 </Box>

@@ -4,14 +4,17 @@ export const useFetch = (url, initData, errorCallback) => {
 
     const [value, setValue] = React.useState({
         loading: false,
-        data: initData
+        data: initData,
+        error: ""
     });
 
     const [apiTrigger, setApiTrigger] = React.useState(false);
     const trigger = () => setApiTrigger(!apiTrigger);
 
+    const setPartData = partData => setValue({ ...value, ...partData });
+
     React.useEffect(() => {
-        setValue({ loading: true, data: initData })
+        setPartData({ loading: true })
         fetch(url, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
@@ -23,7 +26,11 @@ export const useFetch = (url, initData, errorCallback) => {
                     throw new Error("Fetch returned: " + res.status);
                 }
             })
-            .then(json => setValue({ loading: false, data: json }));
+            .then(json => setPartData({ loading: false, data: json, error: "" }))
+            .catch(error => {
+                setPartData({ loading: false, error: error })
+                errorCallback(error);
+            });
     }, [apiTrigger]);
 
     return [value, trigger]

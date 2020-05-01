@@ -10,12 +10,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
-
-import { Link } from "react-router-dom";
 
 import { useSortableData } from "../TableApi";
-import { UserContext } from '../../AppContext';
 
 const useStyles = makeStyles((theme) => ({
     tableHead: {
@@ -28,20 +24,41 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const StagesTable = props => {
+function seconds2time(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds - (hours * 3600)) / 60);
+    var seconds = seconds - (hours * 3600) - (minutes * 60);
+    var time = "";
 
-    const { session } = React.useContext(UserContext);
+    if (hours != 0) {
+        time = hours + ":";
+    }
+    if (minutes != 0 || time !== "") {
+        minutes = (minutes < 10 && time !== "") ? "0" + minutes : String(minutes);
+        time += minutes + ":";
+    }
+    if (time === "") {
+        time = seconds + "s";
+    }
+    else {
+        time += (seconds < 10) ? "0" + seconds : String(seconds);
+    }
+    return time;
+}
+
+export const StageTable = props => {
+
     const classes = useStyles();
 
     const tableColumns = [
-        { id: 'number', type: "number", label: 'Číslo', align: "center" },
-        { id: 'name', label: 'Název', align: "left" },
-        { id: 'type', label: 'Typ', align: "left" },
-        { id: 'distance', type: "number", label: 'Délka (m)', align: "right" },
-        { id: 'elevation', type: "number", label: 'Převýšení (m)', align: "right" }
+        { id: 'athleteName', label: 'Jméno', align: "center" },
+        { id: 'clubName', label: 'Klub', align: "left" },
+        { id: 'date', label: 'Datum', align: "left" },
+        { id: 'time', type: "time", label: 'Čas', align: "right" },
+        { id: 'pointsStrava', type: "number", label: 'Strava body', align: "right" }
     ];
 
-    const [sort, setSort] = React.useState({ id: "number", direction: "asc" })
+    const [sort, setSort] = React.useState({ id: "time", direction: "asc" })
     const { sortedData } = useSortableData(props.rows, sort);
 
     const handleSort = columnId => {
@@ -73,25 +90,16 @@ export const StagesTable = props => {
                 </TableHead>
                 {sortedData && sortedData.length > 0 &&
                     <TableBody>
-                        {sortedData.map(row =>
-                            <TableRow>
+                        {sortedData.map(row => {
+                            console.log(row);
+                            return <TableRow>
                                 {tableColumns.map(column =>
                                     <TableCell align={column.align} >
-                                        {column.type === "number" ? row[column.id].toLocaleString("cz") : row[column.id]}
+                                        {column.type === "number" ? row[column.id].toLocaleString("cz") : column.type === "time" ? seconds2time(row[column.id]) : row[column.id]}
                                     </TableCell>
                                 )}
-                                <TableCell align={"center"} >
-                                    <Link to={"/etapa/" + row.id} style={{ textDecoration: 'none' }} >
-                                        <Button variant="contained" color="primary" size="small" className={classes.button} >
-                                            Zobrazit
-                                     </Button>
-                                    </Link>
-                                    {session.role === "admin" &&
-                                        <Button variant="contained" size="small" className={classes.button} style={{ backgroundColor: "#ff7844", color: "white" }} onClick={() => props.onRowEdit("Upravit etapu", row)}>Upravit</Button>
-                                    }
-                                </TableCell>
                             </TableRow>
-                        )
+                        })
                         }
                     </TableBody>
                 }

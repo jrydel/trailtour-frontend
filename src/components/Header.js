@@ -24,12 +24,10 @@ const Header = () => {
 
     return (
         <AppBar position="static">
-
             <Toolbar>
                 <Typography className={classes.title} variant="h6">
                     Kamenice Trailtour 2020
                 </Typography>
-
                 {session.login && <Button color="inherit" onClick={logout}>Odhlásit</Button>}
             </Toolbar>
         </AppBar>

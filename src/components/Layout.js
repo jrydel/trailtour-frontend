@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
 
-import { Container, Grid, Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { SnackbarProvider } from 'notistack';
 
@@ -40,14 +41,26 @@ const Layout = () => {
         <PrivateRoute component={NoMatch} authenticated={session.login} />
     ]
 
+    const headerLinks = [
+        <Link to="/etapy">Etapy</Link>
+    ]
+
+    const notistackRef = React.createRef();
+    const onClickDismiss = key => () => {
+        notistackRef.current.closeSnackbar(key);
+    }
+
     return (
         <Router>
             <Switch>
                 <Redirect exact from="/" to="/etapy" />
                 <Route path="/login" render={({ location }) => session.login ? <Redirect to={{ pathname: "/", state: { from: location } }} /> : <LoginPage />} />
 
-                <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center", }} autoHideDuration={3000} >
-                    <Header />
+                <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center", }} autoHideDuration={3000} ref={notistackRef} hideIconVariant={true}
+                    action={(key) => (
+                        <CloseIcon onClick={onClickDismiss(key)} />
+                    )}>
+                    <Header links={headerLinks} />
                     <Grid container direction="row" >
                         <Grid item xs />
                         <Grid item xs={11} md={8} container direction="column">
