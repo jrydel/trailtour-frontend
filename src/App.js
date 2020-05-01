@@ -9,8 +9,8 @@ import Layout from './components/Layout';
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: "#035aa6" },
-    secondary: { main: '#d81b60' },
+    primary: { main: "#1565c0" },
+    secondary: { main: '#e61c5d' },
   }
 });
 

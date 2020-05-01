@@ -37,6 +37,8 @@ export const postApiRequest = async (url, data, successCallback, errorCallback) 
             body: JSON.stringify(data)
         });
         if (!response.ok) {
+            const json = await response.json();
+            console.log(json);
             throw Error();
         }
         successCallback();

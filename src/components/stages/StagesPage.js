@@ -1,23 +1,29 @@
 import React from 'react';
 
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { useSnackbar } from 'notistack';
 
 import LayoutPage from '../LayoutPage';
 import MapComponent from '../MapComponent';
-import { useFetch } from "../FetchApi";
-import { API_URL } from '../../AppContext';
-import { TableComponent } from '../TableComponent';
+import { useFetch, postApiRequest } from "../FetchApi";
+import { API_URL, UserContext } from '../../AppContext';
+import { StagesTable } from './StagesTable';
+import { Paper } from '@material-ui/core';
+import StagesModalForm from './StagesModalForm';
 
 const useStyles = makeStyles((theme) => ({
     item: {
         marginTop: theme.spacing(2)
+    },
+    createButton: {
+        marginLeft: theme.spacing(1)
     }
 }));
 
@@ -40,8 +46,21 @@ const countryData = {
     }
 }
 
+const initFormData = {
+    id: "",
+    country: "",
+    number: "",
+    name: "",
+    type: "",
+    distance: "",
+    elevation: "",
+    latitude: "",
+    longitude: ""
+}
+
 const StagesPage = props => {
 
+    const { session } = React.useContext(UserContext);
     const classes = useStyles();
 
     // snackbar
@@ -54,7 +73,6 @@ const StagesPage = props => {
     const handleCountryTabChange = (event, value) => {
         setCountryTab(value);
         setSelectedCountry(countryData[value]);
-
     };
 
     // api data
@@ -63,17 +81,30 @@ const StagesPage = props => {
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
+    const filteredTableData = apiData.data.filter(entry => entry.country === selectedCountry.country);
 
-    const tableColumns = [
-        { id: 'number', type: "number", label: 'Číslo', align: "center" },
-        { id: 'name', label: 'Název', align: "left" },
-        { id: 'type', label: 'Typ', align: "left" },
-        { id: 'distance', type: "number", label: 'Délka (m)', align: "right" },
-        { id: 'elevation', type: "number", label: 'Převýšení (m)', align: "right" },
-        { id: "temp" }
-    ];
-    const tableSort = { id: "number", direction: "asc" };
-    const tableData = apiData.data.filter(entry => entry.country === selectedCountry.country);
+    // modal
+    const [modalTitle, setModalTitle] = React.useState("");
+    const [modalShow, setModalShow] = React.useState(false);
+    const [formData, setFormData] = React.useState(initFormData);
+    const openModal = (title, formData) => {
+        setModalTitle(title);
+        setFormData(formData);
+        setModalShow(true);
+    }
+    const closeModal = () => {
+        setModalShow(false);
+    }
+    const submitModal = async formData => {
+        await postApiRequest(
+            API_URL + "/saveStage",
+            formData,
+            () => showSnackbar("Segment byl uložen.", "success"),
+            error => showSnackbar("Segment se nepodařilo uložit.", "error")
+        );
+        await trigger();
+        closeModal();
+    }
 
     const pageContent = (
         <>
@@ -87,26 +118,36 @@ const StagesPage = props => {
                             zoom: selectedCountry.coordinates.zoom
                         }
                     }
-                    data={tableData}
+                    data={filteredTableData}
                 />
             </Grid>
             <Grid item xs className={classes.item}>
-                <Paper square>
-                    <Tabs
-                        value={countryTab}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        onChange={handleCountryTabChange}
-                        centered
-                    >
-                        <Tab label="CZ" />
-                        <Tab label="SK" />
-                    </Tabs>
-                </Paper>
+                <Box display="flex" alignItems="center">
+                    <Box flexGrow={1}>
+                        <Paper square>
+                            <Tabs
+                                value={countryTab}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                onChange={handleCountryTabChange}
+                                centered
+                            >
+                                <Tab label="CZ" />
+                                <Tab label="SK" />
+                            </Tabs>
+                        </Paper>
+                    </Box>
+                    {session.role === "admin" &&
+                        <Box>
+                            <Button variant="contained" color="primary" className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
+                        </Box>
+                    }
+                </Box>
             </Grid>
             <Grid item xs className={classes.item}>
-                {apiData.loading ? <CircularProgress /> : <TableComponent rows={tableData} columns={tableColumns} sort={tableSort} />}
+                {apiData.loading ? <CircularProgress /> : <StagesTable rows={filteredTableData} onRowEdit={openModal} />}
             </Grid>
+            <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} />
         </>
     )
 
