@@ -38,16 +38,6 @@ const navigation = [
             path: "/etapa/:id",
             component: StagePage,
         }
-    },
-    {
-        route: {
-            path: "/adsf",
-            component: NoMatch
-        },
-        menu: {
-            name: "test",
-            icon: <AdbIcon />
-        }
     }
 ]
 
