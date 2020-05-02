@@ -3,6 +3,7 @@ import React from "react";
 import { Route, Redirect, NavLink } from "react-router-dom";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import FormatListNumbered from '@material-ui/icons/FormatListNumbered';
+import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import AdbIcon from '@material-ui/icons/Adb';
 
 import FeedPage from "./feed/FeedPage";
@@ -16,6 +17,10 @@ const navigation = [
             path: "/",
             exact: true,
             component: FeedPage
+        },
+        menu: {
+            name: "Novinky",
+            icon: <NewReleasesIcon />
         }
     },
     {
@@ -49,7 +54,7 @@ const navigation = [
 export const routes = authenticated => navigation.map((nav, key) => <PrivateRoute {...nav.route} key={key} authenticated={authenticated} />);
 
 export const menuItems = toggleMenu => navigation.filter(nav => nav.menu).map((nav, key) => (
-    <ListItem key={key} button component={NavLink} activeClassName="Mui-selected" to={nav.route.path} onClick={toggleMenu}>
+    <ListItem key={key} button component={NavLink} exact={nav.route.exact} activeClassName="Mui-selected" to={nav.route.path} onClick={toggleMenu}>
         <ListItemIcon>{nav.menu.icon}</ListItemIcon>
         <ListItemText primary={nav.menu.name} />
     </ListItem>

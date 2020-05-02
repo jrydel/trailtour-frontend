@@ -26,7 +26,7 @@ const FeedPage = props => {
     );
 
     return (
-        <LayoutPage pageTitle={"Strava feed"} pageContent={pageContent}></LayoutPage>
+        <LayoutPage pageTitle={"Novinky"} pageContent={pageContent}></LayoutPage>
     );
 }
 
