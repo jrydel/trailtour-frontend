@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel } from "@material-ui/core";
+import { NavLink } from "react-router-dom";
+import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel, Link } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 
 import { useSortableData } from "../TableApi";
@@ -63,11 +64,23 @@ const FeedTable = props => {
                     <TableBody>
                         {sortedData.map((row, index) => {
                             return <TableRow key={index}>
-                                {tableColumns.map((column, index) =>
-                                    <TableCell key={index} align={column.align} >
-                                        {column.type === "number" ? row[column.id].toLocaleString("cz") : column.type === "time" ? secondsToTime(row[column.id]) : row[column.id]}
-                                    </TableCell>
-                                )}
+                                <TableCell align={"center"} >
+                                    {row.dateTime}
+                                </TableCell>
+                                <TableCell align={"left"} >
+                                    <NavLink to={"/etapa/" + row.stageId}>{row.stageNumber + " - " + row.stageName}</NavLink>
+                                </TableCell>
+                                <TableCell align={"left"} >
+                                    {row.athleteName}
+                                </TableCell>
+                                <TableCell align={"right"} >
+                                    <Link href={"http://strava.com/activities/" + row.activityId} target="_blank" rel="noreferrer">
+                                        {secondsToTime(row.time)}
+                                    </Link>
+                                </TableCell>
+                                <TableCell align={"right"} >
+                                    {row.position}
+                                </TableCell>
                             </TableRow>
                         })
                         }
