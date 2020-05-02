@@ -38,7 +38,8 @@ export const StagesTable = props => {
         { id: 'name', label: 'Název', align: "left" },
         { id: 'type', label: 'Typ', align: "left" },
         { id: 'distance', type: "number", label: 'Délka (m)', align: "right" },
-        { id: 'elevation', type: "number", label: 'Převýšení (m)', align: "right" }
+        { id: 'elevation', type: "number", label: 'Převýšení (m)', align: "right" },
+        { id: 'stravaCount', type: "number", label: 'Strava', align: "right" }
     ];
 
     const [sort, setSort] = React.useState({ id: "number", direction: "asc" })
