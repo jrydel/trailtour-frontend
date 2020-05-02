@@ -6,7 +6,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Box from '@material-ui/core/Box';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/core/styles';
@@ -26,11 +25,11 @@ const useStyles = makeStyles((theme) => ({
 const StagesModalForm = props => {
 
     const classes = useStyles();
-    const { register, handleSubmit, errors, reset, getValues } = useForm({ defaultValues: props.formData, mode: "onChange" });
+    const { register, handleSubmit, errors, reset } = useForm({ defaultValues: props.formData, mode: "onChange" });
 
     React.useEffect(() => {
         reset(props.formData);
-    }, [props.formData])
+    }, [props.formData, reset])
 
     return (
         <Dialog

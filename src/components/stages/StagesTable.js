@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
@@ -73,10 +73,10 @@ export const StagesTable = props => {
                 </TableHead>
                 {sortedData && sortedData.length > 0 &&
                     <TableBody>
-                        {sortedData.map(row =>
-                            <TableRow>
-                                {tableColumns.map(column =>
-                                    <TableCell align={column.align} >
+                        {sortedData.map((row, index) =>
+                            <TableRow key={index}>
+                                {tableColumns.map((column, index) =>
+                                    <TableCell key={index} align={column.align} >
                                         {column.type === "number" ? row[column.id].toLocaleString("cz") : row[column.id]}
                                     </TableCell>
                                 )}

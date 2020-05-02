@@ -18,11 +18,13 @@ const StagePage = props => {
     const showSnackbar = (message, variant) => enqueueSnackbar(message, { variant: variant });
 
     // api data
-    const [apiData, trigger] = useFetch(
+    const apiData = useFetch(
         API_URL + "/getResults?stageId=" + segmentId,
+        [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
+
     const filteredTableData = [];
     apiData.data.map(value => {
         filteredTableData.push({
@@ -35,6 +37,7 @@ const StagePage = props => {
             position: value.position,
             pointsStrava: value.pointsStrava
         })
+        return null;
     });
 
     const pageComment = (

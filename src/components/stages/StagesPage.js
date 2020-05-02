@@ -76,9 +76,11 @@ const StagesPage = props => {
     };
 
     // api data
-    const [apiData, trigger] = useFetch(
+    const [trigger, setTrigger] = React.useState(false);
+    const apiData = useFetch(
         API_URL + "/getStages",
         [],
+        [trigger],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const filteredTableData = apiData.data.filter(entry => entry.country === selectedCountry.country);
@@ -102,7 +104,7 @@ const StagesPage = props => {
             () => showSnackbar("Segment byl uložen.", "success"),
             error => showSnackbar("Segment se nepodařilo uložit.", "error")
         );
-        await trigger();
+        setTrigger(!trigger);
         closeModal();
     }
 

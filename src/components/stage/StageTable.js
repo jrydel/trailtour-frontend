@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,26 +24,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function seconds2time(seconds) {
-    var hours = Math.floor(seconds / 3600);
-    var minutes = Math.floor((seconds - (hours * 3600)) / 60);
-    var seconds = seconds - (hours * 3600) - (minutes * 60);
-    var time = "";
+var secondsToTime = secs => {
+    var sec_num = parseInt(secs, 10)
+    var hours = Math.floor(sec_num / 3600)
+    var minutes = Math.floor(sec_num / 60) % 60
+    var seconds = sec_num % 60
 
-    if (hours != 0) {
-        time = hours + ":";
-    }
-    if (minutes != 0 || time !== "") {
-        minutes = (minutes < 10 && time !== "") ? "0" + minutes : String(minutes);
-        time += minutes + ":";
-    }
-    if (time === "") {
-        time = seconds + "s";
-    }
-    else {
-        time += (seconds < 10) ? "0" + seconds : String(seconds);
-    }
-    return time;
+    return [hours, minutes, seconds]
+        .map(v => v < 10 ? "0" + v : v)
+        .filter((v, i) => v !== "00" || i > 0)
+        .join(":")
 }
 
 export const StageTable = props => {
@@ -70,9 +60,9 @@ export const StageTable = props => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        {tableColumns.map(column =>
+                        {tableColumns.map((column, index) =>
                             <TableCell
-                                key={column.id}
+                                key={index}
                                 className={classes.tableHead}
                                 align={column.align}
                             >
@@ -90,12 +80,11 @@ export const StageTable = props => {
                 </TableHead>
                 {sortedData && sortedData.length > 0 &&
                     <TableBody>
-                        {sortedData.map(row => {
-                            console.log(row);
-                            return <TableRow>
-                                {tableColumns.map(column =>
-                                    <TableCell align={column.align} >
-                                        {column.type === "number" ? row[column.id].toLocaleString("cz") : column.type === "time" ? seconds2time(row[column.id]) : row[column.id]}
+                        {sortedData.map((row, index) => {
+                            return <TableRow key={index}>
+                                {tableColumns.map((column, index) =>
+                                    <TableCell key={index} align={column.align} >
+                                        {column.type === "number" ? row[column.id].toLocaleString("cz") : column.type === "time" ? secondsToTime(row[column.id]) : row[column.id]}
                                     </TableCell>
                                 )}
                             </TableRow>

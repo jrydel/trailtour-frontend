@@ -1,39 +1,36 @@
 import React from 'react';
 
-export const useFetch = (url, initData, errorCallback) => {
+export const useFetch = (url, initData, trigger, errorCallback) => {
 
     const [value, setValue] = React.useState({
         loading: false,
-        data: initData,
-        error: ""
+        data: initData
     });
-
-    const [apiTrigger, setApiTrigger] = React.useState(false);
-    const trigger = () => setApiTrigger(!apiTrigger);
 
     const setPartData = partData => setValue({ ...value, ...partData });
 
     React.useEffect(() => {
-        setPartData({ loading: true })
-        fetch(url, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                } else {
-                    throw new Error("Fetch returned: " + res.status);
+        const fetchData = async () => {
+            try {
+                setPartData({ loading: true })
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) {
+                    throw new Error("Fetch returned: " + response.status);
                 }
-            })
-            .then(json => setPartData({ loading: false, data: json, error: "" }))
-            .catch(error => {
-                setPartData({ loading: false, error: error })
+                const json = await response.json();
+                setPartData({ loading: false, data: json });
+            } catch (error) {
+                setPartData({ loading: false })
                 errorCallback(error);
-            });
-    }, [apiTrigger]);
+            }
+        }
+        fetchData();
+    }, trigger); // eslint-disable-line react-hooks/exhaustive-deps
 
-    return [value, trigger]
+    return value;
 }
 
 export const postApiRequest = async (url, data, successCallback, errorCallback) => {
