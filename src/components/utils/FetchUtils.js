@@ -1,5 +1,7 @@
 import React from 'react';
 
+export const API_URL = "https://api.orank.cz/trailtour";
+
 export const useFetch = (url, initData, trigger, errorCallback) => {
 
     const [value, setValue] = React.useState({

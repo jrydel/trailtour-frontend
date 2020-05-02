@@ -1,4 +1,6 @@
-export const secondsToTime = secs => {
+export const formatNumber = number => number.toLocaleString("cz");
+
+export const formatSeconds = secs => {
     var sec_num = parseInt(secs, 10)
     var hours = Math.floor(sec_num / 3600)
     var minutes = Math.floor(sec_num / 60) % 60

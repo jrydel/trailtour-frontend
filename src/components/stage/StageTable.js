@@ -1,19 +1,10 @@
 import React from 'react';
 
-import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
+import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead, TableRow, Paper, makeStyles } from '@material-ui/core';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-
-import { useSortableData } from "../TableApi";
-import { secondsToTime } from "../Utils";
-import { Link } from '@material-ui/core';
+import { useSortableData } from "../utils/TableUtils";
+import { formatSeconds } from "../utils/FormatUtils";
+import { ExternalLink } from '../Navigation';
 
 const useStyles = makeStyles((theme) => ({
     tableHead: {
@@ -86,9 +77,7 @@ export const StageTable = props => {
                                     {row.date}
                                 </TableCell>
                                 <TableCell align={"right"} >
-                                    <Link href={"http://strava.com/activities/" + row.activityId} target="_blank" rel="noreferrer">
-                                        {secondsToTime(row.time)}
-                                    </Link>
+                                    <ExternalLink to={"http://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink>
                                 </TableCell>
                                 <TableCell align={"right"} >
                                     {row.pointsStrava}

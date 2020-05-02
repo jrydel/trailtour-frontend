@@ -1,11 +1,10 @@
 import React from "react";
 
-import { NavLink } from "react-router-dom";
-import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel, Link } from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
+import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel, makeStyles } from "@material-ui/core";
 
-import { useSortableData } from "../TableApi";
-import { secondsToTime } from "../Utils";
+import { useSortableData } from "../utils/TableUtils";
+import { formatSeconds } from "../utils/FormatUtils";
+import { AppLink, ExternalLink } from "../Navigation";
 
 const useStyles = makeStyles((theme) => ({
     tableHead: {
@@ -68,15 +67,13 @@ const FeedTable = props => {
                                     {row.dateTime}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    <NavLink component={Link} to={"/etapa/" + row.stageId}>{row.stageNumber + " - " + row.stageName}</NavLink>
+                                    <AppLink to={"/etapa/" + row.stageId}>{row.stageNumber + " - " + row.stageName}></AppLink>
                                 </TableCell>
                                 <TableCell align={"left"} >
                                     {row.athleteName}
                                 </TableCell>
                                 <TableCell align={"right"} >
-                                    <Link href={"http://strava.com/activities/" + row.activityId} target="_blank" rel="noreferrer">
-                                        {secondsToTime(row.time)}
-                                    </Link>
+                                    <ExternalLink to={"http://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink>
                                 </TableCell>
                                 <TableCell align={"right"} >
                                     {row.position}

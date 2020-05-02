@@ -1,12 +1,13 @@
 import React from 'react';
 
-import { AppBar, Toolbar, Typography, Button, IconButton, Hidden } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Button, IconButton, Hidden, makeStyles } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import { UserContext } from '../AppContext';
+
 import Cookies from 'universal-cookie';
 
-import { makeStyles } from '@material-ui/styles';
 import { NavLink } from 'react-router-dom';
+
+import { UserContext } from '../AppContext';
 
 const useStyles = makeStyles(theme => ({
     appBar: {

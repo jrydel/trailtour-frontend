@@ -2,9 +2,8 @@ import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
-import Grid from '@material-ui/core/Grid';
+import { Grid, makeStyles } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { makeStyles } from '@material-ui/core/styles';
 
 import { SnackbarProvider } from 'notistack';
 

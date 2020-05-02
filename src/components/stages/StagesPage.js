@@ -1,21 +1,14 @@
 import React from 'react';
 
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Box, Paper, Tabs, Tab, Button, CircularProgress, makeStyles } from '@material-ui/core';
 
 import { useSnackbar } from 'notistack';
 
 import LayoutPage from '../LayoutPage';
 import MapComponent from '../MapComponent';
-import { useFetch, postApiRequest } from "../FetchApi";
-import { API_URL, UserContext } from '../../AppContext';
+import { useFetch, postApiRequest, API_URL } from "../utils/FetchUtils";
+import { UserContext } from '../../AppContext';
 import { StagesTable } from './StagesTable';
-import { Paper } from '@material-ui/core';
 import StagesModalForm from './StagesModalForm';
 
 const useStyles = makeStyles((theme) => ({

@@ -2,8 +2,7 @@ import React from "react";
 
 import { useSnackbar } from 'notistack';
 
-import { useFetch } from "../FetchApi";
-import { API_URL } from "../../AppContext";
+import { useFetch, API_URL } from "../utils/FetchUtils";
 import LayoutPage from "../LayoutPage";
 import FeedTable from "./FeedTable";
 

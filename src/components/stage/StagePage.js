@@ -1,14 +1,12 @@
 import React from "react";
 
-import { Paper, Tabs, Tab } from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
+import { Paper, Tabs, Tab, makeStyles } from "@material-ui/core";
 
 import { useSnackbar } from 'notistack';
 
 import LayoutPage from "../LayoutPage";
 import { StageTable } from "./StageTable";
-import { useFetch } from "../FetchApi";
-import { API_URL } from "../../AppContext";
+import { useFetch, API_URL } from "../utils/FetchUtils";
 
 const useStyles = makeStyles((theme) => ({
     item: {

@@ -1,20 +1,10 @@
 import React from 'react';
 
-import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
+import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead, TableRow, Button, Paper, makeStyles } from '@material-ui/core';
 
 import { Link } from "react-router-dom";
 
-import { useSortableData } from "../TableApi";
+import { useSortableData } from "../utils/TableUtils";
 import { UserContext } from '../../AppContext';
 
 const useStyles = makeStyles((theme) => ({

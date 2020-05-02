@@ -1,9 +1,10 @@
 import React from "react";
 
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
-import { Link, Box } from "@material-ui/core";
+import { Box, Link } from "@material-ui/core";
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { NavLink } from "react-router-dom";
 
 const MapComponent = props => {
 
@@ -19,9 +20,7 @@ const MapComponent = props => {
                     <Marker key={key} position={[marker.latitude, marker.longitude]} >
                         <Popup>
                             <div style={{ display: "flex", flexDirection: "column" }}>
-                                <Link to={"/etapa/" + marker.id} >
-                                    {marker.number + " - " + marker.name}
-                                </Link>
+                                <NavLink component={Link} to={"/etapa/" + marker.id}>{marker.number + " - " + marker.name}</NavLink>
                                 <Box display="flex" justifyContent="center" alignItems="center" style={{ marginTop: 5 }}>
                                     <KeyboardArrowRightIcon fontSize="small" />{marker.distance.toLocaleString("cz")} m
                                     <div style={{ marginLeft: 5 }} />
