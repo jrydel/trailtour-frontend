@@ -86,7 +86,7 @@ const StagesModalForm = props => {
                         error={errors.type}
                     />
                     <Box display="flex">
-                        <TextField name="distance" label="Vzdálenost" variant="outlined" fullWidth InputProps={{ endAdornment: <InputAdornment>m</InputAdornment> }} className={classes.textfield}
+                        <TextField name="distance" label="Délka" variant="outlined" fullWidth InputProps={{ endAdornment: <InputAdornment>m</InputAdornment> }} className={classes.textfield}
                             inputRef={
                                 register({
                                     required: true,

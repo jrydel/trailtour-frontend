@@ -39,7 +39,7 @@ export const StagesTable = props => {
         { id: 'type', label: 'Typ', align: "left" },
         { id: 'distance', type: "number", label: 'Délka (m)', align: "right" },
         { id: 'elevation', type: "number", label: 'Převýšení (m)', align: "right" },
-        { id: 'stravaCount', type: "number", label: 'Strava', align: "right" }
+        { id: 'stravaCount', type: "number", label: 'Aktivity', align: "right" }
     ];
 
     const [sort, setSort] = React.useState({ id: "number", direction: "asc" })
@@ -82,10 +82,8 @@ export const StagesTable = props => {
                                     </TableCell>
                                 )}
                                 <TableCell align={"center"} >
-                                    <Link to={"/etapa/" + row.id} style={{ textDecoration: 'none' }} >
-                                        <Button variant="contained" color="primary" size="small" className={classes.button} >
-                                            Zobrazit
-                                     </Button>
+                                    <Link component={Button} to={"/etapa/" + row.id} variant="contained" color="primary" size="small" className={classes.button} >
+                                        Zobrazit
                                     </Link>
                                     {session.role === "admin" &&
                                         <Button variant="contained" size="small" className={classes.button} style={{ backgroundColor: "#ff7844", color: "white" }} onClick={() => props.onRowEdit("Upravit etapu", row)}>Upravit</Button>

@@ -4,12 +4,10 @@ import { Route, Redirect, NavLink } from "react-router-dom";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import FormatListNumbered from '@material-ui/icons/FormatListNumbered';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
-import AdbIcon from '@material-ui/icons/Adb';
 
 import FeedPage from "./feed/FeedPage";
 import StagesPage from "./stages/StagesPage";
 import StagePage from "./stage/StagePage";
-import NoMatch from "./NoMatch";
 
 const navigation = [
     {
