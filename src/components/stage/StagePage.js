@@ -1,15 +1,24 @@
 import React from "react";
 
-import { Link } from "@material-ui/core";
-import LayoutPage from "../LayoutPage";
-import { StageTable } from "./StageTable";
+import { Paper, Tabs, Tab } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
 
 import { useSnackbar } from 'notistack';
 
+import LayoutPage from "../LayoutPage";
+import { StageTable } from "./StageTable";
 import { useFetch } from "../FetchApi";
 import { API_URL } from "../../AppContext";
 
+const useStyles = makeStyles((theme) => ({
+    item: {
+        marginTop: theme.spacing(2)
+    }
+}));
+
 const StagePage = props => {
+
+    const classes = useStyles();
 
     const segmentId = props.match.params.id;
 
@@ -25,33 +34,40 @@ const StagePage = props => {
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
 
-    const filteredTableData = [];
-    apiData.data.map(value => {
-        filteredTableData.push({
-            athleteId: value.athlete.id,
-            athleteName: value.athlete.name,
-            athleteGender: value.athlete.gender,
-            activityId: value.activityId,
-            date: value.date,
-            time: value.time,
-            position: value.position,
-            pointsStrava: value.pointsStrava
-        })
-        return null;
+    const [tabValue, setSelectedTabValue] = React.useState(0);
+    const handleTabChange = (event, value) => {
+        setSelectedTabValue(value);
+    };
+
+    const filteredTableData = apiData.data.filter(value => {
+        if (tabValue === 0) {
+            return value.athlete.gender === "M";
+        } else {
+            return value.athlete.gender === "F";
+        }
     });
 
-    const pageComment = (
-        <Link href={"http://strava.com/segments/" + segmentId} target="_blank" rel="noreferrer">
-            ({segmentId})
-        </Link>
-    );
-
     const pageContent = (
-        <StageTable rows={filteredTableData} />
+        <>
+            <Paper square>
+                <Tabs
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered
+                    value={tabValue}
+                    onChange={handleTabChange}
+                >
+                    <Tab label="Muži" />
+                    <Tab label="Ženy" />
+                </Tabs>
+            </Paper>
+            <div className={classes.item} />
+            <StageTable rows={filteredTableData} />
+        </>
     );
 
     return (
-        <LayoutPage pageTitle={"Etapa"} pageComment={pageComment} pageContent={pageContent}></LayoutPage>
+        <LayoutPage pageTitle={"Etapa"} pageContent={pageContent}></LayoutPage>
     );
 
 }

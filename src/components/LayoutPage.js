@@ -5,6 +5,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
+    layout: {
+        display: "flex"
+    },
     item: {
         marginTop: theme.spacing(5)
     }
@@ -17,7 +20,10 @@ const LayoutPage = props => {
     return (
         <>
             <Grid item xs className={classes.item}>
-                <Typography variant={"h4"}>{props.pageTitle}</Typography>
+                <div className={classes.layout}>
+                    <Typography variant={"h4"}>{props.pageTitle}</Typography>
+                    <Typography variant={"h6"}>{props.pageComment}</Typography>
+                </div>
             </Grid>
             <Grid item xs className={classes.item}>
                 {props.pageContent}

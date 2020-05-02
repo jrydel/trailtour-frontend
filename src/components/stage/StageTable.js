@@ -13,6 +13,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import { useSortableData } from "../TableApi";
 import { secondsToTime } from "../Utils";
+import { Link } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     tableHead: {
@@ -30,7 +31,8 @@ export const StageTable = props => {
     const classes = useStyles();
 
     const tableColumns = [
-        { id: 'athleteName', label: 'Jméno', align: "center" },
+        { id: 'position', label: 'Pozice', align: "center" },
+        { id: 'athleteName', label: 'Jméno', align: "left" },
         { id: 'clubName', label: 'Klub', align: "left" },
         { id: 'date', label: 'Datum', align: "left" },
         { id: 'time', type: "time", label: 'Čas', align: "right" },
@@ -71,11 +73,26 @@ export const StageTable = props => {
                     <TableBody>
                         {sortedData.map((row, index) => {
                             return <TableRow key={index}>
-                                {tableColumns.map((column, index) =>
-                                    <TableCell key={index} align={column.align} >
-                                        {column.type === "number" ? row[column.id].toLocaleString("cz") : column.type === "time" ? secondsToTime(row[column.id]) : row[column.id]}
-                                    </TableCell>
-                                )}
+                                <TableCell align={"center"} >
+                                    {row.position}
+                                </TableCell>
+                                <TableCell align={"left"} >
+                                    {row.athlete.name}
+                                </TableCell>
+                                <TableCell align={"left"} >
+                                    {row.club && row.club.name}
+                                </TableCell>
+                                <TableCell align={"left"} >
+                                    {row.date}
+                                </TableCell>
+                                <TableCell align={"right"} >
+                                    <Link href={"http://strava.com/activities/" + row.activityId} target="_blank" rel="noreferrer">
+                                        {secondsToTime(row.time)}
+                                    </Link>
+                                </TableCell>
+                                <TableCell align={"right"} >
+                                    {row.position}
+                                </TableCell>
                             </TableRow>
                         })
                         }
