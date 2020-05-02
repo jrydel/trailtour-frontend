@@ -91,7 +91,7 @@ export const StageTable = props => {
                                     </Link>
                                 </TableCell>
                                 <TableCell align={"right"} >
-                                    {row.position}
+                                    {row.pointsStrava}
                                 </TableCell>
                             </TableRow>
                         })
