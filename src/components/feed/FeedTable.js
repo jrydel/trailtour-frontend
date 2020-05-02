@@ -1,15 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import Paper from '@material-ui/core/Paper';
+import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 
 import { useSortableData } from "../TableApi";
 import { secondsToTime } from "../Utils";
@@ -25,19 +17,19 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const StageTable = props => {
+const FeedTable = props => {
 
     const classes = useStyles();
 
     const tableColumns = [
-        { id: 'athleteName', label: 'Jméno', align: "center" },
-        { id: 'clubName', label: 'Klub', align: "left" },
-        { id: 'date', label: 'Datum', align: "left" },
+        { id: 'dateTime', label: 'Datum', align: "center" },
+        { id: 'stageName', label: 'Etapa', align: "left" },
+        { id: 'athleteName', label: 'Závodník', align: "left" },
         { id: 'time', type: "time", label: 'Čas', align: "right" },
-        { id: 'pointsStrava', type: "number", label: 'Strava body', align: "right" }
+        { id: 'position', type: "number", label: 'Pořadí na segmentu', align: "right" }
     ];
 
-    const [sort, setSort] = React.useState({ id: "time", direction: "asc" })
+    const [sort, setSort] = React.useState({ id: "dateTime", direction: "desc" })
     const { sortedData } = useSortableData(props.rows, sort);
 
     const handleSort = columnId => {
@@ -81,7 +73,9 @@ export const StageTable = props => {
                         }
                     </TableBody>
                 }
-            </Table>
+            </Table >
         </TableContainer >
     );
-};
+}
+
+export default FeedTable;

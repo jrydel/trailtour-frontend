@@ -5,11 +5,19 @@ import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import FormatListNumbered from '@material-ui/icons/FormatListNumbered';
 import AdbIcon from '@material-ui/icons/Adb';
 
+import FeedPage from "./feed/FeedPage";
 import StagesPage from "./stages/StagesPage";
 import StagePage from "./stage/StagePage";
 import NoMatch from "./NoMatch";
 
 const navigation = [
+    {
+        route: {
+            path: "/",
+            exact: true,
+            component: FeedPage
+        }
+    },
     {
         route: {
             path: "/etapy",

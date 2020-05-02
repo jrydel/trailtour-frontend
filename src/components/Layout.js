@@ -40,7 +40,6 @@ const Layout = () => {
     return (
         <Router>
             <Switch>
-                <Redirect exact from="/" to="/etapy" />
                 <Route path="/login" render={({ location }) => session.login ? <Redirect to={{ pathname: "/", state: { from: location } }} /> : <LoginPage />} />
 
                 <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center", }} autoHideDuration={3000} ref={notistackRef} hideIconVariant={true}
