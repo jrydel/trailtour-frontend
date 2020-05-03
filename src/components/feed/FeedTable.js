@@ -1,10 +1,16 @@
 import React from "react";
 
-import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel, makeStyles } from "@material-ui/core";
+import { format } from "date-fns";
+import { cs } from "date-fns/locale";
+
+import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel, Box, Avatar, makeStyles } from "@material-ui/core";
 
 import { useSortableData } from "../utils/TableUtils";
-import { formatSeconds } from "../utils/FormatUtils";
+import { formatSeconds, formatStageNumber } from "../utils/FormatUtils";
 import { AppLink, ExternalLink } from "../Navigation";
+
+import FlagCZ from "../../files/flagcz.jpg";
+import FlagSK from "../../files/flagsk.jpg";
 
 const useStyles = makeStyles((theme) => ({
     tableHead: {
@@ -14,6 +20,10 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(0.5),
         marginLeft: theme.spacing(1),
         width: 90
+    },
+    small: {
+        width: theme.spacing(4),
+        height: theme.spacing(3)
     }
 }));
 
@@ -35,6 +45,18 @@ const FeedTable = props => {
     const handleSort = columnId => {
         setSort({ id: columnId, direction: sort.direction === "asc" ? "desc" : "asc" });
     }
+
+    const nameRow = (id, number, name, country) => (
+        <AppLink to={"/etapa/" + id}>
+            <Box display="flex" flexDirection="row" alignItems="center">
+                <Avatar alt="Country" variant="rounded" src={country === "cz" ? FlagCZ : FlagSK} className={classes.small} />
+                <div style={{ marginLeft: 10 }} />
+                {formatStageNumber(number) + " - " + name}
+            </Box>
+
+
+        </AppLink>
+    );
 
     return (
         <TableContainer component={Paper}>
@@ -62,12 +84,13 @@ const FeedTable = props => {
                 {sortedData && sortedData.length > 0 &&
                     <TableBody>
                         {sortedData.map((row, index) => {
+                            console.log(row);
                             return <TableRow key={index}>
                                 <TableCell align={"center"} >
-                                    {row.dateTime}
+                                    {format(Date.parse(row.dateTime), "PP - HH:mm:ss", { locale: cs })}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    <AppLink to={"/etapa/" + row.stageId}>{row.stageNumber + " - " + row.stageName}</AppLink>
+                                    {nameRow(row.stageId, row.stageNumber, row.stageName, row.stageCountry)}
                                 </TableCell>
                                 <TableCell align={"left"} >
                                     {row.athleteName}

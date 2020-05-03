@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Route, Redirect, NavLink, Link } from "react-router-dom";
-import { ListItem, ListItemIcon, ListItemText, Link as MaterialLink } from "@material-ui/core";
+import { Route, Redirect, NavLink, Link as RouterLink } from "react-router-dom";
+import { ListItem, ListItemIcon, ListItemText, Link } from "@material-ui/core";
 import FormatListNumbered from '@material-ui/icons/FormatListNumbered';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
 
@@ -24,6 +24,7 @@ const navigation = [
     {
         route: {
             path: "/etapy",
+            exact: true,
             component: StagesPage,
         },
         menu: {
@@ -33,7 +34,7 @@ const navigation = [
     },
     {
         route: {
-            path: "/etapa/:id",
+            path: "/etapy/:country/:number",
             component: StagePage,
         }
     }
@@ -47,8 +48,8 @@ export const menuItems = toggleMenu => navigation.filter(nav => nav.menu).map((n
     </ListItem>
 ));
 
-export const AppLink = props => <Link {...props} component={MaterialLink}>{props.children}</Link>;
-export const ExternalLink = props => <MaterialLink {...props} href={props.to} target="_blank" rel="noreferrer">{props.children}</MaterialLink>;
+export const AppLink = props => <Link {...props} component={RouterLink}>{props.children}</Link>;
+export const ExternalLink = props => <Link {...props} href={props.to} target="_blank" rel="noopener noreferrer">{props.children}</Link>;
 
 const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
     <Route

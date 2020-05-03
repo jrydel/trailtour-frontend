@@ -74,7 +74,7 @@ export const StagesTable = props => {
                                     {formatStageNumber(row.number)}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    <AppLink to={"/etapa/" + row.id}>
+                                    <AppLink to={"/etapy/" + row.country + "/" + row.number}>
                                         {formatNumber(row.name)}
                                     </AppLink>
                                 </TableCell>

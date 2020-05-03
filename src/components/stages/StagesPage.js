@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Grid, Box, Paper, Tabs, Tab, Button, CircularProgress, makeStyles } from '@material-ui/core';
+import { Grid, Box, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/core';
 
 import { useSnackbar } from 'notistack';
 
@@ -140,14 +140,18 @@ const StagesPage = props => {
                 </Box>
             </Grid>
             <Grid item xs className={classes.item}>
-                {apiData.loading ? <CircularProgress /> : <StagesTable rows={filteredTableData} onRowEdit={openModal} />}
+                <StagesTable rows={filteredTableData} onRowEdit={openModal} />
             </Grid>
             <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} />
         </>
     )
 
     return (
-        <LayoutPage pageTitle={<PageTitle>{"Etapy"}</PageTitle>} pageContent={pageContent} />
+        <LayoutPage
+            pageLoading={apiData.loading}
+            pageTitle={<PageTitle>{"Etapy"}</PageTitle>}
+            pageContent={pageContent}
+        />
     );
 }
 

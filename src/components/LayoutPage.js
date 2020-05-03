@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Grid, Typography, makeStyles } from "@material-ui/core";
+import { Grid, Box, Typography, CircularProgress, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -17,17 +17,23 @@ const LayoutPage = props => {
 
     const classes = useStyles();
 
-    return (
-        <>
-            <Grid item xs className={classes.item}>
-                {props.pageTitle}
-            </Grid>
-            <Grid item xs className={classes.item}>
-                {props.pageContent}
-            </Grid>
-            <Grid item xs className={classes.item} />
-        </>
-    )
+    return props.pageLoading ? (
+        <Grid item xs className={classes.item} >
+            <Box display="flex" direction="row" justifyContent="center" alignItems="center">
+                <CircularProgress disableShrink />
+            </Box>
+        </Grid>
+    ) : (
+            <>
+                <Grid item xs className={classes.item} >
+                    {props.pageTitle}
+                </Grid >
+                <Grid item xs className={classes.item}>
+                    {props.pageContent}
+                </Grid>
+                <Grid item xs className={classes.item} />
+            </>
+        );
 }
 
 export default LayoutPage;

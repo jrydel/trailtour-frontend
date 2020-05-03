@@ -27,7 +27,8 @@ const StagePage = props => {
 
     const classes = useStyles();
 
-    const segmentId = props.match.params.id;
+    const country = props.match.params.country;
+    const number = props.match.params.number;
 
     // snackbar
     const { enqueueSnackbar } = useSnackbar();
@@ -35,13 +36,13 @@ const StagePage = props => {
 
     // api data
     const stageData = useFetch(
-        API_URL + "/getStage?id=" + segmentId,
+        API_URL + "/getStageByCountryNumber?country=" + country + "&number=" + number,
         [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const resultData = useFetch(
-        API_URL + "/getResults?stageId=" + segmentId,
+        API_URL + "/getResultsByCountryNumber?country=" + country + "&number=" + number,
         [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
@@ -63,11 +64,13 @@ const StagePage = props => {
     const pageTitle = (
         <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap" flexGrow={1}>
             <Box flexGrow={1}><PageTitle>{formatStageNumber(stageData.data.number) + " - " + stageData.data.name}</PageTitle></Box>
-            <ExternalLink to={"https:/strava.com/segments/" + stageData.data.id} ><Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
-            <div style={{ marginLeft: 10 }} />
-            <ExternalLink><Avatar alt="Mapy.cz" variant="square" src={MapyCZIcon} className={classes.small} /></ExternalLink>
-            <div style={{ marginLeft: 10 }} />
-            <ExternalLink><Avatar alt="Trailtour" variant="square" src={TrailtourIcon} className={classes.small} /></ExternalLink>
+            <Box display="flex" flexDirection="row" flexWrap="wrap">
+                <ExternalLink to={"https:/strava.com/segments/" + stageData.data.id} ><Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
+                <div style={{ marginLeft: 5 }} />
+                <ExternalLink><Avatar alt="Mapy.cz" variant="square" src={MapyCZIcon} className={classes.small} /></ExternalLink>
+                <div style={{ marginLeft: 5 }} />
+                <ExternalLink><Avatar alt="Trailtour" variant="square" src={TrailtourIcon} className={classes.small} /></ExternalLink>
+            </Box>
         </Box>
     );
 
@@ -92,7 +95,8 @@ const StagePage = props => {
 
     return (
         <LayoutPage
-            pageTitle={stageData.loading ? "" : pageTitle}
+            pageLoading={stageData.loading || resultData.loading}
+            pageTitle={pageTitle}
             pageContent={pageContent} />
     );
 
