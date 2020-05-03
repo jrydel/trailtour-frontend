@@ -9,6 +9,7 @@ import FeedPage from "./feed/FeedPage";
 import StagesPage from "./stages/StagesPage";
 import StagePage from "./stage/StagePage";
 import NoMatch from "./NoMatch";
+import Athletepage from "./athlete/AthletePage";
 
 const navigation = [
     {
@@ -37,6 +38,12 @@ const navigation = [
         route: {
             path: "/etapy/:country/:number",
             component: StagePage,
+        }
+    },
+    {
+        route: {
+            path: "/zavodnik/:id",
+            component: Athletepage
         }
     },
     {
