@@ -9,8 +9,6 @@ import FeedPage from "./feed/FeedPage";
 import StagesPage from "./stages/StagesPage";
 import StagePage from "./stage/StagePage";
 
-export const STRAVA_SEGMENT_URL = "https:/strava.com/segments/";
-
 const navigation = [
     {
         route: {

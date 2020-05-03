@@ -8,7 +8,7 @@ import LayoutPage, { PageTitle } from "../LayoutPage";
 import { StageTable } from "./StageTable";
 import { useFetch, API_URL } from "../utils/FetchUtils";
 import { formatStageNumber } from "../utils/FormatUtils";
-import { ExternalLink, STRAVA_SEGMENT_URL } from "../Navigation";
+import { ExternalLink } from "../Navigation";
 import StravaIcon from "../../files/strava.jpg";
 import TrailtourIcon from "../../files/trailtour.jpg";
 import MapyCZIcon from "../../files/mapycz.png";
@@ -63,7 +63,7 @@ const StagePage = props => {
     const pageTitle = (
         <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap" flexGrow={1}>
             <Box flexGrow={1}><PageTitle>{formatStageNumber(stageData.data.number) + " - " + stageData.data.name}</PageTitle></Box>
-            <ExternalLink to={STRAVA_SEGMENT_URL + "/" + stageData.data.id} ><Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
+            <ExternalLink to={"https:/strava.com/segments/" + stageData.data.id} ><Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
             <div style={{ marginLeft: 10 }} />
             <ExternalLink><Avatar alt="Mapy.cz" variant="square" src={MapyCZIcon} className={classes.small} /></ExternalLink>
             <div style={{ marginLeft: 10 }} />
