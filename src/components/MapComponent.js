@@ -25,13 +25,13 @@ const MapComponent = props => {
                     <Marker key={key} position={[marker.latitude, marker.longitude]} >
                         <Popup>
                             <Box display="flex" flexDirection="column" >
-                                <AppLink to={"/etapa/" + marker.id}>{formatStageNumber(marker.number) + " - " + marker.name}</AppLink>
+                                <AppLink to={"/etapy/" + marker.country + "/" + marker.number}> {formatStageNumber(marker.number) + " - " + marker.name}</AppLink>
                                 <Box display="flex" flexDirection="row" alignItems="center" style={{ marginTop: 10 }}>
                                     <ArrowForwardIcon fontSize="small" />{marker.distance.toLocaleString("cz")} m
                                     <div style={{ marginLeft: 5 }} />
                                     <ArrowUpwardIcon fontSize="small" />{marker.elevation.toLocaleString("cz")} m
                                     <div style={{ marginLeft: 5 }} />
-                                    <DirectionsRunIcon fontSize="small" />{formatNumber(marker.stravaCount)}
+                                    <DirectionsRunIcon fontSize="small" />{formatNumber(marker.activities)}
                                 </Box>
                             </Box>
                         </Popup>

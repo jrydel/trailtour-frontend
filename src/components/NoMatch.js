@@ -1,11 +1,13 @@
 import React from 'react';
 
-import LayoutPage from "./LayoutPage";
+import LayoutPage, { PageTitle } from "./LayoutPage";
 
 const NoMatch = props => {
 
     return (
-        <LayoutPage pageTitle={"Nenalezeno"} />
+        <LayoutPage
+            pageTitle={<PageTitle>Nenalezeno</PageTitle>}
+        />
     );
 }
 

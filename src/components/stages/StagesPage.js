@@ -149,7 +149,7 @@ const StagesPage = props => {
     return (
         <LayoutPage
             pageLoading={apiData.loading}
-            pageTitle={<PageTitle>{"Etapy"}</PageTitle>}
+            pageTitle={<PageTitle>Etapy</PageTitle>}
             pageContent={pageContent}
         />
     );

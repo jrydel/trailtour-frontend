@@ -77,7 +77,7 @@ export const StageTable = props => {
                                     {row.date}
                                 </TableCell>
                                 <TableCell align={"right"} >
-                                    <ExternalLink to={"https://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink>
+                                    <ExternalLink href={"https://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink>
                                 </TableCell>
                                 <TableCell align={"right"} >
                                     {row.pointsStrava}

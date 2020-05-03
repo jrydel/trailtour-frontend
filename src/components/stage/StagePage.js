@@ -10,8 +10,6 @@ import { useFetch, API_URL } from "../utils/FetchUtils";
 import { formatStageNumber } from "../utils/FormatUtils";
 import { ExternalLink } from "../Navigation";
 import StravaIcon from "../../files/strava.jpg";
-import TrailtourIcon from "../../files/trailtour.jpg";
-import MapyCZIcon from "../../files/mapycz.png";
 
 const useStyles = makeStyles((theme) => ({
     item: {
@@ -47,29 +45,45 @@ const StagePage = props => {
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
+    const countData = useFetch(
+        API_URL + "/getResultsCount?country=" + country + "&number=" + number,
+        [],
+        [],
+        error => showSnackbar("Nepodařilo se načíst data z API.", "error")
+    );
+
+    const tabData = [
+        {
+            key: "M",
+            label: "Muži (" + countData.data.M + ")"
+        },
+        {
+            key: "F",
+            label: "Ženy (" + countData.data.F + ")"
+        },
+        {
+            key: "C",
+            label: "Kluby (" + countData.data.C + ")",
+            disabled: true
+        }
+    ]
 
     const [tabValue, setSelectedTabValue] = React.useState(0);
     const handleTabChange = (event, value) => {
         setSelectedTabValue(value);
     };
 
-    const filteredTableData = resultData.data.filter(value => {
-        if (tabValue === 0) {
-            return value.athlete.gender === "M";
-        } else {
-            return value.athlete.gender === "F";
-        }
-    });
+    const filteredTableData = resultData.data.filter(value => value.athlete.gender === tabData[tabValue].key);
 
     const pageTitle = (
         <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap" flexGrow={1}>
             <Box flexGrow={1}><PageTitle>{formatStageNumber(stageData.data.number) + " - " + stageData.data.name}</PageTitle></Box>
             <Box display="flex" flexDirection="row" flexWrap="wrap">
-                <ExternalLink to={"https:/strava.com/segments/" + stageData.data.id} ><Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
-                <div style={{ marginLeft: 5 }} />
+                <ExternalLink href={"https:/strava.com/segments/" + stageData.data.id} ><Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
+                {/* <div style={{ marginLeft: 5 }} />
                 <ExternalLink><Avatar alt="Mapy.cz" variant="square" src={MapyCZIcon} className={classes.small} /></ExternalLink>
                 <div style={{ marginLeft: 5 }} />
-                <ExternalLink><Avatar alt="Trailtour" variant="square" src={TrailtourIcon} className={classes.small} /></ExternalLink>
+                <ExternalLink><Avatar alt="Trailtour" variant="square" src={TrailtourIcon} className={classes.small} /></ExternalLink> */}
             </Box>
         </Box>
     );
@@ -84,8 +98,7 @@ const StagePage = props => {
                     value={tabValue}
                     onChange={handleTabChange}
                 >
-                    <Tab label="Muži" />
-                    <Tab label="Ženy" />
+                    {tabData.map(val => <Tab {...val} />)}
                 </Tabs>
             </Paper>
             <div className={classes.item} />

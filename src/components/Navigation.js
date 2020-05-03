@@ -8,6 +8,7 @@ import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import FeedPage from "./feed/FeedPage";
 import StagesPage from "./stages/StagesPage";
 import StagePage from "./stage/StagePage";
+import NoMatch from "./NoMatch";
 
 const navigation = [
     {
@@ -37,6 +38,11 @@ const navigation = [
             path: "/etapy/:country/:number",
             component: StagePage,
         }
+    },
+    {
+        route: {
+            component: NoMatch
+        }
     }
 ]
 
@@ -49,7 +55,7 @@ export const menuItems = toggleMenu => navigation.filter(nav => nav.menu).map((n
 ));
 
 export const AppLink = props => <Link {...props} component={RouterLink}>{props.children}</Link>;
-export const ExternalLink = props => <Link {...props} href={props.to} target="_blank" rel="noopener noreferrer">{props.children}</Link>;
+export const ExternalLink = props => <Link {...props} target="_blank" rel="noopener noreferrer">{props.children}</Link>;
 
 const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
     <Route

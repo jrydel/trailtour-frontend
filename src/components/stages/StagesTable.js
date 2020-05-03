@@ -33,7 +33,7 @@ export const StagesTable = props => {
         { id: 'type', label: 'Typ', align: "left" },
         { id: 'distance', type: "number", label: 'Délka (m)', align: "right" },
         { id: 'elevation', type: "number", label: 'Převýšení (m)', align: "right" },
-        { id: 'stravaCount', type: "number", label: 'Aktivity', align: "right" }
+        { id: 'activities', type: "number", label: 'Aktivity', align: "right" }
     ];
 
     const [sort, setSort] = React.useState({ id: "number", direction: "asc" })
@@ -88,7 +88,7 @@ export const StagesTable = props => {
                                     {formatNumber(row.elevation)}
                                 </TableCell>
                                 <TableCell align={"right"} >
-                                    {formatNumber(row.stravaCount)}
+                                    {formatNumber(row.activities)}
                                 </TableCell>
                                 <TableCell align={"center"} >
                                     {session.role === "admin" &&

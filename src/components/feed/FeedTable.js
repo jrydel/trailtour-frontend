@@ -47,7 +47,7 @@ const FeedTable = props => {
     }
 
     const nameRow = (id, number, name, country) => (
-        <AppLink to={"/etapa/" + id}>
+        <AppLink to={"/etapy/" + country + "/" + number}>
             <Box display="flex" flexDirection="row" alignItems="center">
                 <Avatar alt="Country" variant="rounded" src={country === "cz" ? FlagCZ : FlagSK} className={classes.small} />
                 <div style={{ marginLeft: 10 }} />
@@ -84,7 +84,6 @@ const FeedTable = props => {
                 {sortedData && sortedData.length > 0 &&
                     <TableBody>
                         {sortedData.map((row, index) => {
-                            console.log(row);
                             return <TableRow key={index}>
                                 <TableCell align={"center"} >
                                     {format(Date.parse(row.dateTime), "PP - HH:mm:ss", { locale: cs })}
@@ -96,7 +95,7 @@ const FeedTable = props => {
                                     {row.athleteName}
                                 </TableCell>
                                 <TableCell align={"right"} >
-                                    <ExternalLink to={"http://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink>
+                                    <ExternalLink href={"http://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink>
                                 </TableCell>
                                 <TableCell align={"right"} >
                                     {row.position}

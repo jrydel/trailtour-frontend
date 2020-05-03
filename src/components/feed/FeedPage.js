@@ -24,7 +24,7 @@ const FeedPage = props => {
     );
 
     return (
-        <LayoutPage pageLoading={apiData.loading} pageTitle={<PageTitle>{"Novinky"}</PageTitle>} pageContent={pageContent}></LayoutPage>
+        <LayoutPage pageLoading={apiData.loading} pageTitle={<PageTitle>Novinky</PageTitle>} pageContent={pageContent}></LayoutPage>
     );
 }
 
