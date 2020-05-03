@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 
 import LayoutPage, { PageTitle } from "../LayoutPage";
 import { StageTable } from "./StageTable";
-import { useFetch, API_URL } from "../utils/FetchUtils";
+import { useFetch, API_URL, STRAVA_SEGMENT_URL } from "../utils/FetchUtils";
 import { formatStageNumber } from "../utils/FormatUtils";
 import { ExternalLink } from "../Navigation";
 import StravaIcon from "../../files/strava.jpg";
@@ -79,7 +79,7 @@ const StagePage = props => {
         <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap" flexGrow={1}>
             <Box flexGrow={1}><PageTitle>{formatStageNumber(stageData.data.number) + " - " + stageData.data.name}</PageTitle></Box>
             <Box display="flex" flexDirection="row" flexWrap="wrap">
-                <ExternalLink href={"https:/strava.com/segments/" + stageData.data.id} ><Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
+                <ExternalLink href={STRAVA_SEGMENT_URL(stageData.data.id)} ><Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
                 {/* <div style={{ marginLeft: 5 }} />
                 <ExternalLink><Avatar alt="Mapy.cz" variant="square" src={MapyCZIcon} className={classes.small} /></ExternalLink>
                 <div style={{ marginLeft: 5 }} />

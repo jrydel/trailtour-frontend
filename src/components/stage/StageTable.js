@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead,
 import { useSortableData } from "../utils/TableUtils";
 import { formatSeconds } from "../utils/FormatUtils";
 import { ExternalLink } from '../Navigation';
+import { STRAVA_ACTIVITY_URL } from '../utils/FetchUtils';
 
 const useStyles = makeStyles((theme) => ({
     tableHead: {
@@ -77,7 +78,7 @@ export const StageTable = props => {
                                     {row.date}
                                 </TableCell>
                                 <TableCell align={"right"} >
-                                    <ExternalLink href={"https://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink>
+                                    <ExternalLink href={STRAVA_ACTIVITY_URL(row.activityId)}>{formatSeconds(row.time)}</ExternalLink>
                                 </TableCell>
                                 <TableCell align={"right"} >
                                     {row.pointsStrava}
