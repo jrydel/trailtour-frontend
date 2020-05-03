@@ -9,7 +9,7 @@ import FeedTable from "./FeedTable";
 const FeedPage = props => {
 
     const apiData = useFetch(
-        API_URL + "/getFeed?limit=50",
+        API_URL + "/getFeed?limit=100",
         [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
