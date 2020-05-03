@@ -3,7 +3,7 @@ import React from "react";
 import { useSnackbar } from 'notistack';
 
 import { useFetch, API_URL } from "../utils/FetchUtils";
-import LayoutPage from "../LayoutPage";
+import LayoutPage, { PageTitle } from "../LayoutPage";
 import FeedTable from "./FeedTable";
 
 const FeedPage = props => {
@@ -24,7 +24,7 @@ const FeedPage = props => {
     );
 
     return (
-        <LayoutPage pageTitle={"Novinky"} pageContent={pageContent}></LayoutPage>
+        <LayoutPage pageTitle={<PageTitle>{"Novinky"}</PageTitle>} pageContent={pageContent}></LayoutPage>
     );
 }
 

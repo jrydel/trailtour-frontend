@@ -27,7 +27,7 @@ export const StageTable = props => {
         { id: 'clubName', label: 'Klub', align: "left" },
         { id: 'date', label: 'Datum', align: "left" },
         { id: 'time', type: "time", label: 'Čas', align: "right" },
-        { id: 'pointsStrava', type: "number", label: 'Strava body', align: "right" }
+        { id: 'pointsStrava', type: "number", label: 'Body', align: "right" }
     ];
 
     const [sort, setSort] = React.useState({ id: "time", direction: "asc" })

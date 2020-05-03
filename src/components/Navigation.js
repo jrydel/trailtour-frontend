@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Route, Redirect, Link } from "react-router-dom";
+import { Route, Redirect, NavLink, Link } from "react-router-dom";
 import { ListItem, ListItemIcon, ListItemText, Link as MaterialLink } from "@material-ui/core";
 import FormatListNumbered from '@material-ui/icons/FormatListNumbered';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
@@ -8,6 +8,8 @@ import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import FeedPage from "./feed/FeedPage";
 import StagesPage from "./stages/StagesPage";
 import StagePage from "./stage/StagePage";
+
+export const STRAVA_SEGMENT_URL = "https:/strava.com/segments/";
 
 const navigation = [
     {
@@ -41,7 +43,7 @@ const navigation = [
 
 export const routes = authenticated => navigation.map((nav, key) => <PrivateRoute {...nav.route} key={key} authenticated={authenticated} />);
 export const menuItems = toggleMenu => navigation.filter(nav => nav.menu).map((nav, key) => (
-    <ListItem key={key} button component={Link} exact={nav.route.exact} activeClassName="Mui-selected" to={nav.route.path} onClick={toggleMenu}>
+    <ListItem key={key} button component={NavLink} exact={nav.route.exact} activeClassName="Mui-selected" to={nav.route.path} onClick={toggleMenu}>
         <ListItemIcon>{nav.menu.icon}</ListItemIcon>
         <ListItemText primary={nav.menu.name} />
     </ListItem>

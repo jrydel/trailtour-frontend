@@ -11,6 +11,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+export const PageTitle = props => <Typography {...props} variant={"h4"}>{props.children}</Typography>;
+
 const LayoutPage = props => {
 
     const classes = useStyles();
@@ -18,10 +20,7 @@ const LayoutPage = props => {
     return (
         <>
             <Grid item xs className={classes.item}>
-                <div className={classes.layout}>
-                    <Typography variant={"h4"}>{props.pageTitle}</Typography>
-                    <Typography variant={"h6"}>{props.pageComment}</Typography>
-                </div>
+                {props.pageTitle}
             </Grid>
             <Grid item xs className={classes.item}>
                 {props.pageContent}

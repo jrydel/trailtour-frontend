@@ -1,4 +1,5 @@
 export const formatNumber = number => number.toLocaleString("cz");
+export const formatStageNumber = number => (number > 9 ? "#" : "#0") + number;
 
 export const formatSeconds = secs => {
     var sec_num = parseInt(secs, 10)

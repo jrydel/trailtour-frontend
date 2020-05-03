@@ -1,10 +1,15 @@
 import React from "react";
 
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
-import { Box, Link } from "@material-ui/core";
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { NavLink } from "react-router-dom";
+import { Box } from "@material-ui/core";
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
+
+
+import { formatNumber, formatStageNumber } from "./utils/FormatUtils";
+import { AppLink } from "./Navigation";
+
 
 const MapComponent = props => {
 
@@ -19,14 +24,16 @@ const MapComponent = props => {
                 props.data.map((marker, key) =>
                     <Marker key={key} position={[marker.latitude, marker.longitude]} >
                         <Popup>
-                            <div style={{ display: "flex", flexDirection: "column" }}>
-                                <NavLink component={Link} to={"/etapa/" + marker.id}>{marker.number + " - " + marker.name}</NavLink>
-                                <Box display="flex" justifyContent="center" alignItems="center" style={{ marginTop: 5 }}>
-                                    <KeyboardArrowRightIcon fontSize="small" />{marker.distance.toLocaleString("cz")} m
+                            <Box display="flex" flexDirection="column" >
+                                <AppLink to={"/etapa/" + marker.id}>{formatStageNumber(marker.number) + " - " + marker.name}</AppLink>
+                                <Box display="flex" flexDirection="row" alignItems="center" style={{ marginTop: 10 }}>
+                                    <ArrowForwardIcon fontSize="small" />{marker.distance.toLocaleString("cz")} m
                                     <div style={{ marginLeft: 5 }} />
-                                    <KeyboardArrowUpIcon fontSize="small" />{marker.elevation.toLocaleString("cz")} m
+                                    <ArrowUpwardIcon fontSize="small" />{marker.elevation.toLocaleString("cz")} m
+                                    <div style={{ marginLeft: 5 }} />
+                                    <DirectionsRunIcon fontSize="small" />{formatNumber(marker.stravaCount)}
                                 </Box>
-                            </div>
+                            </Box>
                         </Popup>
                     </Marker>
                 )

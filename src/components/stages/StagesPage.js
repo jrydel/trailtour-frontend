@@ -4,7 +4,7 @@ import { Grid, Box, Paper, Tabs, Tab, Button, CircularProgress, makeStyles } fro
 
 import { useSnackbar } from 'notistack';
 
-import LayoutPage from '../LayoutPage';
+import LayoutPage, { PageTitle } from '../LayoutPage';
 import MapComponent from '../MapComponent';
 import { useFetch, postApiRequest, API_URL } from "../utils/FetchUtils";
 import { UserContext } from '../../AppContext';
@@ -147,7 +147,7 @@ const StagesPage = props => {
     )
 
     return (
-        <LayoutPage pageTitle={"Etapy"} pageContent={pageContent} />
+        <LayoutPage pageTitle={<PageTitle>{"Etapy"}</PageTitle>} pageContent={pageContent} />
     );
 }
 

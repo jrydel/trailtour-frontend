@@ -2,10 +2,10 @@ import React from 'react';
 
 import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead, TableRow, Button, Paper, makeStyles } from '@material-ui/core';
 
-import { Link } from "react-router-dom";
-
 import { useSortableData } from "../utils/TableUtils";
+import { formatNumber, formatStageNumber } from "../utils/FormatUtils";
 import { UserContext } from '../../AppContext';
+import { AppLink } from "../Navigation";
 
 const useStyles = makeStyles((theme) => ({
     tableHead: {
@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(0.5),
         marginLeft: theme.spacing(1),
         width: 90
+    }, small: {
+        width: theme.spacing(4),
+        height: theme.spacing(2),
+        marginLeft: theme.spacing(1)
     }
 }));
 
@@ -66,15 +70,27 @@ export const StagesTable = props => {
                     <TableBody>
                         {sortedData.map((row, index) =>
                             <TableRow key={index}>
-                                {tableColumns.map((column, index) =>
-                                    <TableCell key={index} align={column.align} >
-                                        {column.type === "number" ? row[column.id].toLocaleString("cz") : row[column.id]}
-                                    </TableCell>
-                                )}
                                 <TableCell align={"center"} >
-                                    <Link component={Button} to={"/etapa/" + row.id} variant="contained" color="primary" size="small" className={classes.button} >
-                                        Zobrazit
-                                    </Link>
+                                    {formatStageNumber(row.number)}
+                                </TableCell>
+                                <TableCell align={"left"} >
+                                    <AppLink to={"/etapa/" + row.id}>
+                                        {formatNumber(row.name)}
+                                    </AppLink>
+                                </TableCell>
+                                <TableCell align={"left"} >
+                                    {row.type}
+                                </TableCell>
+                                <TableCell align={"right"} >
+                                    {formatNumber(row.distance)}
+                                </TableCell>
+                                <TableCell align={"right"} >
+                                    {formatNumber(row.elevation)}
+                                </TableCell>
+                                <TableCell align={"right"} >
+                                    {formatNumber(row.stravaCount)}
+                                </TableCell>
+                                <TableCell align={"center"} >
                                     {session.role === "admin" &&
                                         <Button variant="contained" size="small" className={classes.button} style={{ backgroundColor: "#ff7844", color: "white" }} onClick={() => props.onRowEdit("Upravit etapu", row)}>Upravit</Button>
                                     }
@@ -84,7 +100,7 @@ export const StagesTable = props => {
                         }
                     </TableBody>
                 }
-            </Table>
+            </Table >
         </TableContainer >
     );
 };

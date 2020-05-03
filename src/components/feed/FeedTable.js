@@ -67,7 +67,7 @@ const FeedTable = props => {
                                     {row.dateTime}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    <AppLink to={"/etapa/" + row.stageId}>{row.stageNumber + " - " + row.stageName}></AppLink>
+                                    <AppLink to={"/etapa/" + row.stageId}>{row.stageNumber + " - " + row.stageName}</AppLink>
                                 </TableCell>
                                 <TableCell align={"left"} >
                                     {row.athleteName}
