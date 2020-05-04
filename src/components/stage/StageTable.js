@@ -31,7 +31,7 @@ export const StageTable = props => {
         { id: 'pointsTrailtour', type: "number", label: 'Body TT', align: "right" }
     ];
 
-    const [sort, setSort] = React.useState({ id: "time", direction: "asc" })
+    const [sort, setSort] = React.useState({ id: "pointsTrailtour", direction: "desc" })
     const { sortedData } = useSortableData(props.rows, sort);
 
     const handleSort = columnId => {
