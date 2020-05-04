@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 
 import LayoutPage, { PageTitle } from "../LayoutPage";
 import { StageTable } from "./StageTable";
-import { useFetch, API_URL, STRAVA_SEGMENT_URL } from "../utils/FetchUtils";
+import { useFetch, API_URL, STRAVA_SEGMENT_URL, defaultGetOptions } from "../utils/FetchUtils";
 import { formatStageNumber } from "../utils/FormatUtils";
 import { ExternalLink } from "../Navigation";
 import StravaIcon from "../../files/strava.jpg";
@@ -36,18 +36,21 @@ const StagePage = props => {
     // api data
     const stageData = useFetch(
         API_URL + "/getStageByNumber?database=" + database + "&number=" + number,
+        defaultGetOptions,
         [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const resultData = useFetch(
         API_URL + "/getResultsByNumber?database=" + database + "&number=" + number,
+        defaultGetOptions,
         [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const countData = useFetch(
         API_URL + "/getResultsCount?database=" + database + "&number=" + number,
+        defaultGetOptions,
         [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")

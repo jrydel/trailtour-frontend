@@ -4,12 +4,15 @@ import { Route, Redirect, NavLink, Link as RouterLink } from "react-router-dom";
 import { ListItem, ListItemIcon, ListItemText, Link } from "@material-ui/core";
 import FormatListNumbered from '@material-ui/icons/FormatListNumbered';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
+import MapIcon from '@material-ui/icons/Map';
+
 
 import FeedPage from "./feed/FeedPage";
 import StagesPage from "./stages/StagesPage";
 import StagePage from "./stage/StagePage";
 import NoMatch from "./NoMatch";
 import Athletepage from "./athlete/AthletePage";
+import StagesMap from "./stages/StagesMap";
 
 const navigation = [
     {
@@ -32,6 +35,17 @@ const navigation = [
         menu: {
             name: "Etapy",
             icon: <FormatListNumbered />
+        }
+    },
+    {
+        route: {
+            path: "/mapa",
+            exact: true,
+            component: StagesMap,
+        },
+        menu: {
+            name: "Mapa",
+            icon: <MapIcon />
         }
     },
     {

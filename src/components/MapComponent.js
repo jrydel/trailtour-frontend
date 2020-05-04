@@ -6,10 +6,8 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
 
-
 import { formatNumber, formatStageNumber } from "./utils/FormatUtils";
 import { AppLink } from "./Navigation";
-
 
 const MapComponent = props => {
 

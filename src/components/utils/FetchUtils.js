@@ -5,7 +5,12 @@ export const STRAVA_ACTIVITY_URL = activityId => "https://strava.com/activities/
 
 export const API_URL = "https://api.orank.cz/trailtour";
 
-export const useFetch = (url, initData, trigger, errorCallback) => {
+export const defaultGetOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+}
+
+export const useFetch = (url, options, initData, trigger, errorCallback) => {
 
     const [value, setValue] = React.useState({
         loading: false,
@@ -18,10 +23,7 @@ export const useFetch = (url, initData, trigger, errorCallback) => {
         const fetchData = async () => {
             try {
                 setPartData({ loading: true })
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
+                const response = await fetch(url, options);
                 if (!response.ok) {
                     throw new Error("Fetch returned: " + response.status);
                 }

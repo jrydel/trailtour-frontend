@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack';
 
 import LayoutPage, { PageTitle } from '../LayoutPage';
 import MapComponent from '../MapComponent';
-import { useFetch, postApiRequest, API_URL } from "../utils/FetchUtils";
+import { useFetch, postApiRequest, API_URL, defaultGetOptions } from "../utils/FetchUtils";
 import { UserContext } from '../../AppContext';
 import { StagesTable } from './StagesTable';
 import StagesModalForm from './StagesModalForm';
@@ -72,12 +72,14 @@ const StagesPage = props => {
     const [trigger, setTrigger] = React.useState(false);
     const apiDataCZ = useFetch(
         API_URL + "/getStages?database=trailtour_cz",
+        defaultGetOptions,
         [],
         [trigger],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const apiDataSK = useFetch(
         API_URL + "/getStages?database=trailtour_sk",
+        defaultGetOptions,
         [],
         [trigger],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")

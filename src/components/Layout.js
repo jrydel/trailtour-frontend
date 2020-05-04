@@ -2,7 +2,7 @@ import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
-import { Grid, makeStyles } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { SnackbarProvider } from 'notistack';
@@ -14,16 +14,8 @@ import Sidebar from './Sidebar';
 
 import { routes } from "./Navigation";
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        display: 'flex'
-    },
-    offset: theme.mixins.toolbar
-}));
-
 const Layout = () => {
 
-    const classes = useStyles();
     const { session } = React.useContext(UserContext);
 
     const notistackRef = React.createRef();
@@ -40,25 +32,15 @@ const Layout = () => {
         <Router>
             <Switch>
                 <Route path="/login" render={({ location }) => session.login ? <Redirect to={{ pathname: "/", state: { from: location } }} /> : <LoginPage />} />
-
                 <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center", }} autoHideDuration={3000} ref={notistackRef} hideIconVariant={true}
-                    action={(key) => (
-                        <CloseIcon onClick={onClickDismiss(key)} />
-                    )}>
-                    <div className={classes.root}>
+                    action={key => <CloseIcon onClick={onClickDismiss(key)} />}>
+                    <Box display="flex">
                         <Header toggleMenu={toggleMenu} />
                         <Sidebar open={mobileOpen} toggleMenu={toggleMenu} />
-                        <Grid container direction="row" >
-                            <Grid item xs />
-                            <Grid item xs={11} md={8} container direction="column">
-                                <div className={classes.offset} />
-                                <Switch>
-                                    {routes(session.login)}
-                                </Switch>
-                            </Grid>
-                            <Grid item xs />
-                        </Grid>
-                    </div>
+                        <Switch>
+                            {routes(session.login)}
+                        </Switch>
+                    </Box>
                 </SnackbarProvider>
             </Switch>
         </Router >
