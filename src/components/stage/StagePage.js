@@ -26,6 +26,7 @@ const StagePage = props => {
     const classes = useStyles();
 
     const country = props.match.params.country;
+    const database = country === "cz" ? "trailtour_cz" : "trailtour_sk";
     const number = props.match.params.number;
 
     // snackbar
@@ -34,19 +35,19 @@ const StagePage = props => {
 
     // api data
     const stageData = useFetch(
-        API_URL + "/getStageByCountryNumber?country=" + country + "&number=" + number,
+        API_URL + "/getStageByNumber?database=" + database + "&number=" + number,
         [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const resultData = useFetch(
-        API_URL + "/getResultsByCountryNumber?country=" + country + "&number=" + number,
+        API_URL + "/getResultsByNumber?database=" + database + "&number=" + number,
         [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const countData = useFetch(
-        API_URL + "/getResultsCount?country=" + country + "&number=" + number,
+        API_URL + "/getResultsCount?database=" + database + "&number=" + number,
         [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
@@ -73,7 +74,17 @@ const StagePage = props => {
         setSelectedTabValue(value);
     };
 
-    const filteredTableData = resultData.data.filter(value => value.athlete.gender === tabData[tabValue].key);
+    const filteredTableData = resultData.data.filter(value => value.athlete.gender === tabData[tabValue].key).map(value => {
+        return {
+            activityId: value.strava && value.strava.activityId,
+            position: value.strava && value.strava.position,
+            athleteName: value.athlete.name,
+            clubName: value.club && value.club.name,
+            date: value.strava && value.strava.date,
+            time: value.strava && value.strava.time,
+            pointsTrailtour: value.pointsTrailtour
+        }
+    });
 
     const pageTitle = (
         <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap" flexGrow={1}>

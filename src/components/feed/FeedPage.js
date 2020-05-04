@@ -8,8 +8,14 @@ import FeedTable from "./FeedTable";
 
 const FeedPage = props => {
 
-    const apiData = useFetch(
-        API_URL + "/getFeed?limit=100",
+    const apiDataCZ = useFetch(
+        API_URL + "/getFeed?database=trailtour_cz&limit=50",
+        [],
+        [],
+        error => showSnackbar("Nepodařilo se načíst data z API.", "error")
+    );
+    const apiDataSK = useFetch(
+        API_URL + "/getFeed?database=trailtour_sk&limit=50",
         [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
@@ -20,11 +26,11 @@ const FeedPage = props => {
     const showSnackbar = (message, variant) => enqueueSnackbar(message, { variant: variant });
 
     const pageContent = (
-        <FeedTable rows={apiData.data} />
+        <FeedTable rows={[...apiDataCZ.data, ...apiDataSK.data]} />
     );
 
     return (
-        <LayoutPage pageLoading={apiData.loading} pageTitle={<PageTitle>Novinky</PageTitle>} pageContent={pageContent}></LayoutPage>
+        <LayoutPage pageLoading={apiDataCZ.loading || apiDataSK.loading} pageTitle={<PageTitle>Novinky</PageTitle>} pageContent={pageContent}></LayoutPage>
     );
 }
 

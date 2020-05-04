@@ -39,6 +39,7 @@ export const useFetch = (url, initData, trigger, errorCallback) => {
 }
 
 export const postApiRequest = async (url, data, successCallback, errorCallback) => {
+    console.log(url);
     try {
         const response = await fetch(url, {
             method: 'POST',

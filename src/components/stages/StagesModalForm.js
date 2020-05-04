@@ -33,11 +33,11 @@ const StagesModalForm = props => {
             <DialogContent dividers={"paper"}>
                 <Box display="flex" flexDirection="column">
                     <Box display="flex">
-                        <TextField name="country" label="Země" variant="outlined" placeholder="cz / sk" fullWidth className={classes.textfield}
+                        <TextField name="country" label="Země" variant="outlined" placeholder="CZ / SK" fullWidth className={classes.textfield}
                             inputRef={
                                 register({
                                     required: true,
-                                    validate: value => value === "cz" || value === "sk"
+                                    validate: value => value === "CZ" || value === "SK"
                                 })
                             }
                             error={errors.country}

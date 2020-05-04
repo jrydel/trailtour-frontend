@@ -70,13 +70,19 @@ const StagesPage = props => {
 
     // api data
     const [trigger, setTrigger] = React.useState(false);
-    const apiData = useFetch(
-        API_URL + "/getStages",
+    const apiDataCZ = useFetch(
+        API_URL + "/getStages?database=trailtour_cz",
         [],
         [trigger],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
-    const filteredTableData = apiData.data.filter(entry => entry.country === selectedCountry.country);
+    const apiDataSK = useFetch(
+        API_URL + "/getStages?database=trailtour_sk",
+        [],
+        [trigger],
+        error => showSnackbar("Nepodařilo se načíst data z API.", "error")
+    );
+    const filteredTableData = selectedCountry.country === "cz" ? apiDataCZ.data : apiDataSK.data;
 
     // modal
     const [modalTitle, setModalTitle] = React.useState("");
@@ -92,7 +98,7 @@ const StagesPage = props => {
     }
     const submitModal = async formData => {
         await postApiRequest(
-            API_URL + "/saveStage",
+            API_URL + "/saveStage?database=" + (formData.country === "CZ" ? "trailtour_cz" : "trailtour_sk"),
             formData,
             () => showSnackbar("Segment byl uložen.", "success"),
             error => showSnackbar("Segment se nepodařilo uložit.", "error")
@@ -134,7 +140,7 @@ const StagesPage = props => {
                     </Box>
                     {session.role === "admin" &&
                         <Box>
-                            <Button variant="contained" color="primary" disabled={apiData.error} className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
+                            <Button variant="contained" color="primary" disabled={apiDataCZ.error || apiDataCZ.error} className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
                         </Box>
                     }
                 </Box>
@@ -148,7 +154,7 @@ const StagesPage = props => {
 
     return (
         <LayoutPage
-            pageLoading={apiData.loading}
+            pageLoading={apiDataCZ.loading || apiDataSK.loading}
             pageTitle={<PageTitle>Etapy</PageTitle>}
             pageContent={pageContent}
         />

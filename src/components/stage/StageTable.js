@@ -28,7 +28,7 @@ export const StageTable = props => {
         { id: 'clubName', label: 'Klub', align: "left" },
         { id: 'date', label: 'Datum', align: "left" },
         { id: 'time', type: "time", label: 'Čas', align: "right" },
-        { id: 'pointsStrava', type: "number", label: 'Body', align: "right" }
+        { id: 'pointsTrailtour', type: "number", label: 'Body TT', align: "right" }
     ];
 
     const [sort, setSort] = React.useState({ id: "time", direction: "asc" })
@@ -69,10 +69,10 @@ export const StageTable = props => {
                                     {row.position}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    {row.athlete.name}
+                                    {row.athleteName}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    {row.club && row.club.name}
+                                    {row.clubName}
                                 </TableCell>
                                 <TableCell align={"left"} >
                                     {row.date}
@@ -81,7 +81,7 @@ export const StageTable = props => {
                                     <ExternalLink href={STRAVA_ACTIVITY_URL(row.activityId)}>{formatSeconds(row.time)}</ExternalLink>
                                 </TableCell>
                                 <TableCell align={"right"} >
-                                    {row.pointsStrava}
+                                    {row.pointsTrailtour}
                                 </TableCell>
                             </TableRow>
                         })

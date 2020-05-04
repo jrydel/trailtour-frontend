@@ -32,14 +32,14 @@ const FeedTable = props => {
     const classes = useStyles();
 
     const tableColumns = [
-        { id: 'dateTime', label: 'Datum', align: "center" },
+        { id: 'created', label: 'Datum', align: "center" },
         { id: 'stageName', label: 'Etapa', align: "left" },
         { id: 'athleteName', label: 'Závodník', align: "left" },
         { id: 'time', type: "time", label: 'Čas', align: "right" },
         { id: 'position', type: "number", label: 'Pořadí na segmentu', align: "right" }
     ];
 
-    const [sort, setSort] = React.useState({ id: "dateTime", direction: "desc" })
+    const [sort, setSort] = React.useState({ id: "created", direction: "desc" })
     const { sortedData } = useSortableData(props.rows, sort);
 
     const handleSort = columnId => {
@@ -47,9 +47,9 @@ const FeedTable = props => {
     }
 
     const nameRow = (id, number, name, country) => (
-        <AppLink to={"/etapy/" + country + "/" + number}>
+        <AppLink to={"/etapy/" + country.toLowerCase() + "/" + number}>
             <Box display="flex" flexDirection="row" alignItems="center">
-                <Avatar alt="Country" variant="rounded" src={country === "cz" ? FlagCZ : FlagSK} className={classes.small} />
+                <Avatar alt="Country" variant="rounded" src={country === "CZ" ? FlagCZ : FlagSK} className={classes.small} />
                 <div style={{ marginLeft: 10 }} />
                 {formatStageNumber(number) + " - " + name}
             </Box>
@@ -86,7 +86,7 @@ const FeedTable = props => {
                         {sortedData.map((row, index) => {
                             return <TableRow key={index}>
                                 <TableCell align={"center"} >
-                                    {format(Date.parse(row.dateTime), "PP - HH:mm:ss", { locale: cs })}
+                                    {format(Date.parse(row.created), "PP - HH:mm:ss", { locale: cs })}
                                 </TableCell>
                                 <TableCell align={"left"} >
                                     {nameRow(row.stageId, row.stageNumber, row.stageName, row.stageCountry)}
