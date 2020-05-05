@@ -3,7 +3,8 @@ import React from "react";
 import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 
-import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel, Box, Avatar, makeStyles } from "@material-ui/core";
+import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel, Box, Avatar, makeStyles, Tooltip, Typography } from "@material-ui/core";
+import ErrorIcon from '@material-ui/icons/Error';
 
 import { useSortableData } from "../utils/TableUtils";
 import { formatSeconds, formatStageNumber } from "../utils/FormatUtils";
@@ -46,16 +47,14 @@ const FeedTable = props => {
         setSort({ id: columnId, direction: sort.direction === "asc" ? "desc" : "asc" });
     }
 
-    const nameRow = (id, number, name, country) => (
-        <AppLink to={"/etapy/" + country.toLowerCase() + "/" + number}>
-            <Box display="flex" flexDirection="row" alignItems="center">
-                <Avatar alt="Country" variant="rounded" src={country === "CZ" ? FlagCZ : FlagSK} className={classes.small} />
-                <div style={{ marginLeft: 10 }} />
+    const nameRow = (number, name, country) => (
+        <Box display="flex" flexDirection="row" alignItems="center">
+            <Avatar alt="Country" variant="rounded" src={country === "cz" ? FlagCZ : FlagSK} className={classes.small} />
+            <div style={{ marginLeft: 10 }} />
+            <AppLink to={"/etapy/" + country + "/" + number}>
                 {formatStageNumber(number) + " - " + name}
-            </Box>
-
-
-        </AppLink>
+            ></AppLink>
+        </Box>
     );
 
     return (
@@ -89,10 +88,17 @@ const FeedTable = props => {
                                     {format(Date.parse(row.created), "PP - HH:mm:ss", { locale: cs })}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    {nameRow(row.stageId, row.stageNumber, row.stageName, row.stageCountry)}
+                                    {nameRow(row.stage.number, row.stage.name, row.country)}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    {row.athleteName}
+                                    <Box display="flex" flexDirection="row" alignItems="center">
+                                        <Typography noWrap={true} variant="inherit">{row.athlete.name}</Typography>
+                                        {row.athlete.abuser &&
+                                            <Tooltip title="Závodník měl v minulosti privátní aktivitu.">
+                                                <ErrorIcon color="secondary" style={{ marginLeft: 5 }} />
+                                            </Tooltip>
+                                        }
+                                    </Box>
                                 </TableCell>
                                 <TableCell align={"right"} >
                                     <ExternalLink href={"http://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink>

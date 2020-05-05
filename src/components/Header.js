@@ -19,7 +19,6 @@ const useStyles = makeStyles(theme => ({
     title: {
         textDecoration: "none",
         color: "unset",
-        flexGrow: 1,
     }
 }));
 
@@ -41,10 +40,10 @@ const Header = props => {
                         <MenuIcon />
                     </IconButton>
                 </Hidden>
-
                 <Typography component={NavLink} to="/" className={classes.title} variant="h6">
                     Kamenice Trailtour 2020
                 </Typography>
+                <div style={{ flexGrow: 1 }} />
                 {session.login && <Button color="inherit" onClick={logout}>Odhlásit</Button>}
             </Toolbar>
         </AppBar>

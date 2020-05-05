@@ -38,7 +38,6 @@ export const StagesTable = props => {
 
     const [sort, setSort] = React.useState({ id: "number", direction: "asc" })
     const { sortedData } = useSortableData(props.rows, sort);
-
     const handleSort = columnId => {
         setSort({ id: columnId, direction: sort.direction === "asc" ? "desc" : "asc" });
     }
@@ -74,7 +73,7 @@ export const StagesTable = props => {
                                     {formatStageNumber(row.number)}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    <AppLink to={"/etapy/" + row.country.toLowerCase() + "/" + row.number}>
+                                    <AppLink to={"/etapy/" + (props.tab === 0 ? "cz" : "sk") + "/" + row.number}>
                                         {formatNumber(row.name)}
                                     </AppLink>
                                 </TableCell>
@@ -92,7 +91,7 @@ export const StagesTable = props => {
                                 </TableCell>
                                 <TableCell align={"center"} >
                                     {session.role === "admin" &&
-                                        <Button variant="contained" size="small" className={classes.button} style={{ backgroundColor: "#ff7844", color: "white" }} onClick={() => props.onRowEdit("Upravit etapu", row)}>Upravit</Button>
+                                        <Button disabled={true} variant="contained" size="small" className={classes.button} onClick={() => props.onRowEdit("Upravit etapu", row)}>Upravit</Button>
                                     }
                                 </TableCell>
                             </TableRow>

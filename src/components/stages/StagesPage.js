@@ -5,7 +5,6 @@ import { Grid, Box, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/co
 import { useSnackbar } from 'notistack';
 
 import LayoutPage, { PageTitle } from '../LayoutPage';
-import MapComponent from '../MapComponent';
 import { useFetch, postApiRequest, API_URL, defaultGetOptions } from "../utils/FetchUtils";
 import { UserContext } from '../../AppContext';
 import { StagesTable } from './StagesTable';
@@ -19,25 +18,6 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(1)
     }
 }));
-
-const countryData = {
-    0: {
-        country: "cz",
-        coordinates: {
-            latitude: 49.8037633,
-            longitude: 15.4749126,
-            zoom: 7
-        }
-    },
-    1: {
-        country: "sk",
-        coordinates: {
-            latitude: 48.6737532,
-            longitude: 19.696058,
-            zoom: 7
-        }
-    }
-}
 
 const initFormData = {
     id: "",
@@ -62,29 +42,26 @@ const StagesPage = props => {
 
     // country
     const [countryTab, setCountryTab] = React.useState(0);
-    const [selectedCountry, setSelectedCountry] = React.useState(countryData[countryTab]);
     const handleCountryTabChange = (event, value) => {
         setCountryTab(value);
-        setSelectedCountry(countryData[value]);
     };
 
     // api data
-    const [trigger, setTrigger] = React.useState(false);
     const apiDataCZ = useFetch(
         API_URL + "/getStages?database=trailtour_cz",
         defaultGetOptions,
         [],
-        [trigger],
+        [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const apiDataSK = useFetch(
         API_URL + "/getStages?database=trailtour_sk",
         defaultGetOptions,
         [],
-        [trigger],
+        [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
-    const filteredTableData = selectedCountry.country === "cz" ? apiDataCZ.data : apiDataSK.data;
+    const filteredTableData = countryTab === 0 ? apiDataCZ.data : apiDataSK.data;
 
     // modal
     const [modalTitle, setModalTitle] = React.useState("");
@@ -105,25 +82,11 @@ const StagesPage = props => {
             () => showSnackbar("Segment byl uložen.", "success"),
             error => showSnackbar("Segment se nepodařilo uložit.", "error")
         );
-        setTrigger(!trigger);
         closeModal();
     }
 
     const pageContent = (
         <>
-            <Grid item xs >
-                <MapComponent
-                    viewport={
-                        {
-                            height: "400px",
-                            width: "100%",
-                            center: [selectedCountry.coordinates.latitude, selectedCountry.coordinates.longitude],
-                            zoom: selectedCountry.coordinates.zoom
-                        }
-                    }
-                    data={filteredTableData}
-                />
-            </Grid>
             <Grid item xs className={classes.item}>
                 <Box display="flex" alignItems="center">
                     <Box flexGrow={1}>
@@ -142,13 +105,13 @@ const StagesPage = props => {
                     </Box>
                     {session.role === "admin" &&
                         <Box>
-                            <Button variant="contained" color="primary" disabled={apiDataCZ.error || apiDataCZ.error} className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
+                            <Button variant="contained" color="primary" disabled={true} className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
                         </Box>
                     }
                 </Box>
             </Grid>
             <Grid item xs className={classes.item}>
-                <StagesTable rows={filteredTableData} onRowEdit={openModal} />
+                <StagesTable rows={filteredTableData} onRowEdit={openModal} tab={countryTab} />
             </Grid>
             <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} />
         </>

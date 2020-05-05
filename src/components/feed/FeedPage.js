@@ -15,6 +15,7 @@ const FeedPage = props => {
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
+
     const apiDataSK = useFetch(
         API_URL + "/getFeed?database=trailtour_sk&limit=50",
         defaultGetOptions,
@@ -28,7 +29,7 @@ const FeedPage = props => {
     const showSnackbar = (message, variant) => enqueueSnackbar(message, { variant: variant });
 
     const pageContent = (
-        <FeedTable rows={[...apiDataCZ.data, ...apiDataSK.data]} />
+        <FeedTable rows={[...apiDataCZ.data.map(val => { return { ...val, country: "cz" } }), ...apiDataSK.data.map(val => { return { ...val, country: "sk" } })]} />
     );
 
     return (

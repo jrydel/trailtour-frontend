@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead, TableRow, Paper, makeStyles } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead, TableRow, Paper, makeStyles, Box, Typography, Tooltip } from '@material-ui/core';
+import ErrorIcon from '@material-ui/icons/Error';
 
 import { useSortableData } from "../utils/TableUtils";
 import { formatSeconds } from "../utils/FormatUtils";
@@ -28,10 +29,12 @@ export const StageTable = props => {
         { id: 'clubName', label: 'Klub', align: "left" },
         { id: 'date', label: 'Datum', align: "left" },
         { id: 'time', type: "time", label: 'Čas', align: "right" },
+        { id: 'timeTrailtour', type: "time", label: 'Čas TT', align: "right" },
+        { id: 'points', type: "number", label: 'Body', align: "right" },
         { id: 'pointsTrailtour', type: "number", label: 'Body TT', align: "right" }
     ];
 
-    const [sort, setSort] = React.useState({ id: "pointsTrailtour", direction: "desc" })
+    const [sort, setSort] = React.useState({ id: "points", direction: "desc" })
     const { sortedData } = useSortableData(props.rows, sort);
 
     const handleSort = columnId => {
@@ -69,7 +72,14 @@ export const StageTable = props => {
                                     {row.position}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    {row.athleteName}
+                                    <Box display="flex" flexDirection="row" alignItems="center">
+                                        <Typography noWrap={true} variant="inherit">{row.athleteName}</Typography>
+                                        {row.athleteAbuser &&
+                                            <Tooltip title="Závodník měl v minulosti privátní aktivitu.">
+                                                <ErrorIcon color="secondary" style={{ marginLeft: 5 }} />
+                                            </Tooltip>
+                                        }
+                                    </Box>
                                 </TableCell>
                                 <TableCell align={"left"} >
                                     {row.clubName}
@@ -79,6 +89,12 @@ export const StageTable = props => {
                                 </TableCell>
                                 <TableCell align={"right"} >
                                     <ExternalLink href={STRAVA_ACTIVITY_URL(row.activityId)}>{formatSeconds(row.time)}</ExternalLink>
+                                </TableCell>
+                                <TableCell align={"right"} >
+                                    {formatSeconds(row.timeTrailtour)}
+                                </TableCell>
+                                <TableCell align={"right"} >
+                                    {row.points}
                                 </TableCell>
                                 <TableCell align={"right"} >
                                     {row.pointsTrailtour}
