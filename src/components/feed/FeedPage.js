@@ -40,7 +40,7 @@ const FeedPage = props => {
 
     const nameRow = (number, name, country) => (
         <Box display="flex" flexDirection="row" alignItems="center">
-            <Avatar alt="Country" variant="rounded" src={country === "cz" ? FlagCZ : FlagSK} style={{ width: 35, height: 30 }} />
+            <Avatar alt="Country" variant="rounded" src={country === "cz" ? FlagCZ : FlagSK} style={{ width: 30, height: 25 }} />
             <div style={{ marginLeft: 10 }} />
             <AppLink to={"/etapy/" + country + "/" + number}>{formatStageNumber(number) + " - " + name}</AppLink>
         </Box>

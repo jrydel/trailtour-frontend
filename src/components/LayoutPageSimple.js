@@ -1,16 +1,7 @@
 import React from "react";
-import { Box, CircularProgress, makeStyles } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) => ({
-    item: {
-        marginTop: theme.spacing(5)
-    },
-    appBarOffset: theme.mixins.toolbar
-}));
+import { CircularProgress } from "@material-ui/core";
 
 const LayoutPageSimple = props => {
-
-    const classes = useStyles();
 
     return (
         <div style={{ width: "100%", position: "relative" }}>
