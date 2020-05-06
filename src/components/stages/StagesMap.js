@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import { Box, List, ListItem } from '@material-ui/core';
 import { AppLink } from '../Navigation';
 
@@ -43,12 +43,15 @@ const StagesMap = props => {
         ]
     }
     const CustomMarker = props => (
-        <Marker position={props.position} >
-            <Popup>
-                <StageBox stage={props.stage} />
-                <ResultBox data={top3} />
-            </Popup>
-        </Marker>
+        <>
+            <Marker position={props.position} >
+                <Popup>
+                    <StageBox stage={props.stage} />
+                    <ResultBox data={top3} />
+                </Popup>
+            </Marker>
+            <Polyline positions={props.data} color="red" />
+        </>
     );
 
     const StageBox = props => (
@@ -91,8 +94,9 @@ const StagesMap = props => {
                             <CustomMarker
                                 key={key}
                                 position={data[0]}
-                                stage={stage}>
-                            </CustomMarker>
+                                stage={stage}
+                                data={data}
+                            />
                         </>
                     })}
                 </Map >
