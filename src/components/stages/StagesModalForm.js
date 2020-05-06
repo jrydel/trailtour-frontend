@@ -33,25 +33,8 @@ const StagesModalForm = props => {
             <DialogContent dividers={"paper"}>
                 <Box display="flex" flexDirection="column">
                     <Box display="flex">
-                        <TextField name="country" label="Země" variant="outlined" placeholder="CZ / SK" fullWidth className={classes.textfield}
-                            inputRef={
-                                register({
-                                    required: true,
-                                    validate: value => value === "CZ" || value === "SK"
-                                })
-                            }
-                            error={errors.country}
-                        />
-                        <TextField name="id" label="Id segmentu" variant="outlined" fullWidth className={classes.textfieldRight}
-                            inputRef={
-                                register({
-                                    required: true,
-                                    validate: isFinite
-                                })
-                            }
-                            error={errors.id}
-                        />
-                        <TextField name="number" label="Číslo etapy" variant="outlined" fullWidth className={classes.textfieldRight}
+                        <TextField name="country" label="Země" variant="outlined" fullWidth className={classes.textfield} defaultValue={props.country} disabled />
+                        <TextField name="number" label="Číslo" variant="outlined" fullWidth className={classes.textfieldRight}
                             inputRef={
                                 register({
                                     required: true,
@@ -59,8 +42,27 @@ const StagesModalForm = props => {
                                 })
                             }
                             error={errors.number}
+                            disabled
                         />
                     </Box>
+                    <TextField name="url" label="Trailtour url" variant="outlined" fullWidth className={classes.textfield}
+                        inputRef={
+                            register({
+                                required: true,
+                                validate: value => {
+                                    let url;
+                                    try {
+                                        url = new URL(value);
+                                    } catch (_) {
+                                        return false;
+                                    }
+                                    return url.protocol === "http:" || url.protocol === "https:";
+                                }
+                            })
+                        }
+                        error={errors.url}
+                        disabled
+                    />
                     <TextField name="name" label="Název" variant="outlined" fullWidth className={classes.textfield}
                         inputRef={
                             register({
@@ -95,26 +97,6 @@ const StagesModalForm = props => {
                                 })
                             }
                             error={errors.elevation}
-                        />
-                    </Box>
-                    <Box display="flex">
-                        <TextField name="latitude" label="Souřadnice startu (ZŠ)" variant="outlined" placeholder="49.8037633" fullWidth className={classes.textfield}
-                            inputRef={
-                                register({
-                                    required: true,
-                                    validate: value => isFinite(value) && Math.abs(value) <= 90
-                                })
-                            }
-                            error={errors.latitude}
-                        />
-                        <TextField name="longitude" label="Souřadnice startu (ZD)" variant="outlined" placeholder="15.4749126" fullWidth className={classes.textfieldRight}
-                            inputRef={
-                                register({
-                                    required: true,
-                                    validate: value => isFinite(value) && Math.abs(value) <= 180
-                                })
-                            }
-                            error={errors.longitude}
                         />
                     </Box>
                 </Box>

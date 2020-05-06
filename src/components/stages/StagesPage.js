@@ -22,16 +22,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const initFormData = {
-    id: "",
     country: "",
     number: "",
+    url: "",
     name: "",
     type: "",
     distance: "",
-    elevation: "",
-    latitude: "",
-    longitude: ""
+    elevation: ""
 }
+
+const tabData = ["CZ", "SK"];
 
 const StagesPage = props => {
 
@@ -49,29 +49,20 @@ const StagesPage = props => {
     };
 
     // api data
+    const [trigger, setTrigger] = React.useState(false);
     const apiDataCZ = useFetch(
         API_URL + "/getStages?database=trailtour_cz",
         defaultGetOptions,
-        [],
+        [trigger],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const apiDataSK = useFetch(
         API_URL + "/getStages?database=trailtour_sk",
         defaultGetOptions,
-        [],
+        [trigger],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const pageLoading = loading(apiDataCZ, apiDataSK);
-
-    const tableOptions = [
-        { id: "number", label: "Číslo", align: "center", sort: "number", render: row => formatStageNumber(row.number) },
-        { id: "name", label: "Název", align: "left", sort: "name", render: row => <AppLink to={"/etapy/" + (props.tab === 0 ? "cz" : "sk") + "/" + row.number}>{row.name}</AppLink> },
-        { id: "type", label: "Typ", align: "left", sort: "type", render: row => row.type },
-        { id: "distance", label: "Délka (m)", align: "right", sort: "distance", render: row => formatNumber(row.distance) },
-        { id: "elevation", label: "Převýšení (m)", align: "right", sort: "elevation", render: row => formatNumber(row.elevation) },
-        { id: "activities", label: "Aktivity", align: "center", sort: "activities", render: row => formatNumber(row.activities) }
-    ];
-    const tableData = countryTab === 0 ? apiDataCZ.data : apiDataSK.data;
 
     // modal
     const [modalTitle, setModalTitle] = React.useState("");
@@ -87,43 +78,54 @@ const StagesPage = props => {
     }
     const submitModal = async formData => {
         await postApiRequest(
-            API_URL + "/saveStage?database=" + (formData.country === "CZ" ? "trailtour_cz" : "trailtour_sk"),
+            API_URL + "/saveStage?database=" + (tabData[countryTab] === "CZ" ? "trailtour_cz" : "trailtour_sk"),
             formData,
-            () => showSnackbar("Segment byl uložen.", "success"),
+            () => {
+                setTrigger(!trigger);
+                showSnackbar("Segment byl uložen.", "success");
+            },
             error => showSnackbar("Segment se nepodařilo uložit.", "error")
         );
         closeModal();
     }
 
+    const tableOptions = [
+        { id: "number", label: "Číslo", align: "center", sort: "number", render: row => formatStageNumber(row.number) },
+        { id: "name", label: "Název", align: "left", sort: "name", render: row => <AppLink to={"/etapy/" + tabData[countryTab].toLowerCase() + "/" + row.number}>{row.name}</AppLink> },
+        { id: "type", label: "Typ", align: "left", sort: "type", render: row => row.type },
+        { id: "distance", label: "Délka (m)", align: "right", sort: "distance", render: row => formatNumber(row.distance) },
+        { id: "elevation", label: "Převýšení (m)", align: "right", sort: "elevation", render: row => formatNumber(row.elevation) },
+        { id: "activities", label: "Aktivity", align: "center", sort: "activities", render: row => formatNumber(row.activities) },
+        { id: "actions", align: "center", render: row => <Button variant="contained" color="secondary" size="small" onClick={() => openModal("Upravit etapu.", row)}>Upravit</Button> },
+    ];
+    const tableData = countryTab === 0 ? apiDataCZ.data : apiDataSK.data;
+
     const pageContent = (
         <>
-            <Grid item xs className={classes.item}>
-                <Box display="flex" alignItems="center">
-                    <Box flexGrow={1}>
-                        <Paper square>
-                            <Tabs
-                                value={countryTab}
-                                indicatorColor="primary"
-                                textColor="primary"
-                                onChange={handleCountryTabChange}
-                                centered
-                            >
-                                <Tab label="CZ" />
-                                <Tab label="SK" />
-                            </Tabs>
-                        </Paper>
-                    </Box>
-                    {session.role === "admin" &&
-                        <Box>
-                            <Button variant="contained" color="primary" disabled={true} className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
-                        </Box>
-                    }
+            <Box display="flex" alignItems="center">
+                <Box flexGrow={1}>
+                    <Paper square>
+                        <Tabs
+                            value={countryTab}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            onChange={handleCountryTabChange}
+                            centered
+                        >
+                            {tabData.map((tab, key) => <Tab key={key} label={tab} />)}
+                        </Tabs>
+                    </Paper>
                 </Box>
-            </Grid>
+                {session.role === "admin" &&
+                    <Box>
+                        <Button disabled variant="contained" color="primary" className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
+                    </Box>
+                }
+            </Box>
             <Grid item xs className={classes.item}>
-                <TableComponent options={tableOptions} data={tableData} sort={{ key: "number", direction: "desc" }} />
+                <TableComponent options={tableOptions} data={tableData} sort={{ key: "number", direction: "asc" }} />
             </Grid>
-            <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} />
+            <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} country={tabData[countryTab]} />
         </>
     )
 
