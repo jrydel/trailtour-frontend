@@ -18,7 +18,7 @@ const LayoutPage = props => {
     return (
         <Grid container direction="row">
             <Grid item xs />
-            <Grid item xs={11} md={8} container direction="column">
+            <Grid item xs={11} lg={10} xl={8} container direction="column">
                 <div className={classes.appBarOffset} />
                 {props.pageLoading ? (
                     <Box display="flex" direction="row" justifyContent="center" alignItems="center" className={classes.item}>
@@ -37,7 +37,7 @@ const LayoutPage = props => {
                     )}
             </Grid>
             <Grid item xs />
-        </Grid>
+        </Grid >
     );
 }
 

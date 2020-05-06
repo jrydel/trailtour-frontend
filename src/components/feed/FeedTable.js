@@ -3,15 +3,15 @@ import React from "react";
 import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 
-import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel, Box, Avatar, makeStyles, Tooltip, Typography } from "@material-ui/core";
-import ErrorIcon from '@material-ui/icons/Error';
+import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, TableSortLabel, Box, Avatar, makeStyles } from "@material-ui/core";
 
-import { useSortableData } from "../utils/TableUtils";
+import { useSortableData } from "../utils/SortUtils";
 import { formatSeconds, formatStageNumber } from "../utils/FormatUtils";
 import { AppLink, ExternalLink } from "../Navigation";
 
 import FlagCZ from "../../files/flagcz.jpg";
 import FlagSK from "../../files/flagsk.jpg";
+import { AthleteNameBox } from "../athlete/AthleteName";
 
 const useStyles = makeStyles((theme) => ({
     tableHead: {
@@ -47,15 +47,7 @@ const FeedTable = props => {
         setSort({ id: columnId, direction: sort.direction === "asc" ? "desc" : "asc" });
     }
 
-    const nameRow = (number, name, country) => (
-        <Box display="flex" flexDirection="row" alignItems="center">
-            <Avatar alt="Country" variant="rounded" src={country === "cz" ? FlagCZ : FlagSK} className={classes.small} />
-            <div style={{ marginLeft: 10 }} />
-            <AppLink to={"/etapy/" + country + "/" + number}>
-                {formatStageNumber(number) + " - " + name}
-            ></AppLink>
-        </Box>
-    );
+
 
     return (
         <TableContainer component={Paper}>
@@ -91,14 +83,7 @@ const FeedTable = props => {
                                     {nameRow(row.stage.number, row.stage.name, row.country)}
                                 </TableCell>
                                 <TableCell align={"left"} >
-                                    <Box display="flex" flexDirection="row" alignItems="center">
-                                        <Typography noWrap={true} variant="inherit">{row.athlete.name}</Typography>
-                                        {row.athlete.abuser &&
-                                            <Tooltip title="Závodník měl v minulosti privátní aktivitu.">
-                                                <ErrorIcon color="secondary" style={{ marginLeft: 5 }} />
-                                            </Tooltip>
-                                        }
-                                    </Box>
+                                    <AthleteNameBox name={row.athlete.name} abuser={row.athlete.abuser} />
                                 </TableCell>
                                 <TableCell align={"right"} >
                                     <ExternalLink href={"http://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink>

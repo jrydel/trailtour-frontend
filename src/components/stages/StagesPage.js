@@ -5,10 +5,12 @@ import { Grid, Box, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/co
 import { useSnackbar } from 'notistack';
 
 import LayoutPage, { PageTitle } from '../LayoutPage';
-import { useFetch, postApiRequest, API_URL, defaultGetOptions } from "../utils/FetchUtils";
+import { useFetch, postApiRequest, API_URL, defaultGetOptions, loading } from "../utils/FetchUtils";
 import { UserContext } from '../../AppContext';
-import { StagesTable } from './StagesTable';
 import StagesModalForm from './StagesModalForm';
+import TableComponent from '../TableComponent';
+import { formatNumber, formatStageNumber } from '../utils/FormatUtils';
+import { AppLink } from '../Navigation';
 
 const useStyles = makeStyles((theme) => ({
     item: {
@@ -51,17 +53,25 @@ const StagesPage = props => {
         API_URL + "/getStages?database=trailtour_cz",
         defaultGetOptions,
         [],
-        [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const apiDataSK = useFetch(
         API_URL + "/getStages?database=trailtour_sk",
         defaultGetOptions,
         [],
-        [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
-    const filteredTableData = countryTab === 0 ? apiDataCZ.data : apiDataSK.data;
+    const pageLoading = loading(apiDataCZ, apiDataSK);
+
+    const tableOptions = [
+        { id: "number", label: "Číslo", align: "center", sort: "number", render: row => formatStageNumber(row.number) },
+        { id: "name", label: "Název", align: "left", sort: "name", render: row => <AppLink to={"/etapy/" + (props.tab === 0 ? "cz" : "sk") + "/" + row.number}>{row.name}</AppLink> },
+        { id: "type", label: "Typ", align: "left", sort: "type", render: row => row.type },
+        { id: "distance", label: "Délka (m)", align: "right", sort: "distance", render: row => formatNumber(row.distance) },
+        { id: "elevation", label: "Převýšení (m)", align: "right", sort: "elevation", render: row => formatNumber(row.elevation) },
+        { id: "activities", label: "Aktivity", align: "center", sort: "activities", render: row => formatNumber(row.activities) }
+    ];
+    const tableData = countryTab === 0 ? apiDataCZ.data : apiDataSK.data;
 
     // modal
     const [modalTitle, setModalTitle] = React.useState("");
@@ -111,7 +121,7 @@ const StagesPage = props => {
                 </Box>
             </Grid>
             <Grid item xs className={classes.item}>
-                <StagesTable rows={filteredTableData} onRowEdit={openModal} tab={countryTab} />
+                <TableComponent options={tableOptions} data={tableData} sort={{ key: "number", direction: "desc" }} />
             </Grid>
             <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} />
         </>
@@ -119,7 +129,7 @@ const StagesPage = props => {
 
     return (
         <LayoutPage
-            pageLoading={apiDataCZ.loading || apiDataSK.loading}
+            pageLoading={pageLoading}
             pageTitle={<PageTitle>Etapy</PageTitle>}
             pageContent={pageContent}
         />

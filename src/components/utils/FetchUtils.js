@@ -5,16 +5,25 @@ export const STRAVA_ACTIVITY_URL = activityId => "https://strava.com/activities/
 
 export const API_URL = "https://api.orank.cz/trailtour";
 
+export const loading = (...props) => {
+    for (var i = 0; i < props.length; i++) {
+        if (props[i].loading || props[i].data.length === 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 export const defaultGetOptions = {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' }
 }
 
-export const useFetch = (url, options, initData, trigger, errorCallback) => {
+export const useFetch = (url, options, trigger, errorCallback) => {
 
     const [value, setValue] = React.useState({
         loading: false,
-        data: initData
+        data: []
     });
 
     const setPartData = partData => setValue({ ...value, ...partData });

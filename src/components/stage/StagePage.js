@@ -5,13 +5,14 @@ import { Paper, Tabs, Tab, Avatar, Box, makeStyles } from "@material-ui/core";
 import { useSnackbar } from 'notistack';
 
 import LayoutPage, { PageTitle } from "../LayoutPage";
-import { StageTable } from "./StageTable";
-import { useFetch, API_URL, defaultGetOptions } from "../utils/FetchUtils";
-import { formatStageNumber } from "../utils/FormatUtils";
+import { useFetch, API_URL, defaultGetOptions, loading, STRAVA_ACTIVITY_URL } from "../utils/FetchUtils";
+import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
 import { ExternalLink } from "../Navigation";
 
 import StravaIcon from "../../files/strava.jpg";
 import TrailtourIcon from "../../files/trailtour.jpg";
+import { AthleteNameBox } from "../athlete/AthleteName";
+import TableComponent from "../TableComponent";
 
 const useStyles = makeStyles((theme) => ({
     item: {
@@ -40,13 +41,11 @@ const StagePage = props => {
         API_URL + "/getStage?database=" + database + "&number=" + number,
         defaultGetOptions,
         [],
-        [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const resultData = useFetch(
         API_URL + "/getResults?database=" + database + "&number=" + number,
         defaultGetOptions,
-        [],
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
@@ -54,9 +53,9 @@ const StagePage = props => {
         API_URL + "/getResultsCount?database=" + database + "&number=" + number,
         defaultGetOptions,
         [],
-        [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
+    const pageLoading = loading(stageData, resultData, countData);
 
     const tabData = [
         {
@@ -74,25 +73,22 @@ const StagePage = props => {
         }
     ]
 
-    const [tabValue, setSelectedTabValue] = React.useState(0);
+    const [tabValue, setTabValue] = React.useState(0);
     const handleTabChange = (event, value) => {
-        setSelectedTabValue(value);
+        setTabValue(value);
     };
 
-    const filteredTableData = resultData.data.filter(value => value.athlete.gender === tabData[tabValue].key).map(value => {
-        return {
-            athleteName: value.athlete.name,
-            athleteAbuser: value.athlete.abuser,
-            clubName: value.athlete.clubName,
-            activityId: value.stravaResult && value.stravaResult.activityId,
-            date: value.stravaResult && value.stravaResult.date,
-            time: value.stravaResult && value.stravaResult.time,
-            position: value.stravaResult && value.stravaResult.position,
-            points: value.stravaResult && value.stravaResult.points,
-            timeTrailtour: value.trailtourResult.time,
-            pointsTrailtour: value.trailtourResult.points
-        }
-    });
+    const tableOptions = [
+        { id: "position", label: "pozice", align: "center", sort: "stravaResult.position", render: (row) => row.stravaResult.position },
+        { id: "athleteName", label: "Jméno", align: "left", sort: "athlete.name", render: (row) => <AthleteNameBox name={row.athlete.name} abuser={row.athlete.abuser} /> },
+        { id: "clubName", label: "Klub", align: "left", sort: "athlete.clubName", render: (row) => row.athlete.clubName },
+        { id: "date", label: "Datum", align: "left", sort: "stravaResult.date", render: (row) => row.stravaResult && row.stravaResult.date },
+        { id: "time", label: "Čas", align: "right", sort: "stravaResult.time", render: (row) => row.stravaResult && <ExternalLink href={STRAVA_ACTIVITY_URL(row.stravaResult.activityId)}>{formatSeconds(row.stravaResult.time)}</ExternalLink> },
+        { id: "timeTrailtour", label: "Čas TT", align: "right", sort: "trailtourResult.time", render: (row) => row.trailtourResult && formatSeconds(row.trailtourResult.time) },
+        { id: "points", label: "Body", align: "right", sort: "stravaResult.points", render: (row) => row.stravaResult && row.stravaResult.points },
+        { id: "pointsTrailtour", label: "Body TT", align: "right", sort: "trailtourResult.points", render: (row) => row.trailtourResult && row.trailtourResult.points }
+    ];
+    const tableData = resultData.data.filter(value => value.athlete.gender === tabData[tabValue].key);
 
     const pageTitle = (
         <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap" flexGrow={1}>
@@ -121,13 +117,17 @@ const StagePage = props => {
                 </Tabs>
             </Paper>
             <div className={classes.item} />
-            <StageTable rows={filteredTableData} />
+            <TableComponent
+                options={tableOptions}
+                data={tableData}
+                sort={{ key: "stravaResult.points", direction: "desc" }}
+            />
         </>
     );
 
     return (
         <LayoutPage
-            pageLoading={stageData.loading || resultData.loading}
+            pageLoading={pageLoading}
             pageTitle={pageTitle}
             pageContent={pageContent} />
     );

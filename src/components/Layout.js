@@ -34,7 +34,7 @@ const Layout = () => {
                 <Route path="/login" render={({ location }) => session.login ? <Redirect to={{ pathname: "/", state: { from: location } }} /> : <LoginPage />} />
                 <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center", }} autoHideDuration={3000} ref={notistackRef} hideIconVariant={true}
                     action={key => <CloseIcon onClick={onClickDismiss(key)} />}>
-                    <Box display="flex">
+                    <Box display="flex" flexBasis="row">
                         <Header toggleMenu={toggleMenu} />
                         <Sidebar open={mobileOpen} toggleMenu={toggleMenu} />
                         <Switch>

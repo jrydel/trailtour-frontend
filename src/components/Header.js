@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { AppBar, Toolbar, Typography, Button, IconButton, Hidden, makeStyles } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Button, IconButton, Hidden, makeStyles, withWidth, isWidthUp } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import Cookies from 'universal-cookie';
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
         zIndex: theme.zIndex.drawer + 1
     },
     menuButton: {
-        marginRight: theme.spacing(2),
+        marginRight: theme.spacing(1),
     },
     title: {
         textDecoration: "none",
@@ -41,7 +41,7 @@ const Header = props => {
                     </IconButton>
                 </Hidden>
                 <Typography component={NavLink} to="/" className={classes.title} variant="h6">
-                    Kamenice Trailtour 2020
+                    {isWidthUp("sm", props.width) ? "Kamenice Trailtour 2020" : "KAM TT 2020"}
                 </Typography>
                 <div style={{ flexGrow: 1 }} />
                 {session.login && <Button color="inherit" onClick={logout}>Odhlásit</Button>}
@@ -50,4 +50,4 @@ const Header = props => {
     );
 }
 
-export default Header;
+export default withWidth()(Header);
