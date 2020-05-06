@@ -96,7 +96,7 @@ const StagesPage = props => {
         { id: "distance", label: "Délka (m)", align: "right", sort: "distance", render: row => formatNumber(row.distance) },
         { id: "elevation", label: "Převýšení (m)", align: "right", sort: "elevation", render: row => formatNumber(row.elevation) },
         { id: "activities", label: "Aktivity", align: "center", sort: "activities", render: row => formatNumber(row.activities) },
-        { id: "actions", align: "center", render: row => <Button variant="contained" color="secondary" size="small" onClick={() => openModal("Upravit etapu.", row)}>Upravit</Button> },
+        { id: "actions", align: "center", render: row => session.role === "admin" && <Button variant="contained" color="secondary" size="small" onClick={() => openModal("Upravit etapu.", row)}>Upravit</Button> },
     ];
     const tableData = countryTab === 0 ? apiDataCZ.data : apiDataSK.data;
 
