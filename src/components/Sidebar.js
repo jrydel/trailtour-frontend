@@ -28,7 +28,7 @@ const Sidebar = props => {
 
     return (
         <div className={classes.root}>
-            <Hidden lgUp implementation="css">
+            <Hidden lgUp>
                 <Drawer
                     variant="temporary"
                     anchor="left"
@@ -36,6 +36,10 @@ const Sidebar = props => {
                     onClose={props.toggleMenu}
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
+                    }}
+                    className={classes.drawer}
+                    classes={{
+                        paper: classes.drawerPaper,
                     }}
                 >
                     <div className={classes.drawer}>
@@ -47,8 +51,15 @@ const Sidebar = props => {
                     </div>
                 </Drawer>
             </Hidden>
-            <Hidden mdDown implementation="css">
-                <Drawer variant="permanent" open  >
+            <Hidden mdDown>
+                <Drawer
+                    variant="permanent"
+                    anchor="left"
+                    className={classes.drawer}
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                >
                     <div className={classes.drawer}>
                         <div className={classes.toolbar} />
                         <Divider />
