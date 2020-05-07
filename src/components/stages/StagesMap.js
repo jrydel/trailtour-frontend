@@ -1,6 +1,6 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
-import { Box, List, ListItem } from '@material-ui/core';
+import { Box, List, ListItem, Avatar } from '@material-ui/core';
 import { AppLink } from '../Navigation';
 
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
@@ -13,6 +13,8 @@ import LayoutPageSimple from '../LayoutPageSimple';
 
 import LooksOneIcon from '@material-ui/icons/LooksOne';
 import LooksTwoIcon from '@material-ui/icons/LooksTwo';
+import Trophy from "../../files/trophy.jpg";
+import { AthleteNameBox } from '../athlete/AthleteName';
 
 const StagesMap = props => {
 
@@ -33,12 +35,14 @@ const StagesMap = props => {
             {
                 id: 123456789,
                 name: "Bum prask",
-                time: 1234
+                time: 1234,
+                abuser: true
             },
             {
                 id: 123456789,
                 name: "Abuser",
-                time: 13456
+                time: 13456,
+                abuser: false
             }
         ]
     }
@@ -47,7 +51,6 @@ const StagesMap = props => {
             <Marker position={props.position} >
                 <Popup>
                     <StageBox stage={props.stage} />
-                    <ResultBox data={top3} />
                 </Popup>
             </Marker>
             <Polyline positions={props.data} color="red" />
@@ -64,18 +67,11 @@ const StagesMap = props => {
                 <div style={{ marginLeft: 5 }} />
                 <DirectionsRunIcon fontSize="small" />{formatNumber(props.stage.activities)}
             </Box>
+            <Box display="flex" flexDirection="column" alignItems="left" style={{ marginTop: 10 }}>
+                <AthleteNameBox icon={<Avatar alt="Trophy" variant="rounded" src={Trophy} style={{ width: 20, height: 20 }} />} name={top3["M"][0].name} abuser={top3["M"][0].abuser} time={formatSeconds(top3["M"][0].time)} />
+                <AthleteNameBox icon={<Avatar alt="Trophy" variant="rounded" src={Trophy} style={{ width: 20, height: 20 }} />} name={top3["M"][1].name} abuser={top3["M"][1].abuser} time={formatSeconds(top3["M"][1].time)} />
+            </Box>
         </Box>
-    );
-
-    const ResultBox = props => (
-        <List>
-            <ListItem>
-                <LooksOneIcon />{props.data["M"][0].name + " " + formatSeconds(props.data["M"][0].time)}
-            </ListItem>
-            <ListItem >
-                <LooksTwoIcon />{props.data["M"][1].name + " " + formatSeconds(props.data["M"][1].time)}
-            </ListItem>
-        </List>
     );
 
     return (

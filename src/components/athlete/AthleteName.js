@@ -5,11 +5,14 @@ import ErrorIcon from "@material-ui/icons/Error";
 
 export const AthleteNameBox = props => (
     <Box display="flex" flexDirection="row" alignItems="center">
+        {props.icon}
         <Typography noWrap={true} variant="inherit">{props.name}</Typography>
         {props.abuser &&
             <Tooltip title="Privátní aktivista.">
                 <ErrorIcon color="secondary" style={{ marginLeft: 5 }} />
             </Tooltip>
         }
+        <Box style={{ marginLeft: 5 }}>{props.time}</Box>
+
     </Box>
 );
