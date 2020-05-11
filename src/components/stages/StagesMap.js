@@ -1,6 +1,6 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
-import { Box, List, ListItem, Avatar } from '@material-ui/core';
+import { Box, Avatar } from '@material-ui/core';
 import { AppLink } from '../Navigation';
 
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
@@ -11,8 +11,6 @@ import { useSnackbar } from 'notistack';
 import { formatStageNumber, formatNumber, formatSeconds } from '../utils/FormatUtils';
 import LayoutPageSimple from '../LayoutPageSimple';
 
-import LooksOneIcon from '@material-ui/icons/LooksOne';
-import LooksTwoIcon from '@material-ui/icons/LooksTwo';
 import Trophy from "../../files/trophy.jpg";
 import { AthleteNameBox } from '../athlete/AthleteName';
 

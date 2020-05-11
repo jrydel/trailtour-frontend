@@ -4,7 +4,7 @@ import { Paper, Tabs, Tab, Avatar, Box, makeStyles } from "@material-ui/core";
 
 import { useSnackbar } from 'notistack';
 
-import LayoutPage, { PageTitle } from "../LayoutPage";
+import LayoutPage, { PageTitle, MarginTop, PageContent } from "../LayoutPage";
 import { useFetch, API_URL, defaultGetOptions, loading, STRAVA_ACTIVITY_URL } from "../utils/FetchUtils";
 import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
 import { ExternalLink } from "../Navigation";
@@ -15,9 +15,6 @@ import { AthleteNameBox } from "../athlete/AthleteName";
 import TableComponent from "../TableComponent";
 
 const useStyles = makeStyles((theme) => ({
-    item: {
-        marginTop: theme.spacing(2)
-    },
     small: {
         width: theme.spacing(10),
         height: theme.spacing(4)
@@ -79,7 +76,7 @@ const StagePage = props => {
     };
 
     const tableOptions = [
-        { id: "position", label: "pozice", align: "center", sort: "stravaResult.position", render: (row) => row.stravaResult.position },
+        { id: "position", label: "Pozice", align: "center", sort: "stravaResult.position", render: (row) => row.stravaResult.position },
         { id: "athleteName", label: "Jméno", align: "left", sort: "athlete.name", render: (row) => <AthleteNameBox name={row.athlete.name} abuser={row.athlete.abuser} /> },
         { id: "clubName", label: "Klub", align: "left", sort: "athlete.clubName", render: (row) => row.athlete.clubName },
         { id: "date", label: "Datum", align: "left", sort: "stravaResult.date", render: (row) => row.stravaResult && row.stravaResult.date },
@@ -90,46 +87,40 @@ const StagePage = props => {
     ];
     const tableData = resultData.data.filter(value => value.athlete.gender === tabData[tabValue].key);
 
-    const pageTitle = (
-        <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap" flexGrow={1}>
-            <Box flexGrow={1}><PageTitle>{formatStageNumber(stageData.data.number) + " - " + stageData.data.name}</PageTitle></Box>
-            <Box display="flex" flexDirection="row" flexWrap="wrap">
-                <ExternalLink href={stageData.data.stravaUrl} > <Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
-                {/*  <div style={{ marginLeft: 5 }} />
-                <ExternalLink><Avatar alt="Mapy.cz" variant="square" src={MapyCZIcon} className={classes.small} /></ExternalLink> */}
-                <div style={{ marginLeft: 5 }} />
-                <ExternalLink href={stageData.data.url}><Avatar alt="Trailtour" variant="square" src={TrailtourIcon} className={classes.small} /></ExternalLink>
-            </Box>
-        </Box>
-    );
-
-    const pageContent = (
-        <>
-            <Paper square>
-                <Tabs
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered
-                    value={tabValue}
-                    onChange={handleTabChange}
-                >
-                    {tabData.map(val => <Tab {...val} />)}
-                </Tabs>
-            </Paper>
-            <div className={classes.item} />
-            <TableComponent
-                options={tableOptions}
-                data={tableData}
-                sort={{ key: "stravaResult.points", direction: "desc" }}
-            />
-        </>
-    );
-
     return (
-        <LayoutPage
-            pageLoading={pageLoading}
-            pageTitle={pageTitle}
-            pageContent={pageContent} />
+        <LayoutPage pageLoading={pageLoading}>
+            <PageTitle>
+                <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap" flexGrow={1}>
+                    <Box flexGrow={1}><PageTitle>{formatStageNumber(stageData.data.number) + " - " + stageData.data.name}</PageTitle></Box>
+                    <Box display="flex" flexDirection="row" flexWrap="wrap">
+                        <ExternalLink href={stageData.data.stravaUrl} > <Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
+                        {/*  <div style={{ marginLeft: 5 }} />
+                            <ExternalLink><Avatar alt="Mapy.cz" variant="square" src={MapyCZIcon} className={classes.small} /></ExternalLink> */}
+                        <div style={{ marginLeft: 5 }} />
+                        <ExternalLink href={stageData.data.url}><Avatar alt="Trailtour" variant="square" src={TrailtourIcon} className={classes.small} /></ExternalLink>
+                    </Box>
+                </Box>
+            </PageTitle>
+            <PageContent>
+                <Paper square>
+                    <Tabs
+                        indicatorColor="primary"
+                        textColor="primary"
+                        centered
+                        value={tabValue}
+                        onChange={handleTabChange}
+                    >
+                        {tabData.map(val => <Tab {...val} />)}
+                    </Tabs>
+                </Paper>
+                <MarginTop margin={16} />
+                <TableComponent
+                    options={tableOptions}
+                    data={tableData}
+                    sort={{ key: "stravaResult.points", direction: "desc" }}
+                />
+            </PageContent>
+        </LayoutPage>
     );
 
 }

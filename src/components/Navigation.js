@@ -32,13 +32,14 @@ const navigation = [
             icon: <FormatListNumbered />
         },
         route: {
-            path: "/etapy/seznam",
+            path: "/etapy",
+            exact: true,
             component: StagesPage,
         }
     },
     {
         route: {
-            path: "/etapy/mapa",
+            path: "/mapa",
             exact: true,
             component: StagesMap,
         },

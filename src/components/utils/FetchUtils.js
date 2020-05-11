@@ -39,7 +39,7 @@ export const useFetch = (url, options, trigger, errorCallback) => {
                 const json = await response.json();
                 setPartData({ loading: false, data: json });
             } catch (error) {
-                setPartData({ loading: false })
+                setPartData({ loading: false });
                 errorCallback(error);
             }
         }

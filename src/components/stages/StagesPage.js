@@ -4,7 +4,7 @@ import { Grid, Box, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/co
 
 import { useSnackbar } from 'notistack';
 
-import LayoutPage, { PageTitle } from '../LayoutPage';
+import LayoutPage, { PageTitle, PageContent } from '../LayoutPage';
 import { useFetch, postApiRequest, API_URL, defaultGetOptions, loading } from "../utils/FetchUtils";
 import { UserContext } from '../../AppContext';
 import StagesModalForm from './StagesModalForm';
@@ -100,41 +100,36 @@ const StagesPage = props => {
     ];
     const tableData = countryTab === 0 ? apiDataCZ.data : apiDataSK.data;
 
-    const pageContent = (
-        <>
-            <Box display="flex" alignItems="center">
-                <Box flexGrow={1}>
-                    <Paper square>
-                        <Tabs
-                            value={countryTab}
-                            indicatorColor="primary"
-                            textColor="primary"
-                            onChange={handleCountryTabChange}
-                            centered
-                        >
-                            {tabData.map((tab, key) => <Tab key={key} label={tab} />)}
-                        </Tabs>
-                    </Paper>
-                </Box>
-                {session.role === "admin" &&
-                    <Box>
-                        <Button disabled variant="contained" color="primary" className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
-                    </Box>
-                }
-            </Box>
-            <Grid item xs className={classes.item}>
-                <TableComponent options={tableOptions} data={tableData} sort={{ key: "number", direction: "asc" }} />
-            </Grid>
-            <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} country={tabData[countryTab]} />
-        </>
-    )
-
     return (
-        <LayoutPage
-            pageLoading={pageLoading}
-            pageTitle={<PageTitle>Etapy</PageTitle>}
-            pageContent={pageContent}
-        />
+        <LayoutPage pageLoading={pageLoading}>
+            <PageTitle>Etapy</PageTitle>
+            <PageContent>
+                <Box display="flex" alignItems="center">
+                    <Box flexGrow={1}>
+                        <Paper square>
+                            <Tabs
+                                value={countryTab}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                onChange={handleCountryTabChange}
+                                centered
+                            >
+                                {tabData.map((tab, key) => <Tab key={key} label={tab} />)}
+                            </Tabs>
+                        </Paper>
+                    </Box>
+                    {session.role === "admin" &&
+                        <Box>
+                            <Button disabled variant="contained" color="primary" className={classes.createButton} onClick={() => openModal("Vytvořit etapu", initFormData)}>Vytvořit</Button>
+                        </Box>
+                    }
+                </Box>
+                <Grid item xs className={classes.item}>
+                    <TableComponent options={tableOptions} data={tableData} sort={{ key: "number", direction: "asc" }} />
+                </Grid>
+                <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} country={tabData[countryTab]} />
+            </PageContent>
+        </LayoutPage>
     );
 }
 
