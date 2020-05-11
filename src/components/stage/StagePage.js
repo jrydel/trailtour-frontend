@@ -10,6 +10,7 @@ import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
 import { ExternalLink } from "../Navigation";
 
 import StravaIcon from "../../files/strava.jpg";
+import MapyCZIcon from "../../files/mapycz.png";
 import TrailtourIcon from "../../files/trailtour.jpg";
 import { AthleteNameBox } from "../athlete/AthleteName";
 import TableComponent from "../TableComponent";
@@ -94,8 +95,8 @@ const StagePage = props => {
                     <Box flexGrow={1}><PageTitle>{formatStageNumber(stageData.data.number) + " - " + stageData.data.name}</PageTitle></Box>
                     <Box display="flex" flexDirection="row" flexWrap="wrap">
                         <ExternalLink href={stageData.data.stravaUrl} > <Avatar alt="Strava" variant="square" src={StravaIcon} className={classes.small} /></ExternalLink>
-                        {/*  <div style={{ marginLeft: 5 }} />
-                            <ExternalLink><Avatar alt="Mapy.cz" variant="square" src={MapyCZIcon} className={classes.small} /></ExternalLink> */}
+                        <div style={{ marginLeft: 5 }} />
+                        <ExternalLink href={stageData.data.mapyczUrl}><Avatar alt="Mapy.cz" variant="square" src={MapyCZIcon} className={classes.small} /></ExternalLink>
                         <div style={{ marginLeft: 5 }} />
                         <ExternalLink href={stageData.data.url}><Avatar alt="Trailtour" variant="square" src={TrailtourIcon} className={classes.small} /></ExternalLink>
                     </Box>
