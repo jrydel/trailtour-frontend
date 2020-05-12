@@ -2,6 +2,7 @@ import React from 'react';
 
 export const STRAVA_SEGMENT_URL = segmentId => "https://strava.com/segments/" + segmentId;
 export const STRAVA_ACTIVITY_URL = activityId => "https://strava.com/activities/" + activityId;
+export const STRAVA_ATHLETE_URL = athleteId => "https://www.strava.com/athletes/" + athleteId;
 
 export const API_URL = "https://api.orank.cz/trailtour";
 

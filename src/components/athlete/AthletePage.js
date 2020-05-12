@@ -1,12 +1,15 @@
 import React from "react";
 
 import LayoutPage, { PageHeader, PageTitle, PageContent } from "../LayoutPage";
-import { API_URL, useFetch, defaultGetOptions, loading, STRAVA_ACTIVITY_URL } from "../utils/FetchUtils";
+import { API_URL, useFetch, defaultGetOptions, loading, STRAVA_ACTIVITY_URL, STRAVA_ATHLETE_URL } from "../utils/FetchUtils";
 import { useSnackbar } from "notistack";
 import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
 
 import { AppLink, ExternalLink } from "../Navigation";
 import TableComponent from "../TableComponent";
+import { Typography, Box, Avatar } from "@material-ui/core";
+
+import StravaIcon from "../../files/strava.jpg";
 
 const Athletepage = props => {
 
@@ -44,11 +47,29 @@ const Athletepage = props => {
         { id: "pointsTrailtour", label: "Body TT", align: "right", sort: "trailtourResult.points", render: (row) => row.trailtourResult && row.trailtourResult.points }
     ];
     const tableData = resultData.data;
+    const pointsSum = tableData.reduce((prev, next) => prev + next.stravaResult.points, 0).toFixed(2);
+    const pointsSumTrailtour = tableData.reduce((prev, next) => prev + next.trailtourResult.points, 0).toFixed(2);
 
     return (
         <LayoutPage pageLoading={pageLoading}>
             <PageHeader>
-                <PageTitle>{athleteData.data.name}</PageTitle>
+                <Box display="flex" flexDirection="row" flexWrap="wrap">
+                    <Box display="flex" flexDirection="row" flexWrap="wrap" flexGrow={1}>
+                        <Box mr={2}>
+                            <PageTitle>{athleteData.data.name}</PageTitle>
+                        </Box>
+                        <Box display="flex" flexDirection="column" justifyContent="center">
+                            <Typography component="div">
+                                <Box fontWeight="fontWeightBold" fontFamily="Monospace">
+                                    {pointsSum} | {pointsSumTrailtour}
+                                </Box>
+                            </Typography>
+                        </Box>
+                    </Box>
+                    <Box display="flex" alignItems="center">
+                        <ExternalLink href={STRAVA_ATHLETE_URL(athleteId)} > <Avatar alt="Strava" variant="square" src={StravaIcon} style={{ width: 80, height: 32 }} /></ExternalLink>
+                    </Box>
+                </Box>
             </PageHeader>
             <PageContent>
                 <TableComponent
