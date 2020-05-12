@@ -4,7 +4,7 @@ import { Paper, Tabs, Tab, Avatar, Box, makeStyles } from "@material-ui/core";
 
 import { useSnackbar } from 'notistack';
 
-import LayoutPage, { PageTitle, MarginTop, PageContent } from "../LayoutPage";
+import LayoutPage, { PageTitle, MarginTop, PageContent, PageHeader } from "../LayoutPage";
 import { useFetch, API_URL, defaultGetOptions, loading, STRAVA_ACTIVITY_URL } from "../utils/FetchUtils";
 import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
 import { ExternalLink } from "../Navigation";
@@ -78,7 +78,7 @@ const StagePage = props => {
 
     const tableOptions = [
         { id: "position", label: "Pozice", align: "center", sort: "stravaResult.position", render: (row) => row.stravaResult.position },
-        { id: "athleteName", label: "Jméno", align: "left", sort: "athlete.name", render: (row) => <AthleteNameBox name={row.athlete.name} abuser={row.athlete.abuser} /> },
+        { id: "athleteName", label: "Jméno", align: "left", sort: "athlete.name", render: (row) => <AthleteNameBox athlete={row.athlete} /> },
         { id: "clubName", label: "Klub", align: "left", sort: "athlete.clubName", render: (row) => row.athlete.clubName },
         { id: "date", label: "Datum", align: "left", sort: "stravaResult.date", render: (row) => row.stravaResult && row.stravaResult.date },
         { id: "time", label: "Čas", align: "right", sort: "stravaResult.time", render: (row) => row.stravaResult && <ExternalLink href={STRAVA_ACTIVITY_URL(row.stravaResult.activityId)}>{formatSeconds(row.stravaResult.time)}</ExternalLink> },
@@ -90,7 +90,7 @@ const StagePage = props => {
 
     return (
         <LayoutPage pageLoading={pageLoading}>
-            <PageTitle>
+            <PageHeader>
                 <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap" flexGrow={1}>
                     <Box flexGrow={1}><PageTitle>{formatStageNumber(stageData.data.number) + " - " + stageData.data.name}</PageTitle></Box>
                     <Box display="flex" flexDirection="row" flexWrap="wrap">
@@ -101,7 +101,7 @@ const StagePage = props => {
                         <ExternalLink href={stageData.data.url}><Avatar alt="Trailtour" variant="square" src={TrailtourIcon} className={classes.small} /></ExternalLink>
                     </Box>
                 </Box>
-            </PageTitle>
+            </PageHeader>
             <PageContent>
                 <Paper square>
                     <Tabs

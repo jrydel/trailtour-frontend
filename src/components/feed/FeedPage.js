@@ -3,7 +3,7 @@ import React from "react";
 import { useSnackbar } from 'notistack';
 
 import { useFetch, API_URL, defaultGetOptions, loading } from "../utils/FetchUtils";
-import LayoutPage, { PageTitle, MarginTop, PageContent } from "../LayoutPage";
+import LayoutPage, { PageTitle, MarginTop, PageContent, PageHeader } from "../LayoutPage";
 import { AthleteNameBox } from "../athlete/AthleteName";
 import TableComponent from "../TableComponent";
 import { format } from "date-fns";
@@ -64,7 +64,7 @@ const FeedPage = props => {
     const tableOptions = [
         { id: 'created', label: 'Datum', align: "center", sort: "created", render: (row) => format(Date.parse(row.created), "PP - HH:mm:ss", { locale: cs }) },
         { id: 'stageName', label: 'Etapa', align: "left", sort: "stage.number", render: (row) => nameRow(row.stage.number, row.stage.name, row.country) },
-        { id: 'athleteName', label: 'Závodník', align: "left", sort: "athlete.name", render: (row) => <AthleteNameBox name={row.athlete.name} abuser={row.athlete.abuser} /> },
+        { id: 'athleteName', label: 'Závodník', align: "left", sort: "athlete.name", render: (row) => <AthleteNameBox athlete={row.athlete} /> },
         { id: 'time', type: "time", label: 'Čas', align: "right", sort: "time", render: (row) => <ExternalLink href={"http://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink> },
         { id: 'position', type: "number", label: 'Pořadí na segmentu', align: "center", sort: "position", render: (row) => row.position }
     ];
@@ -74,7 +74,9 @@ const FeedPage = props => {
 
     return (
         <LayoutPage pageLoading={pageLoading}>
-            <PageTitle>Novinky</PageTitle>
+            <PageHeader>
+                <PageTitle>Novinky</PageTitle>
+            </PageHeader>
             <PageContent>
                 <Paper square>
                     <Tabs

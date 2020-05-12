@@ -4,7 +4,7 @@ import { Grid, Box, Paper, Tabs, Tab, Button, makeStyles } from '@material-ui/co
 
 import { useSnackbar } from 'notistack';
 
-import LayoutPage, { PageTitle, PageContent } from '../LayoutPage';
+import LayoutPage, { PageTitle, PageContent, PageHeader } from '../LayoutPage';
 import { useFetch, postApiRequest, API_URL, defaultGetOptions, loading } from "../utils/FetchUtils";
 import { UserContext } from '../../AppContext';
 import StagesModalForm from './StagesModalForm';
@@ -102,7 +102,9 @@ const StagesPage = props => {
 
     return (
         <LayoutPage pageLoading={pageLoading}>
-            <PageTitle>Etapy</PageTitle>
+            <PageHeader>
+                <PageTitle>Etapy</PageTitle>
+            </PageHeader>
             <PageContent>
                 <Box display="flex" alignItems="center">
                     <Box flexGrow={1}>

@@ -56,7 +56,7 @@ const navigation = [
     },
     {
         route: {
-            path: "/zavodnik/:id",
+            path: "/zavodnik/:country/:id",
             component: Athletepage
         }
     },

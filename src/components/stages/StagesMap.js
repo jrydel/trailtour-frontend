@@ -1,6 +1,6 @@
 import React from 'react';
 import { Map, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
-import { Box, Avatar } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { AppLink } from '../Navigation';
 
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
@@ -8,11 +8,8 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import { defaultGetOptions, API_URL, useFetch, loading } from '../utils/FetchUtils';
 import { useSnackbar } from 'notistack';
-import { formatStageNumber, formatNumber, formatSeconds } from '../utils/FormatUtils';
+import { formatStageNumber, formatNumber } from '../utils/FormatUtils';
 import LayoutPageSimple from '../LayoutPageSimple';
-
-import Trophy from "../../files/trophy.jpg";
-import { AthleteNameBox } from '../athlete/AthleteName';
 
 const StagesMap = props => {
 
@@ -28,22 +25,6 @@ const StagesMap = props => {
     );
     const pageLoading = loading(apiDataCZ);
 
-    const top3 = {
-        "M": [
-            {
-                id: 123456789,
-                name: "Bum prask",
-                time: 1234,
-                abuser: true
-            },
-            {
-                id: 123456789,
-                name: "Abuser",
-                time: 13456,
-                abuser: false
-            }
-        ]
-    }
     const CustomMarker = props => (
         <>
             <Marker position={props.position} >
@@ -64,10 +45,6 @@ const StagesMap = props => {
                 <ArrowUpwardIcon fontSize="small" />{props.stage.elevation.toLocaleString("cz")} m
                 <div style={{ marginLeft: 5 }} />
                 <DirectionsRunIcon fontSize="small" />{formatNumber(props.stage.activities)}
-            </Box>
-            <Box display="flex" flexDirection="column" alignItems="left" style={{ marginTop: 10 }}>
-                <AthleteNameBox icon={<Avatar alt="Trophy" variant="rounded" src={Trophy} style={{ width: 20, height: 20 }} />} name={top3["M"][0].name} abuser={top3["M"][0].abuser} time={formatSeconds(top3["M"][0].time)} />
-                <AthleteNameBox icon={<Avatar alt="Trophy" variant="rounded" src={Trophy} style={{ width: 20, height: 20 }} />} name={top3["M"][1].name} abuser={top3["M"][1].abuser} time={formatSeconds(top3["M"][1].time)} />
             </Box>
         </Box>
     );

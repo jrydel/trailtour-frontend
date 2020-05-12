@@ -7,10 +7,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const MarginTop = props => <div style={{ marginTop: props.margin }} />;
-export const PageTitle = props => (
+export const PageTitle = props => <Typography {...props} variant={"h4"}>{props.children}</Typography>;
+export const PageHeader = props => (
     <>
+        <MarginTop margin={useStyles().appBarOffset} />
         <MarginTop margin={40} />
-        <Typography {...props} variant={"h4"}>{props.children}</Typography>
+        {props.children}
     </>
 );
 export const PageContent = props => (
