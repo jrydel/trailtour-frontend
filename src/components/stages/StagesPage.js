@@ -24,14 +24,22 @@ const useStyles = makeStyles((theme) => ({
 const initFormData = {
     country: "",
     number: "",
-    url: "",
+    trailtourUrl: "",
     name: "",
     type: "",
     distance: "",
     elevation: ""
 }
 
-const tabData = ["CZ", "SK"];
+const tabData = [
+    {
+        key: "CZ"
+    },
+    {
+        key: "SK",
+        disabled: true
+    }
+]
 
 const StagesPage = props => {
 
@@ -56,13 +64,7 @@ const StagesPage = props => {
         [trigger],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
-    const apiDataSK = useFetch(
-        API_URL + "/getStages?database=trailtour_sk",
-        defaultGetOptions,
-        [trigger],
-        error => showSnackbar("Nepodařilo se načíst data z API.", "error")
-    );
-    const pageLoading = loading(apiDataCZ, apiDataSK);
+    const pageLoading = loading(apiDataCZ);
 
     // modal
     const [modalTitle, setModalTitle] = React.useState("");
@@ -78,7 +80,7 @@ const StagesPage = props => {
     }
     const submitModal = async formData => {
         await postApiRequest(
-            API_URL + "/saveStage?database=" + (tabData[countryTab] === "CZ" ? "trailtour_cz" : "trailtour_sk"),
+            API_URL + "/saveStage?database=" + (tabData[countryTab].key === "CZ" ? "trailtour_cz" : "trailtour_sk"),
             formData,
             () => {
                 setTrigger(!trigger);
@@ -91,14 +93,14 @@ const StagesPage = props => {
 
     const tableOptions = [
         { id: "number", label: "Číslo", align: "center", sort: "number", render: row => formatStageNumber(row.number) },
-        { id: "name", label: "Název", align: "left", sort: "name", render: row => <AppLink to={"/etapy/" + tabData[countryTab].toLowerCase() + "/" + row.number}>{row.name}</AppLink> },
+        { id: "name", label: "Název", align: "left", sort: "name", render: row => <AppLink to={"/etapy/" + tabData[countryTab].key.toLowerCase() + "/" + row.number}>{row.name}</AppLink> },
         { id: "type", label: "Typ", align: "left", sort: "type", render: row => row.type },
         { id: "distance", label: "Délka (m)", align: "right", sort: "distance", render: row => formatNumber(row.distance) },
         { id: "elevation", label: "Převýšení (m)", align: "right", sort: "elevation", render: row => formatNumber(row.elevation) },
         { id: "activities", label: "Aktivity", align: "center", sort: "activities", render: row => formatNumber(row.activities) },
         { id: "actions", align: "center", render: row => session.role === "admin" && <Button variant="contained" color="secondary" size="small" onClick={() => openModal("Upravit etapu.", row)}>Upravit</Button> },
     ];
-    const tableData = countryTab === 0 ? apiDataCZ.data : apiDataSK.data;
+    const tableData = apiDataCZ.data;
 
     return (
         <LayoutPage pageLoading={pageLoading}>
@@ -116,7 +118,7 @@ const StagesPage = props => {
                                 onChange={handleCountryTabChange}
                                 centered
                             >
-                                {tabData.map((tab, key) => <Tab key={key} label={tab} />)}
+                                {tabData.map((tab, key) => <Tab  {...props} key={tab.key} label={tab.key} />)}
                             </Tabs>
                         </Paper>
                     </Box>
@@ -129,7 +131,7 @@ const StagesPage = props => {
                 <Grid item xs className={classes.item}>
                     <TableComponent options={tableOptions} data={tableData} sort={{ key: "number", direction: "asc" }} />
                 </Grid>
-                <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} country={tabData[countryTab]} />
+                <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} country={tabData[countryTab].key} />
             </PageContent>
         </LayoutPage>
     );

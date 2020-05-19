@@ -19,20 +19,15 @@ import FlagSK from "../../files/flagsk.jpg";
 const FeedPage = props => {
 
     const apiDataCZ = useFetch(
-        API_URL + "/getFeed?database=trailtour_cz&limit=100",
+        API_URL + "/getFeed?database=trailtour_cz&limit=50",
         defaultGetOptions,
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
 
-    const apiDataSK = useFetch(
-        API_URL + "/getFeed?database=trailtour_sk&limit=100",
-        defaultGetOptions,
-        [],
-        error => showSnackbar("Nepodařilo se načíst data z API.", "error")
-    );
+    const apiDataSK = [];
 
-    const pageLoading = loading(apiDataCZ, apiDataSK);
+    const pageLoading = loading(apiDataCZ);
 
     // snackbar
     const { enqueueSnackbar } = useSnackbar();
@@ -53,29 +48,29 @@ const FeedPage = props => {
     const tabData = [
         {
             key: "cz",
-            label: "CZ"
+            label: "CZ",
+            disabled: false
         },
         {
             key: "sk",
-            label: "SK"
+            label: "SK",
+            disabled: true
         }
     ]
 
     const tableOptions = [
-        { id: 'created', label: 'Datum', align: "center", sort: "created", render: (row) => format(Date.parse(row.created), "PP - HH:mm:ss", { locale: cs }) },
+        { id: 'created', label: 'Datum', align: "center", sort: "activity.created", render: (row) => format(Date.parse(row.activity.created), "PP - HH:mm:ss", { locale: cs }) },
         { id: 'stageName', label: 'Etapa', align: "left", sort: "stage.number", render: (row) => nameRow(row.stage.number, row.stage.name, row.country) },
         { id: 'athleteName', label: 'Závodník', align: "left", sort: "athlete.name", render: (row) => <AthleteNameBox athlete={row.athlete} /> },
-        { id: 'time', type: "time", label: 'Čas', align: "right", sort: "time", render: (row) => <ExternalLink href={"http://strava.com/activities/" + row.activityId}>{formatSeconds(row.time)}</ExternalLink> },
-        { id: 'position', type: "number", label: 'Pořadí na segmentu', align: "center", sort: "position", render: (row) => row.position }
+        { id: 'time', label: 'Čas', align: "right", sort: "activity.time", render: (row) => <ExternalLink href={"http://strava.com/activities/" + row.activity.id}>{formatSeconds(row.activity.time)}</ExternalLink> },
+        { id: 'position', label: 'Pozice na segmentu', align: "center", sort: "activity.position", render: (row) => row.activity.position }
     ];
-    const tableData = tabValue === 0 ?
-        apiDataCZ.data.map(val => { return { ...val, country: "cz" } }) :
-        apiDataSK.data.map(val => { return { ...val, country: "sk" } });
+    const tableData = apiDataCZ.data.map(val => { return { ...val, country: "cz" } });
 
     return (
         <LayoutPage pageLoading={pageLoading}>
             <PageHeader>
-                <PageTitle>Novinky</PageTitle>
+                <PageTitle>Novinky ze Stravy</PageTitle>
             </PageHeader>
             <PageContent>
                 <Paper square>
@@ -93,7 +88,7 @@ const FeedPage = props => {
                 <TableComponent
                     options={tableOptions}
                     data={tableData}
-                    sort={{ key: "created", direction: "desc" }}
+                    sort={{ key: "activity.created", direction: "desc" }}
                 />
             </PageContent>
         </LayoutPage>

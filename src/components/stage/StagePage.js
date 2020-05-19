@@ -77,14 +77,14 @@ const StagePage = props => {
     };
 
     const tableOptions = [
-        { id: "position", label: "Pozice", align: "center", sort: "stravaResult.position", render: (row) => row.stravaResult.position },
+        { id: "position", label: "Pozice", align: "center", sort: "activityResult.position", render: (row) => row.activityResult.position },
         { id: "athleteName", label: "Jméno", align: "left", sort: "athlete.name", render: (row) => <AthleteNameBox athlete={row.athlete} /> },
         { id: "clubName", label: "Klub", align: "left", sort: "athlete.clubName", render: (row) => row.athlete.clubName },
-        { id: "date", label: "Datum", align: "left", sort: "stravaResult.date", render: (row) => row.stravaResult && row.stravaResult.date },
-        { id: "time", label: "Čas", align: "right", sort: "stravaResult.time", render: (row) => row.stravaResult && <ExternalLink href={STRAVA_ACTIVITY_URL(row.stravaResult.activityId)}>{formatSeconds(row.stravaResult.time)}</ExternalLink> },
-        { id: "timeTrailtour", label: "Čas TT", align: "right", sort: "trailtourResult.time", render: (row) => row.trailtourResult && formatSeconds(row.trailtourResult.time) },
-        { id: "points", label: "Body", align: "right", sort: "stravaResult.points", render: (row) => row.stravaResult && row.stravaResult.points },
-        { id: "pointsTrailtour", label: "Body TT", align: "right", sort: "trailtourResult.points", render: (row) => row.trailtourResult && row.trailtourResult.points }
+        { id: "date", label: "Datum", align: "left", sort: "activity.date", render: (row) => row.activity.date },
+        { id: "time", label: "Čas", align: "right", sort: "activity.time", render: (row) => <ExternalLink href={STRAVA_ACTIVITY_URL(row.activity.id)}>{formatSeconds(row.activity.time)}</ExternalLink> },
+        { id: "timeTrailtour", label: "Čas TT", align: "right", sort: "activityResult.trailtourTime", render: (row) => row.activityResult.trailtourTime && formatSeconds(row.activityResult.trailtourTime) },
+        { id: "points", label: "Body", align: "right", sort: "activityResult.points", render: (row) => row.activityResult.points },
+        { id: "pointsTrailtour", label: "Body TT", align: "right", sort: "activityResult.trailtourPoints", render: (row) => row.activityResult.trailtourPoints }
     ];
     const tableData = resultData.data.filter(value => value.athlete.gender === tabData[tabValue].key);
 
@@ -118,7 +118,7 @@ const StagePage = props => {
                 <TableComponent
                     options={tableOptions}
                     data={tableData}
-                    sort={{ key: "stravaResult.points", direction: "desc" }}
+                    sort={{ key: "activityResult.points", direction: "desc" }}
                 />
             </PageContent>
         </LayoutPage>

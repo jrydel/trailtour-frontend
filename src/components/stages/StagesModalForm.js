@@ -45,7 +45,7 @@ const StagesModalForm = props => {
                             disabled
                         />
                     </Box>
-                    <TextField name="url" label="Trailtour url" variant="outlined" fullWidth className={classes.textfield}
+                    <TextField name="trailtourUrl" label="Trailtour url" variant="outlined" fullWidth className={classes.textfield}
                         inputRef={
                             register({
                                 required: true,
