@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, Typography, Tooltip } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import { AppLink } from "../Navigation";
 
 export const AthleteNameBox = props => (

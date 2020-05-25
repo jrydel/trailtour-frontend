@@ -98,7 +98,7 @@ const StagePage = props => {
                         <div style={{ marginLeft: 5 }} />
                         <ExternalLink href={stageData.data.mapyczUrl}><Avatar alt="Mapy.cz" variant="square" src={MapyCZIcon} className={classes.small} /></ExternalLink>
                         <div style={{ marginLeft: 5 }} />
-                        <ExternalLink href={stageData.data.url}><Avatar alt="Trailtour" variant="square" src={TrailtourIcon} className={classes.small} /></ExternalLink>
+                        <ExternalLink href={stageData.data.trailtourUrl}><Avatar alt="Trailtour" variant="square" src={TrailtourIcon} className={classes.small} /></ExternalLink>
                     </Box>
                 </Box>
             </PageHeader>

@@ -25,8 +25,6 @@ const FeedPage = props => {
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
 
-    const apiDataSK = [];
-
     const pageLoading = loading(apiDataCZ);
 
     // snackbar

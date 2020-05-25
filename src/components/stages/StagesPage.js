@@ -33,10 +33,11 @@ const initFormData = {
 
 const tabData = [
     {
-        key: "CZ"
+        label: "CZ",
+        disabled: false
     },
     {
-        key: "SK",
+        label: "SK",
         disabled: true
     }
 ]
@@ -80,7 +81,7 @@ const StagesPage = props => {
     }
     const submitModal = async formData => {
         await postApiRequest(
-            API_URL + "/saveStage?database=" + (tabData[countryTab].key === "CZ" ? "trailtour_cz" : "trailtour_sk"),
+            API_URL + "/saveStage?database=" + (tabData[countryTab].label === "CZ" ? "trailtour_cz" : "trailtour_sk"),
             formData,
             () => {
                 setTrigger(!trigger);
@@ -93,7 +94,7 @@ const StagesPage = props => {
 
     const tableOptions = [
         { id: "number", label: "Číslo", align: "center", sort: "number", render: row => formatStageNumber(row.number) },
-        { id: "name", label: "Název", align: "left", sort: "name", render: row => <AppLink to={"/etapy/" + tabData[countryTab].key.toLowerCase() + "/" + row.number}>{row.name}</AppLink> },
+        { id: "name", label: "Název", align: "left", sort: "name", render: row => <AppLink to={"/etapy/" + tabData[countryTab].label.toLowerCase() + "/" + row.number}>{row.name}</AppLink> },
         { id: "type", label: "Typ", align: "left", sort: "type", render: row => row.type },
         { id: "distance", label: "Délka (m)", align: "right", sort: "distance", render: row => formatNumber(row.distance) },
         { id: "elevation", label: "Převýšení (m)", align: "right", sort: "elevation", render: row => formatNumber(row.elevation) },
@@ -118,7 +119,7 @@ const StagesPage = props => {
                                 onChange={handleCountryTabChange}
                                 centered
                             >
-                                {tabData.map((tab, key) => <Tab  {...props} key={tab.key} label={tab.key} />)}
+                                {tabData.map(val => <Tab {...val} />)}
                             </Tabs>
                         </Paper>
                     </Box>
@@ -131,7 +132,7 @@ const StagesPage = props => {
                 <Grid item xs className={classes.item}>
                     <TableComponent options={tableOptions} data={tableData} sort={{ key: "number", direction: "asc" }} />
                 </Grid>
-                <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} country={tabData[countryTab].key} />
+                <StagesModalForm open={modalShow} title={modalTitle} handleClose={closeModal} handleSubmit={submitModal} formData={formData} country={tabData[countryTab].label} />
             </PageContent>
         </LayoutPage>
     );
