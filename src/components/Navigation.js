@@ -5,6 +5,7 @@ import { ListItem, ListItemIcon, ListItemText, Link, List } from "@material-ui/c
 import FormatListNumbered from '@material-ui/icons/FormatListNumbered';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import MapIcon from '@material-ui/icons/Map';
+import UpdateIcon from '@material-ui/icons/Update';
 
 
 import FeedPage from "./feed/FeedPage";
@@ -13,6 +14,7 @@ import StagePage from "./stage/StagePage";
 import NoMatch from "./NoMatch";
 import Athletepage from "./athlete/AthletePage";
 import StagesMap from "./stages/StagesMap";
+import ChangelogPage from "./ChangelogPage";
 
 const navigation = [
     {
@@ -58,6 +60,16 @@ const navigation = [
         route: {
             path: "/zavodnik/:country/:id",
             component: Athletepage
+        }
+    },
+    {
+        route: {
+            path: "/changelog",
+            component: ChangelogPage
+        },
+        menu: {
+            name: "Changelog",
+            icon: <UpdateIcon />
         }
     },
     {

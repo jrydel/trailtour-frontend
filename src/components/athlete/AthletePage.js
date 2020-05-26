@@ -34,7 +34,7 @@ const Athletepage = props => {
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
-    const pageLoading = loading(athleteData, resultData);
+    const pageLoading = loading(athleteData) && resultData.data;
 
     const tableOptions = [
         { id: 'date', label: 'Datum', align: "center", sort: "activity.date", render: (row) => row.activity.date },
@@ -47,8 +47,7 @@ const Athletepage = props => {
         { id: "pointsTrailtour", label: "Body TT", align: "right", sort: "activityResult.trailtourPoints", render: (row) => row.activityResult.trailtourPoints }
     ];
     const tableData = resultData.data;
-    const pointsSum = tableData.reduce((prev, next) => prev + next.activityResult.points, 0).toFixed(2);
-    const pointsSumTrailtour = tableData.reduce((prev, next) => prev + next.activityResult.trailtourPoints, 0).toFixed(2);
+
 
     return (
         <LayoutPage pageLoading={pageLoading}>
@@ -59,11 +58,16 @@ const Athletepage = props => {
                             <PageTitle>{athleteData.data.name}</PageTitle>
                         </Box>
                         <Box display="flex" flexDirection="column" justifyContent="center">
-                            <Typography component="div">
-                                <Box fontWeight="fontWeightBold" fontFamily="Monospace">
-                                    {pointsSum} | {pointsSumTrailtour}
-                                </Box>
-                            </Typography>
+                            {athleteData.data.ladder &&
+                                <Typography component="div">
+                                    <Box fontWeight="fontWeightBold" fontFamily="Monospace">
+                                        Aktuálně: {athleteData.data.ladder.points}  ({athleteData.data.ladder.position})
+                                        </Box>
+                                    <Box fontWeight="fontWeightBold" fontFamily="Monospace">
+                                        Oficiálně: {athleteData.data.ladder.trailtourPoints}  ({athleteData.data.ladder.trailtourPosition})
+                                        </Box>
+                                </Typography>
+                            }
                         </Box>
                     </Box>
                     <Box display="flex" alignItems="center">

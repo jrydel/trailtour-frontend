@@ -18,7 +18,7 @@ const TableComponent = props => {
         setTableData(sortArray(tableData, key, newDirection));
     }
 
-    return (
+    return tableData.length !== 0 &&
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
@@ -58,8 +58,7 @@ const TableComponent = props => {
                     ))}
                 </TableBody>
             </Table >
-        </TableContainer >
-    )
+        </TableContainer >;
 }
 
 export default TableComponent;
