@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { Router, Route, Switch, Redirect } from 'react-router-dom';
+import createHistory from 'history/createBrowserHistory';
+import ReactGA from 'react-ga';
 
 import { Box } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -28,8 +30,17 @@ const Layout = () => {
         setMobileOpen(!mobileOpen);
     };
 
+    const history = createHistory();
+    history.listen(location => {
+        ReactGA.set({ page: location.pathname });
+        ReactGA.pageview(location.pathname);
+    })
+    React.useEffect(() => {
+        ReactGA.pageview(window.location.pathname + window.location.search);
+    }, [history])
+
     return (
-        <Router>
+        <Router history={history}>
             <Switch>
                 <Route path="/login" render={({ location }) => session.login ? <Redirect to={{ pathname: "/", state: { from: location } }} /> : <LoginPage />} />
                 <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center", }} autoHideDuration={3000} ref={notistackRef} hideIconVariant={true}
