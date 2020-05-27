@@ -38,7 +38,9 @@ const Athletepage = props => {
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
 
-    const pageLoading = loading(athleteData) && resultData.data;
+    const stagesCount = resultData.data.length;
+    const finishedStagesCount = resultData.data.filter(item => item.activity || item.activityResult).length;
+    const pageLoading = loading(athleteData) || resultData.loading;
 
     const tableOptions = [
         { id: 'date', label: 'Datum', align: "center", sort: "activity.date", render: (row) => row.activity.date },
@@ -65,10 +67,13 @@ const Athletepage = props => {
                                 <Typography component="div">
                                     <Box fontWeight="fontWeightBold" fontFamily="Monospace">
                                         Aktuálně: {athleteData.data.ladder.points}  ({athleteData.data.ladder.position})
-                                        </Box>
+                                    </Box>
                                     <Box fontWeight="fontWeightBold" fontFamily="Monospace">
                                         Oficiálně: {athleteData.data.ladder.trailtourPoints}  ({athleteData.data.ladder.trailtourPosition})
-                                        </Box>
+                                    </Box>
+                                    <Box fontWeight="fontWeightBold" fontFamily="Monospace">
+                                        Etap: {finishedStagesCount}/{stagesCount}
+                                    </Box>
                                 </Typography>
                             }
                         </Box>
