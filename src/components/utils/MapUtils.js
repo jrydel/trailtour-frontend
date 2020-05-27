@@ -1,5 +1,5 @@
 import React from 'react';
-import { Marker, Popup } from 'react-leaflet';
+import { Marker, Popup, Polyline } from 'react-leaflet';
 import { Box } from '@material-ui/core';
 import { AppLink } from '../Navigation';
 
@@ -12,11 +12,14 @@ import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import L from 'leaflet';
 
 export const CustomMarker = props => (
-    <Marker position={props.position} >
-        <Popup>
-            <StageBox stage={props.stage} />
-        </Popup>
-    </Marker>
+    <>
+        <Marker position={props.position} >
+            <Popup>
+                <StageBox stage={props.stage} />
+            </Popup>
+        </Marker>
+        <Polyline positions={props.data} color="red" />
+    </>
 );
 
 export const CustomGreenMarker = props => (
