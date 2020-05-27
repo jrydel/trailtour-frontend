@@ -1,15 +1,10 @@
 import React from 'react';
-import { Map, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
-import { Box } from '@material-ui/core';
-import { AppLink } from '../Navigation';
+import { Map, TileLayer } from 'react-leaflet';
 
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import { defaultGetOptions, API_URL, useFetch, loading } from '../utils/FetchUtils';
 import { useSnackbar } from 'notistack';
-import { formatStageNumber, formatNumber } from '../utils/FormatUtils';
 import LayoutPageSimple from '../LayoutPageSimple';
+import { CustomMarker } from '../utils/MapUtils';
 
 const StagesMap = props => {
 
@@ -24,30 +19,6 @@ const StagesMap = props => {
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
     const pageLoading = loading(apiDataCZ);
-
-    const CustomMarker = props => (
-        <>
-            <Marker position={props.position} >
-                <Popup>
-                    <StageBox stage={props.stage} />
-                </Popup>
-            </Marker>
-            <Polyline positions={props.data} color="red" />
-        </>
-    );
-
-    const StageBox = props => (
-        <Box display="flex" flexDirection="column" >
-            <AppLink to={"/etapy/cz/" + props.stage.number} >{formatStageNumber(props.stage.number) + " - " + props.stage.name}</AppLink>
-            <Box display="flex" flexDirection="row" alignItems="center" style={{ marginTop: 10 }}>
-                <ArrowForwardIcon fontSize="small" />{props.stage.distance.toLocaleString("cz")} m
-                <div style={{ marginLeft: 5 }} />
-                <ArrowUpwardIcon fontSize="small" />{props.stage.elevation.toLocaleString("cz")} m
-                <div style={{ marginLeft: 5 }} />
-                <DirectionsRunIcon fontSize="small" />{formatNumber(props.stage.activities)}
-            </Box>
-        </Box>
-    );
 
     return (
         <LayoutPageSimple

@@ -6,9 +6,16 @@ const ChangelogPage = () => {
 
     const list = [
         {
+            date: "2020-05-27",
+            content: [
+                "Mapa etap na stránce závodníka.",
+            ]
+        },
+        {
             date: "2020-05-26",
             content: [
                 "Na stránce závodníka se vedle jména vypisuje i jeho aktuální body a pozice v žebříčku.",
+                "Stránka změn.",
             ]
         },
         {

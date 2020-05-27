@@ -15,6 +15,7 @@ import NoMatch from "./NoMatch";
 import Athletepage from "./athlete/AthletePage";
 import StagesMap from "./stages/StagesMap";
 import ChangelogPage from "./ChangelogPage";
+import StageInfo from "./stages/StageInfo";
 
 const navigation = [
     {
@@ -28,6 +29,7 @@ const navigation = [
             icon: <NewReleasesIcon />
         }
     },
+    // etapy
     {
         menu: {
             name: "Etapy",
@@ -53,15 +55,24 @@ const navigation = [
     {
         route: {
             path: "/etapy/:country/:number",
+            exact: true,
             component: StagePage,
         }
     },
+    {
+        route: {
+            path: "/etapy/:country/:number/info",
+            component: StageInfo,
+        }
+    },
+    // zavodnici
     {
         route: {
             path: "/zavodnik/:country/:id",
             component: Athletepage
         }
     },
+    // ostatni
     {
         route: {
             path: "/changelog",

@@ -1,6 +1,6 @@
 import React from "react";
 
-import LayoutPage, { PageHeader, PageTitle, PageContent } from "../LayoutPage";
+import LayoutPage, { PageHeader, PageTitle, PageContent, MarginTop } from "../LayoutPage";
 import { API_URL, useFetch, defaultGetOptions, loading, STRAVA_ACTIVITY_URL, STRAVA_ATHLETE_URL } from "../utils/FetchUtils";
 import { useSnackbar } from "notistack";
 import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
@@ -10,6 +10,9 @@ import TableComponent from "../TableComponent";
 import { Typography, Box, Avatar } from "@material-ui/core";
 
 import StravaIcon from "../../files/strava.jpg";
+import { TileLayer, Map, Marker, Popup } from "react-leaflet";
+
+import { blueIcon, greenIcon } from '../utils/MapUtils';
 
 const Athletepage = props => {
 
@@ -34,6 +37,7 @@ const Athletepage = props => {
         [],
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
+
     const pageLoading = loading(athleteData) && resultData.data;
 
     const tableOptions = [
@@ -46,8 +50,7 @@ const Athletepage = props => {
         { id: "points", label: "Body", align: "right", sort: "activityResult.points", render: (row) => row.activityResult.points },
         { id: "pointsTrailtour", label: "Body TT", align: "right", sort: "activityResult.trailtourPoints", render: (row) => row.activityResult.trailtourPoints }
     ];
-    const tableData = resultData.data;
-
+    const tableData = resultData.data.filter(item => item.activity || item.activityResult);
 
     return (
         <LayoutPage pageLoading={pageLoading}>
@@ -76,13 +79,32 @@ const Athletepage = props => {
                 </Box>
             </PageHeader>
             <PageContent>
+                <Box display="flex" style={{ height: 400 }}>
+                    <Map
+                        style={{ width: "100%", height: "100%" }}
+                        center={[49.8037633, 15.4749126]}
+                        zoom={7}
+                    >
+                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        {resultData.data.map((item, key) =>
+                            <Marker key={key} position={[item.stage.coordinates.latitude, item.stage.coordinates.longitude]} icon={item.activity && item.activityResult ? greenIcon : blueIcon}>
+                                <Popup>
+                                    <Box display="flex" flexDirection="column" >
+                                        <AppLink to={"/etapy/cz/" + item.stage.number} >{formatStageNumber(item.stage.number) + " - " + item.stage.name}</AppLink>
+                                    </Box>
+                                </Popup>
+                            </Marker>
+                        )}
+                    </Map>
+                </Box>
+                <MarginTop margin={16} />
                 <TableComponent
                     options={tableOptions}
                     data={tableData}
                     sort={{ key: "activity.date", direction: "desc" }}
                 />
-            </PageContent>
-        </LayoutPage>
+            </PageContent >
+        </LayoutPage >
     );
 }
 
