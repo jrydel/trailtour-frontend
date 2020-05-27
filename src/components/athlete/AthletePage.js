@@ -7,12 +7,14 @@ import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
 
 import { AppLink, ExternalLink } from "../Navigation";
 import TableComponent from "../TableComponent";
-import { Typography, Box, Avatar } from "@material-ui/core";
+import { Box, Avatar, Paper, Chip, Tooltip } from "@material-ui/core";
 
 import StravaIcon from "../../files/strava.jpg";
 import { TileLayer, Map, Marker, Popup } from "react-leaflet";
 
 import { blueIcon, greenIcon } from '../utils/MapUtils';
+
+const computeAverage = (arr) => arr.reduce((p, c) => p + (c === null ? 0 : c), 0) / arr.length;
 
 const Athletepage = props => {
 
@@ -38,8 +40,10 @@ const Athletepage = props => {
         error => showSnackbar("Nepodařilo se načíst data z API.", "error")
     );
 
-    const stagesCount = resultData.data.length;
-    const finishedStagesCount = resultData.data.filter(item => item.activity || item.activityResult).length;
+    const filteredResults = resultData.data.filter(item => item.activityResult);
+    const average = computeAverage(filteredResults.map(item => item.activityResult.points));
+    const trailtourAverage = computeAverage(filteredResults.map(item => item.activityResult.trailtourPoints).filter(x => x));
+
     const pageLoading = loading(athleteData) || resultData.loading;
 
     const tableOptions = [
@@ -57,36 +61,34 @@ const Athletepage = props => {
     return (
         <LayoutPage pageLoading={pageLoading}>
             <PageHeader>
-                <Box display="flex" flexDirection="row" flexWrap="wrap">
-                    <Box display="flex" flexDirection="row" flexWrap="wrap" flexGrow={1}>
-                        <Box mr={2}>
-                            <PageTitle>{athleteData.data.name}</PageTitle>
-                        </Box>
-                        <Box display="flex" flexDirection="column" justifyContent="center">
-                            {athleteData.data.ladder &&
-                                <Typography component="div">
-                                    <Box fontWeight="fontWeightBold" fontFamily="Monospace">
-                                        Aktuálně: {athleteData.data.ladder.points}  ({athleteData.data.ladder.position})
-                                    </Box>
-                                    <Box fontWeight="fontWeightBold" fontFamily="Monospace">
-                                        Oficiálně: {athleteData.data.ladder.trailtourPoints}  ({athleteData.data.ladder.trailtourPosition})
-                                    </Box>
-                                    <Box fontWeight="fontWeightBold" fontFamily="Monospace">
-                                        Etap: {finishedStagesCount}/{stagesCount}
-                                    </Box>
-                                </Typography>
-                            }
-                        </Box>
+                <Box display="flex" flexDirection="row" flexWrap="wrap" alignItems="center">
+                    <Box flexGrow={1}>
+                        <PageTitle >{athleteData.data.name}</PageTitle>
                     </Box>
-                    <Box display="flex" alignItems="center">
-                        <ExternalLink href={STRAVA_ATHLETE_URL(athleteId)} > <Avatar alt="Strava" variant="square" src={StravaIcon} style={{ width: 80, height: 32 }} /></ExternalLink>
-                    </Box>
+                    <ExternalLink href={STRAVA_ATHLETE_URL(athleteId)} > <Avatar alt="Strava" variant="square" src={StravaIcon} style={{ width: 80, height: 32 }} /></ExternalLink>
                 </Box>
             </PageHeader>
             <PageContent>
-                <Box display="flex" style={{ height: 400 }}>
+                {athleteData.data.ladder &&
+                    <Box display="flex" flexDirection="row" flexWrap="wrap" >
+                        <Tooltip title="Aktuální výsledky">
+                            <Chip avatar={<Avatar>A</Avatar>} label={`${athleteData.data.ladder.points} (${athleteData.data.ladder.position})`} color="primary" style={{ marginRight: 5 }} />
+                        </Tooltip>
+                        <Tooltip title="Oficiální TT výsledky">
+                            <Chip avatar={<Avatar>O</Avatar>} label={`${athleteData.data.ladder.trailtourPoints} (${athleteData.data.ladder.trailtourPosition})`} color="primary" style={{ marginRight: 5 }} />
+                        </Tooltip>
+                        <Tooltip title="Počet zaběhnutých etap">
+                            <Chip avatar={<Avatar>E</Avatar>} label={`${filteredResults.length} / ${resultData.data.length}`} color="primary" style={{ marginRight: 5 }} />
+                        </Tooltip>
+                        <Tooltip title="Průměrné body z etap">
+                            <Chip avatar={<Avatar>P</Avatar>} label={`${average.toFixed(2)} / ${trailtourAverage.toFixed(2)}`} color="primary" />
+                        </Tooltip>
+                    </Box>
+                }
+                <MarginTop margin={16} />
+                <Box component={Paper} square>
                     <Map
-                        style={{ width: "100%", height: "100%" }}
+                        style={{ width: "100%", height: "400px" }}
                         center={[49.8037633, 15.4749126]}
                         zoom={7}
                     >

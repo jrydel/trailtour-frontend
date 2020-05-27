@@ -13,7 +13,7 @@ const StageInfo = props => {
     const showSnackbar = (message, variant) => enqueueSnackbar(message, { variant: variant });
 
     // api data
-    const [trigger, setTrigger] = React.useState(false);
+    const trigger = React.useState(false);
     const stageData = useFetch(
         API_URL + "/getStageInfo?database=trailtour_cz&number=" + stageNumber,
         defaultGetOptions,
@@ -31,7 +31,7 @@ const StageInfo = props => {
                 {stageData.data.map((item, key1) =>
                     <Paper variant="outlined" square>
                         <Box style={{ padding: 20 }}>
-                            <Typography gutterBottom variant="h5" component="h2" gutterBottom>
+                            <Typography variant="h5" component="h2" gutterBottom>
                                 {item.title}
                             </Typography>
                             <Typography variant="body2" component="p">

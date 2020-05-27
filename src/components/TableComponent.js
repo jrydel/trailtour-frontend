@@ -19,7 +19,7 @@ const TableComponent = props => {
     }
 
     return tableData.length !== 0 &&
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} square>
             <Table>
                 <TableHead>
                     <TableRow>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Router, Route, Switch, Redirect } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history'
 import ReactGA from 'react-ga';
 
 import { Box } from '@material-ui/core';
@@ -30,7 +30,7 @@ const Layout = () => {
         setMobileOpen(!mobileOpen);
     };
 
-    const history = createHistory();
+    const history = createBrowserHistory();
     history.listen(location => {
         ReactGA.set({ page: location.pathname });
         ReactGA.pageview(location.pathname);
