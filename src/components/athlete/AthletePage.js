@@ -7,7 +7,7 @@ import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
 
 import { AppLink, ExternalLink } from "../Navigation";
 import TableComponent from "../TableComponent";
-import { Box, Avatar, Paper, Chip, Tooltip } from "@material-ui/core";
+import { Box, Avatar, Paper, Tooltip, Typography } from "@material-ui/core";
 
 import StravaIcon from "../../files/strava.jpg";
 import { TileLayer, Map, Marker, Popup } from "react-leaflet";
@@ -15,6 +15,15 @@ import { TileLayer, Map, Marker, Popup } from "react-leaflet";
 import { blueIcon, greenIcon } from '../utils/MapUtils';
 
 const computeAverage = (arr) => arr.reduce((p, c) => p + (c === null ? 0 : c), 0) / arr.length;
+
+const InfoBox = props => (
+    <Tooltip title={props.tooltip}>
+        <Box display="flex" flexDirection="row" alignItems="center" style={{ padding: 2, marginRight: 5 }} >
+            <Avatar variant="square" style={{ width: 20, height: 20, backgroundColor: "#1565c0", fontSize: "0.75rem" }}>{props.title}</Avatar>
+            <Typography style={{ marginLeft: 5, fontSize: "0.75rem", fontWeight: "bold" }}>{props.content}</Typography>
+        </Box>
+    </Tooltip>
+);
 
 const Athletepage = props => {
 
@@ -62,30 +71,27 @@ const Athletepage = props => {
         <LayoutPage pageLoading={pageLoading}>
             <PageHeader>
                 <Box display="flex" flexDirection="row" flexWrap="wrap" alignItems="center">
+                    <PageTitle style={{ marginRight: 20 }} >{athleteData.data.name}</PageTitle>
                     <Box flexGrow={1}>
-                        <PageTitle >{athleteData.data.name}</PageTitle>
+                        {athleteData.data.ladder &&
+                            <Box display="flex" flexDirection="row" flexWrap="wrap">
+                                <Box display="flex" flexDirection="row" flexWrap="wrap" component={Paper} square>
+                                    <Box display="flex" flexDirection="column">
+                                        <InfoBox tooltip="Aktuální výsledky" title="A" content={`${athleteData.data.ladder.points} (${athleteData.data.ladder.position})`} />
+                                        <InfoBox tooltip="Oficiální TT výsledky" title="O" content={`${athleteData.data.ladder.trailtourPoints} (${athleteData.data.ladder.trailtourPosition})`} />
+                                    </Box>
+                                    <Box display="flex" flexDirection="column">
+                                        <InfoBox tooltip="Počet zaběhnutých etap" title="E" content={`${filteredResults.length} / ${resultData.data.length}`} />
+                                        <InfoBox tooltip="Průměrné body z etap" title="P" content={`${average.toFixed(2)} / ${trailtourAverage.toFixed(2)}`} />
+                                    </Box>
+                                </Box>
+                            </Box>
+                        }
                     </Box>
                     <ExternalLink href={STRAVA_ATHLETE_URL(athleteId)} > <Avatar alt="Strava" variant="square" src={StravaIcon} style={{ width: 80, height: 32 }} /></ExternalLink>
                 </Box>
             </PageHeader>
             <PageContent>
-                {athleteData.data.ladder &&
-                    <Box display="flex" flexDirection="row" flexWrap="wrap" >
-                        <Tooltip title="Aktuální výsledky">
-                            <Chip avatar={<Avatar>A</Avatar>} label={`${athleteData.data.ladder.points} (${athleteData.data.ladder.position})`} color="primary" style={{ marginRight: 5 }} />
-                        </Tooltip>
-                        <Tooltip title="Oficiální TT výsledky">
-                            <Chip avatar={<Avatar>O</Avatar>} label={`${athleteData.data.ladder.trailtourPoints} (${athleteData.data.ladder.trailtourPosition})`} color="primary" style={{ marginRight: 5 }} />
-                        </Tooltip>
-                        <Tooltip title="Počet zaběhnutých etap">
-                            <Chip avatar={<Avatar>E</Avatar>} label={`${filteredResults.length} / ${resultData.data.length}`} color="primary" style={{ marginRight: 5 }} />
-                        </Tooltip>
-                        <Tooltip title="Průměrné body z etap">
-                            <Chip avatar={<Avatar>P</Avatar>} label={`${average.toFixed(2)} / ${trailtourAverage.toFixed(2)}`} color="primary" />
-                        </Tooltip>
-                    </Box>
-                }
-                <MarginTop margin={16} />
                 <Box component={Paper} square>
                     <Map
                         style={{ width: "100%", height: "400px" }}
