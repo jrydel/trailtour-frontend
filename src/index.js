@@ -4,12 +4,15 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ReactGA from 'react-ga'
+import { BrowserRouter as Router } from 'react-router-dom';
 
 ReactGA.initialize('UA-167777796-1');
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <App />
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
