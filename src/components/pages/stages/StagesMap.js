@@ -1,7 +1,7 @@
 import React from "react";
 
 import useSWR from "swr";
-import { Map, TileLayer, Marker, Popup } from "react-leaflet";
+import { Map, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import FullscreenControl from "react-leaflet-fullscreen";
 
 import { defaultGetOptions, fetcher } from "../../utils/FetchUtils";
@@ -30,18 +30,23 @@ const StageMap = props => {
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 {data.map((stage, key) => {
                     const data = JSON.parse(stage.stravaData).latlng;
-                    return <Marker
-                        key={key}
-                        position={data[0]}
-                    >
-                        <Popup>
-                            <AppLink to={`/etapa/${stage.number}`} >{formatStageNumber(stage.number) + " - " + stage.name}</AppLink>
-                        </Popup>
-                    </Marker>
+                    return (
+                        <>
+                            <Marker
+                                key={key}
+                                position={data[0]}
+                            >
+                                <Popup>
+                                    <AppLink to={`/etapa/${stage.number}`} >{formatStageNumber(stage.number) + " - " + stage.name}</AppLink>
+                                </Popup>
+                            </Marker>
+                            <Polyline positions={data} color="red" />
+                        </>
+                    )
                 })}
                 <FullscreenControl position="topleft" content={"full"} />
             </Map >
-        </PageBox>
+        </PageBox >
     )
 }
 
