@@ -1,7 +1,8 @@
-import React, { Children } from "react";
-import { PageTitle, PageContent } from "./layout/Page";
+import React from "react";
 
 import { FiGitPullRequest } from "react-icons/fi";
+
+import { PageTitle, PageContent } from "./layout/Page";
 import { Box } from "../utils/LayoutUtils";
 
 const list = [

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { PageTitle, PageContent } from "../layout/Page";
 
 const ResultsClubs = props => {

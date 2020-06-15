@@ -1,21 +1,24 @@
 import React from "react";
+
+import useSWR from "swr";
+import moment from "moment";
+
 import { PageTitle, PageContent, PageLoader, PageMenu } from "./layout/Page";
 import { Table } from "../utils/TableUtils";
-import useSWR from "swr";
 import { defaultGetOptions, fetcher } from "../utils/FetchUtils";
-import { cs } from "date-fns/locale";
-import { format } from "date-fns";
 import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
 import { ExternalLink, AppLink, pageClasses } from "../utils/NavUtils";
 import { Box } from "../utils/LayoutUtils";
 
 const Dashboard = props => {
 
+    moment.locale("cs");
+
     const [limit, setLimit] = React.useState(50);
     const { data, error } = useSWR(`https://api.orank.cz/trailtour/getFeed?database=trailtour_cz&limit=${limit}`, url => fetcher(url, defaultGetOptions));
 
     const tableOptions = [
-        { header: 'Datum', align: "center", sort: { id: "activity.created", direction: "desc" }, render: row => format(Date.parse(row.activity.created), "PP - HH:mm:ss", { locale: cs }) },
+        { header: 'Nahráno', align: "center", sort: { id: "activity.created", direction: "desc" }, render: row => moment(row.activity.created).startOf("hour").fromNow() },
         { header: 'Etapa', align: "left", sort: { id: "stage.number" }, render: row => <AppLink to={`/etapa/${row.stage.number}`}>{formatStageNumber(row.stage.number) + " - " + row.stage.name}</AppLink> },
         { header: 'Závodník', align: "left", sort: { id: "athlete.name" }, render: row => <AppLink to={`/zavodnik/${row.athlete.id}`}>{row.athlete.name}</AppLink> },
         { header: 'Čas', align: "right", sort: { id: "activity.time" }, render: row => <ExternalLink to={`http://strava.com/activities/${row.activity.id}`}>{formatSeconds(row.activity.time)}</ExternalLink> },

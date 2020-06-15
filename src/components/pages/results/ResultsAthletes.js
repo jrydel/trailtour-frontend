@@ -1,6 +1,8 @@
 import React from "react";
+
+import { useLocation } from "react-router";
+
 import { PageTitle, PageContent } from "../layout/Page";
-import { useLocation, useParams } from "react-router";
 
 const ResultsAthletes = props => {
 

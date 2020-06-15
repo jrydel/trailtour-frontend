@@ -1,9 +1,9 @@
 import React from "react";
 
-import NavLink, { menuClasses } from "../../utils/NavUtils";
 import { Link } from "react-router-dom";
-
 import { FiLogOut, FiRepeat, FiNavigation, FiGitPullRequest, FiCalendar, FiSearch } from "react-icons/fi";
+
+import NavLink, { menuClasses } from "../../utils/NavUtils";
 
 const Search = () => {
 

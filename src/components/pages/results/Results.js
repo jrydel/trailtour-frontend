@@ -1,9 +1,11 @@
 import React from "react";
-import { PageTitle, PageContent, PageMenu } from "../layout/Page";
+
 import { Outlet } from "react-router";
 import { Link } from "react-router-dom";
-import NavLink, { pageClasses } from "../../utils/NavUtils";
 import { FiMap, FiAlignJustify } from "react-icons/fi";
+
+import { PageTitle, PageContent, PageMenu } from "../layout/Page";
+import NavLink, { pageClasses } from "../../utils/NavUtils";
 
 const Results = props => {
 

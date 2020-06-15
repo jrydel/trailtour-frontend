@@ -1,7 +1,8 @@
 import React from "react";
 
-import { Map, TileLayer } from "react-leaflet";
 import useSWR from "swr";
+import { Map, TileLayer } from "react-leaflet";
+
 import { defaultGetOptions, fetcher } from "../../utils/FetchUtils";
 import { CustomMarker } from "../../utils/MapUtils";
 import { PageLoader } from "../layout/Page";

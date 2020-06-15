@@ -1,7 +1,9 @@
 import React from "react";
-import { formatStageNumber, formatNumber } from "../../utils/FormatUtils";
+
 import useSWR from "swr";
-import { PageLoader, PageContent } from "../layout/Page";
+
+import { formatStageNumber, formatNumber } from "../../utils/FormatUtils";
+import { PageLoader } from "../layout/Page";
 import { fetcher, defaultGetOptions } from "../../utils/FetchUtils";
 import { Box } from "../../utils/LayoutUtils";
 import { Table } from "../../utils/TableUtils";

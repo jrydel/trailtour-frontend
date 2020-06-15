@@ -1,9 +1,10 @@
 import React from "react";
+
 import { Outlet } from "react-router";
-import { PageTitle, PageContent, PageMenu } from "../layout/Page";
-import { FlexBoxRow } from "../../utils/LayoutUtils";
 import { Link } from "react-router-dom";
 import { FiMapPin, FiList } from "react-icons/fi";
+
+import { PageTitle, PageContent, PageMenu } from "../layout/Page";
 
 import NavLink, { pageClasses } from "../../utils/NavUtils";
 

@@ -1,19 +1,21 @@
 import React from "react";
-import { PageTitle, PageContent, PageLoader, PageMenu } from "../layout/Page";
-import { useLocation } from "react-router";
-import { fetcher, defaultGetOptions } from "../../utils/FetchUtils";
+
+import { useLocation, useNavigate } from "react-router";
 import useSWR from "swr";
+
+import { PageTitle, PageContent, PageLoader, PageMenu } from "../layout/Page";
+import { fetcher, defaultGetOptions } from "../../utils/FetchUtils";
 import { ExternalLink, pageClasses, AppLink } from "../../utils/NavUtils";
 import { Box } from "../../utils/LayoutUtils";
-
+import { formatStageNumber, formatSeconds } from "../../utils/FormatUtils";
+import { Table } from "../../utils/TableUtils";
 import StravaImage from "../../../assets/images/strava.jpg";
 import MapyCZImage from "../../../assets/images/mapycz.png";
 import TrailtourImage from "../../../assets/images/trailtour.jpg";
-import { formatStageNumber, formatSeconds } from "../../utils/FormatUtils";
-import { Table } from "../../utils/TableUtils";
 
 const Stage = props => {
 
+    const navigate = useNavigate();
     const { pathname } = useLocation();
     const path = pathname.substring(pathname.lastIndexOf("/") + 1);
 
@@ -24,8 +26,8 @@ const Stage = props => {
     const { data: countData, error: countDataError } = useSWR(`https://api.orank.cz/trailtour/getResultsCount?database=trailtour_cz&number=${path}`, url => fetcher(url, defaultGetOptions));
 
     if (stageDataError || resultsError || countDataError) {
-        console.log(stageDataError, resultsDataError, countDataError);
-        return <div>error</div>
+        console.log(stageDataError, resultsError, countDataError);
+        navigate("/nenalezeno", { replace: true });
     }
 
     if (!stageData || !resultsData || !countData) return <PageLoader />
