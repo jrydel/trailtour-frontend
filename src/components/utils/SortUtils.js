@@ -10,10 +10,10 @@ export const useSortableData = (data, sort) => {
             const tempB = getSplittedValue(b, sort.id);
 
             if (tempA < tempB) {
-                return sort.direction === 'asc' ? -1 : 1;
+                return sort.direction === "asc" ? -1 : 1;
             }
             if (tempA > tempB) {
-                return sort.direction === 'asc' ? 1 : -1;
+                return sort.direction === "asc" ? 1 : -1;
             }
             return 0;
         });

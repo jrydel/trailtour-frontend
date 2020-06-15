@@ -20,12 +20,7 @@ export const NavLink = ({ to, exact, classes, component: Component, ...rest }) =
     const resolvedLocation = useResolvedLocation(to);
     const routeMatches = matchRoutes(routes, location);
 
-    let isActive;
-    if (!routeMatches) {
-        isActive = false;
-    } else {
-        isActive = exact ? location.pathname === resolvedLocation.pathname : routeMatches.some(match => match.pathname === resolvedLocation.pathname);
-    }
+    const isActive = exact ? location.pathname === resolvedLocation.pathname : routeMatches.some(match => match.pathname === resolvedLocation.pathname);
 
     const allClassNames = classes ? classes.className + (isActive ? ` ${classes.activeClassName}` : ` ${classes.inactiveClassName}`) : "";
 

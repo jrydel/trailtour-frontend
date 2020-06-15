@@ -3,11 +3,11 @@ import React from "react";
 import useSWR from "swr";
 
 import { formatStageNumber, formatNumber } from "../../utils/FormatUtils";
-import { PageLoader } from "../layout/Page";
+import { PageError, PageLoading, PageBox } from "../layout/Page";
 import { fetcher, defaultGetOptions } from "../../utils/FetchUtils";
-import { Box } from "../../utils/LayoutUtils";
 import { Table } from "../../utils/TableUtils";
 import { AppLink } from "../../utils/NavUtils";
+import { Box } from "../../utils/LayoutUtils";
 
 const StageList = props => {
 
@@ -33,16 +33,17 @@ const StageList = props => {
     ];
 
     if (error) {
-        console.log(error);
-        return <div>error</div>
+        return <PageError />
     }
-    if (!data) return <PageLoader />
+    if (!data) return <PageLoading />
 
     return (
-        <Box>
-            <Table options={tableOptions} data={data} />
-        </Box>
-    )
+        <PageBox>
+            <Box>
+                <Table options={tableOptions} data={data} />
+            </Box>
+        </PageBox>
+    );
 }
 
 export default StageList;

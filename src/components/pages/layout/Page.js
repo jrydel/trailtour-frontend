@@ -1,6 +1,23 @@
-import React from 'react';
+import React from "react";
 
-export const PageTitle = ({ children }) => <h1 className="text-2xl text-dark h-10">{children}</h1>;
-export const PageMenu = ({ children }) => <div className="flex flex-row items-center justify-between h-10">{children}</div>
-export const PageContent = ({ children }) => <div className="mt-4">{children}</div>;
-export const PageLoader = () => <div className="mt-4 flex flex-row items-center justify-center"><div className="loader" /></div>;
+import Navbar from "./Navbar";
+
+export const PageBox = ({ children }) => <div className="mt-5">{children}</div>;
+export const PageHeader = ({ children }) => <div className="flex flex-col sm:flex-row items-center justify-around sm:justify-between h-header sm:h-headersm">{children}</div>
+export const PageTitle = ({ children }) => <h1 className="text-2xl text-dark">{children}</h1>;
+
+export const PageError = ({ full = false }) => full ? <Page><div className="flex flex-col items-center justify-center"><p>Error</p></div></Page> : <PageBox><div className="flex flex-col items-center justify-center"><p>Error</p></div></PageBox>;
+export const PageLoading = ({ full = false }) => full ? <Page><div className="flex flex-col items-center justify-center"><div className="loader" /></div></Page> : <PageBox><div className="flex flex-col items-center justify-center"><div className="loader" /></div></PageBox>;
+
+const Page = ({ children }) => {
+    return (
+        <>
+            <Navbar />
+            <div className="container mx-auto max-w-screen-xl px-4 py-5">
+                {children}
+            </div>
+        </>
+    );
+}
+
+export default Page;

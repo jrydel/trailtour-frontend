@@ -1,6 +1,6 @@
 export const defaultGetOptions = {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
+    method: "GET",
+    headers: { "Content-Type": "application/json" }
 }
 
 export const fetcher = (...args) => fetch(...args).then(res => {

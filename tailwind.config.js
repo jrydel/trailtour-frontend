@@ -20,13 +20,15 @@ module.exports = {
         background: "#f5f7fb"
       },
       height: {
-        navbar: "3.5rem"
+        navbar: "3.5rem",
+        header: "6rem",
+        headersm: "3rem"
       },
       width: {
         changelog: "21px"
       },
       minHeight: {
-        navbar: "3.5rem"
+        navbar: "3.5rem",
       },
       boxShadow: {
         navbar: "inset 0 -1px 0 0 rgba(110,117,130,.2)"

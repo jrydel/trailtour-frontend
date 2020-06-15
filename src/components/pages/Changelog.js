@@ -2,7 +2,7 @@ import React from "react";
 
 import { FiGitPullRequest } from "react-icons/fi";
 
-import { PageTitle, PageContent } from "./layout/Page";
+import Page, { PageTitle, PageHeader, PageBox } from "./layout/Page";
 import { Box } from "../utils/LayoutUtils";
 
 const list = [
@@ -77,9 +77,9 @@ const list = [
 ]
 
 const Release = ({ version, date, children }) => {
-    return <div className="flex flex-row mb-4 lg:w-1/2">
+    return <div className="flex flex-row mb-4">
         <div className="bg-success rounded-full h-10 w-10 flex flex-none items-center justify-center z-50"><FiGitPullRequest /></div>
-        <Box className="ml-4 px-4 pt-2 sm:row-span-3">
+        <Box className="ml-4 px-4 pt-4">
             <p className="text-dark font-bold text-xl ">{version}</p>
             <p className="text-gray-600 text-sm">{date}</p>
             <div className="p-4">
@@ -92,10 +92,12 @@ const Release = ({ version, date, children }) => {
 const Changelog = props => {
 
     return (
-        <>
-            <PageTitle>Changelog</PageTitle>
-            <PageContent>
-                <div className="relative flex flex-col">
+        <Page>
+            <PageHeader>
+                <PageTitle>Changelog</PageTitle>
+            </PageHeader>
+            <PageBox>
+                <div className={"relative flex flex-col"}>
                     <div className="w-changelog h-full border-r-2 border-success border-dotted absolute" />
                     {
                         list.map(({ version, date, content }, index) => {
@@ -109,8 +111,8 @@ const Changelog = props => {
                         })
                     }
                 </div>
-            </PageContent>
-        </>
+            </PageBox>
+        </Page>
     )
 }
 

@@ -3,7 +3,7 @@ import React from "react";
 import useSWR from "swr";
 import moment from "moment";
 
-import { PageTitle, PageContent, PageLoader, PageMenu } from "./layout/Page";
+import Page, { PageTitle, PageError, PageBox, PageHeader, PageLoading } from "./layout/Page";
 import { Table } from "../utils/TableUtils";
 import { defaultGetOptions, fetcher } from "../utils/FetchUtils";
 import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
@@ -18,35 +18,34 @@ const Dashboard = props => {
     const { data, error } = useSWR(`https://api.orank.cz/trailtour/getFeed?database=trailtour_cz&limit=${limit}`, url => fetcher(url, defaultGetOptions));
 
     const tableOptions = [
-        { header: 'Nahráno', align: "center", sort: { id: "activity.created", direction: "desc" }, render: row => moment(row.activity.created).startOf("hour").fromNow() },
-        { header: 'Etapa', align: "left", sort: { id: "stage.number" }, render: row => <AppLink to={`/etapa/${row.stage.number}`}>{formatStageNumber(row.stage.number) + " - " + row.stage.name}</AppLink> },
-        { header: 'Závodník', align: "left", sort: { id: "athlete.name" }, render: row => <AppLink to={`/zavodnik/${row.athlete.id}`}>{row.athlete.name}</AppLink> },
-        { header: 'Čas', align: "right", sort: { id: "activity.time" }, render: row => <ExternalLink to={`http://strava.com/activities/${row.activity.id}`}>{formatSeconds(row.activity.time)}</ExternalLink> },
-        { header: 'Pozice na segmentu', align: "center", sort: { id: "activity.position" }, render: row => row.activity.position }
+        { header: "Nahráno", align: "center", sort: { id: "activity.created", direction: "desc" }, render: row => moment(row.activity.created).startOf("hour").fromNow() },
+        { header: "Etapa", align: "left", sort: { id: "stage.number" }, render: row => <AppLink to={`/etapa/${row.stage.number}`}>{formatStageNumber(row.stage.number) + " - " + row.stage.name}</AppLink> },
+        { header: "Závodník", align: "left", sort: { id: "athlete.name" }, render: row => <AppLink to={`/zavodnik/${row.athlete.id}`}>{row.athlete.name}</AppLink> },
+        { header: "Čas", align: "right", sort: { id: "activity.time" }, render: row => <ExternalLink to={`http://strava.com/activities/${row.activity.id}`}>{formatSeconds(row.activity.time)}</ExternalLink> },
+        { header: "Pozice na segmentu", align: "center", sort: { id: "activity.position" }, render: row => row.activity.position }
     ];
 
     if (error) {
-        console.log(error);
-        return <div>error</div>
+        return <PageError full={true} />
     }
-    if (!data) return <PageLoader />
+    if (!data) return <PageLoading full={true} />
 
     return (
-        <>
-            <div className="flex flex-col sm:flex-row items-center justify-between">
+        <Page>
+            <PageHeader>
                 <PageTitle>Novinky</PageTitle>
-                <PageMenu>
+                <div className="flex flex-row items-center justify-between">
                     <div onClick={() => setLimit(50)} className={`${pageClasses.className} ${limit === 50 ? pageClasses.activeClassName : pageClasses.inactiveClassName}`}>50</div>
                     <div onClick={() => setLimit(100)} className={`${pageClasses.className} ${limit === 100 ? pageClasses.activeClassName : pageClasses.inactiveClassName}`}>100</div>
                     <div onClick={() => setLimit(500)} className={`${pageClasses.className} ${limit === 500 ? pageClasses.activeClassName : pageClasses.inactiveClassName}`}>500</div>
-                </PageMenu>
-            </div>
-            <PageContent>
+                </div>
+            </PageHeader>
+            <PageBox>
                 <Box>
                     <Table options={tableOptions} data={data} />
                 </Box>
-            </PageContent>
-        </>
+            </PageBox>
+        </Page>
     )
 }
 
