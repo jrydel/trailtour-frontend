@@ -7,7 +7,6 @@ import { routes } from "../../Routes";
 const Layout = () => {
 
     const router = useRoutes(routes);
-    console.log(router);
 
     return (
         <div className="antialiased">

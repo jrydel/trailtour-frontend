@@ -30,6 +30,9 @@ module.exports = {
       minHeight: {
         navbar: "3.5rem",
       },
+      maxHeight: {
+        searchbar: "16rem",
+      },
       boxShadow: {
         navbar: "inset 0 -1px 0 0 rgba(110,117,130,.2)"
       }

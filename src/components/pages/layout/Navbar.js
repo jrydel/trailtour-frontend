@@ -1,21 +1,52 @@
-import React from "react";
+import React, { useRef } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiLogOut, FiRepeat, FiNavigation, FiGitPullRequest, FiCalendar, FiSearch } from "react-icons/fi";
 
-import NavLink, { menuClasses } from "../../utils/NavUtils";
+import NavLink, { menuClasses, AppLink } from "../../utils/NavUtils";
+import useSWR from "swr";
+import { fetcher, defaultGetOptions } from "../../utils/FetchUtils";
+import { formatStageNumber } from "../../utils/FormatUtils";
 
 const Search = () => {
 
-    const [focus, setFocus] = React.useState(false);
+    const navigate = useNavigate();
+    const [open, setOpen] = React.useState(false);
+    const [query, setQuery] = React.useState("");
+    const { data } = useSWR(`https://api.orank.cz/trailtour/fulltext?database=trailtour_cz&match=${query}`, url => fetcher(url, defaultGetOptions));
+    const inputRef = useRef(null);
+
+    React.useEffect(() => {
+        setOpen(query !== "");
+    }, [query])
 
     return (
         <div className="order-first sm:order-last mt-4 sm:mt-0 w-full sm:w-1/2 relative">
             <FiSearch className={`absolute bottom-0 top-0 my-auto ml-2 ${focus ? "text-dark" : "text-gray-500"}`} />
-            <input className={`border border-gray-400 pl-8 h-10 focus:outline-none w-full sm:auto rounded`} id="username" type="text" placeholder="Hledat..."
-                onFocus={() => setFocus(true)}
-                onBlur={() => setFocus(false)}
+            <input ref={inputRef} className={`border border-gray-400 pl-8 h-10 focus:outline-none w-full sm:auto rounded`} id="searchbar" placeholder="Hledat..." type="text" autoComplete="off" value={query}
+                onChange={event => setQuery(event.target.value)}
+                onBlur={() => setQuery("")}
+                onKeyDown={event => {
+                    if (event.key === "Escape") {
+                        setQuery("");
+                        event.target.blur();
+                    }
+                }}
             />
+            <div className={`${open ? "block" : "hidden"} absolute flex flex-col bg-light rounded-lg p-4 max-h-searchbar overflow-y-auto w-full divide-y divide-gray-light border-l border-r border-b border-gray-light`} style={{ zIndex: 9999 }}>
+                <div className="inline-flex flex-col p-2">
+                    <p className="text-sm font-bold">Etapy</p>
+                    {
+                        data && data.stages.map((val, index) => <div onMouseDown={() => navigate(`/etapa/${val.number}`)} key={index} className="p-2 text-primary hover:underline cursor-pointer">{`${formatStageNumber(val.number)} - ${val.name}`}</div>)
+                    }
+                </div>
+                <div className="inline-flex flex-col p-2">
+                    <p className="text-sm font-bold">Závodníci</p>
+                    {
+                        data && data.athletes.map((val, index) => <div onMouseDown={() => navigate(`/zavodnik/${val.id}`)} key={index} className="p-2 text-primary hover:underline cursor-pointer">{`${val.name} (${val.id})`}</div>)
+                    }
+                </div>
+            </div>
         </div>
     )
 }
@@ -43,7 +74,7 @@ const Navbar = props => {
                             </svg>
                         </button>
                     </div>
-                    <Link to="/" className="font-bold text-light text-xl">Trailtour 2020</Link>
+                    <Link to="/" className="font-bold text-light text-xl">KamTT 2020</Link>
                     <button className="focus:outline-none">
                         <FiLogOut className="h-6 w-6 text-light" />
                     </button>

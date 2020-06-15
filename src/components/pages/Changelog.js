@@ -7,6 +7,15 @@ import { Box } from "../utils/LayoutUtils";
 
 const list = [
     {
+        version: "v2.1.0",
+        date: "15. června",
+        content: [
+            "Optimalizace a opravy chyb.",
+            "Zlatý marker na mapě závodníka.",
+            "Vyhledávač."
+        ]
+    },
+    {
         version: "v2.0.0",
         date: "13. června",
         content: [
