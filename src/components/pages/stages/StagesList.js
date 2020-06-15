@@ -20,16 +20,16 @@ const StageList = props => {
         { header: "Délka (m)", align: "right", sort: { id: "distance" }, render: row => formatNumber(row.distance) },
         { header: "Převýšení (m)", align: "right", sort: { id: "elevation" }, render: row => formatNumber(row.elevation) },
         { header: "Aktivity", align: "right", sort: { id: "activities" }, render: row => formatNumber(row.activities) },
-        {
-            header: <button className="bg-primary text-white text-sm font-bold px-2 py-1 rounded" >Vytvořit</button>,
-            align: "center",
-            render: row => (
-                <div className="flex flex-row items-center justify-center">
-                    <button className="bg-success text-white text-sm font-bold px-2 py-1 mx-2 rounded" >Upravit</button>
-                    <button className="bg-danger text-white text-sm font-bold px-2 py-1 rounded" >Smazat</button>
-                </div>
-            )
-        },
+        // {
+        //     header: <button className="bg-primary text-white text-sm font-bold px-2 py-1 rounded" >Vytvořit</button>,
+        //     align: "center",
+        //     render: row => (
+        //         <div className="flex flex-row items-center justify-center">
+        //             <button className="bg-success text-white text-sm font-bold px-2 py-1 mx-2 rounded" >Upravit</button>
+        //             <button className="bg-danger text-white text-sm font-bold px-2 py-1 rounded" >Smazat</button>
+        //         </div>
+        //     )
+        // },
     ];
 
     if (error) {
