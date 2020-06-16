@@ -6,29 +6,27 @@ import { useParams } from "react-router";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import FullscreenControl from "react-leaflet-fullscreen";
 
-import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
-import { AppLink, ExternalLink, pageClasses, NavLink } from "../utils/NavUtils";
-import Page, { PageTitle, PageError, PageLoading, PageHeader, PageBox } from "./layout/Page";
-import { fetcher, defaultGetOptions } from "../utils/FetchUtils";
-import { Box } from "../utils/LayoutUtils";
-import { Table } from "../utils/TableUtils";
-import StravaImage from "../../assets/images/strava.jpg";
-import { goldIcon, greenIcon, blueIcon } from "../utils/MapUtils";
+import { formatStageNumber, formatSeconds } from "../../utils/FormatUtils";
+import { AppLink, ExternalLink, pageClasses } from "../../utils/NavUtils";
+import { PageTitle, PageError, PageLoading, PageBox } from "../layout/Page";
+import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
+import { Box, FlexBoxRow } from "../../utils/LayoutUtils";
+import { Table } from "../../utils/TableUtils";
+import StravaImage from "../../../assets/images/strava.jpg";
+import { icon } from "../../utils/MapUtils";
 
 const computeAverage = (arr) => arr.reduce((p, c) => p + (c === null ? 0 : c), 0) / arr.length;
 
 const Athlete = () => {
 
-    moment.locale("cs");
-
     const { id } = useParams();
 
-    const { data: athleteData, error: athleteDataError } = useSWR(`https://api.orank.cz/trailtour/getAthlete?database=trailtour_cz&id=${id}`, url => fetcher(url, defaultGetOptions));
-    const { data: athleteResultsData, error: athleteResultsError } = useSWR(`https://api.orank.cz/trailtour/getAthleteResults?database=trailtour_cz&athleteId=${id}`, url => fetcher(url, defaultGetOptions));
+    const { data: athleteData, error: athleteDataError } = useSWR(`${API_URL}/getAthlete?database=trailtour_cz&id=${id}`, url => fetcher(url, defaultGetOptions));
+    const { data: athleteResultsData, error: athleteResultsError } = useSWR(() => `${API_URL}/getAthleteResults?database=trailtour_cz&athleteId=${athleteData.id}`, url => fetcher(url, defaultGetOptions));
 
     if (athleteDataError || athleteResultsError) {
         console.log(athleteDataError, athleteResultsError);
-        return <PageError full={true} />
+        return <PageError />
     }
 
     if (!athleteData || !athleteResultsData) return <PageLoading full={true} />
@@ -49,11 +47,13 @@ const Athlete = () => {
     const trailtourAverage = computeAverage(filteredData.map(item => item.activityResult.trailtourPoints).filter(x => x));
 
     return (
-        <Page>
-            <PageHeader>
-                <PageTitle>{athleteData.name}</PageTitle>
-                <ExternalLink to={`https://www.strava.com/athletes/${athleteData.id}`} className={pageClasses.className}><img className="w-15 h-10 rounded" src={StravaImage} alt="Strava" /></ExternalLink>
-            </PageHeader>
+        <>
+            <PageBox>
+                <div className="flex flex-col sm:flex-row items-center justify-between">
+                    <PageTitle>{athleteData.name}</PageTitle>
+                    <ExternalLink to={`https://www.strava.com/athletes/${athleteData.id}`} className={pageClasses.className}><img className="w-15 h-10 rounded" src={StravaImage} alt="Strava" /></ExternalLink>
+                </div>
+            </PageBox>
             <PageBox>
                 <div className="flex flex-row items-center justify-center sm:justify-start">
                     <Box className="p-3 inline-flex flex-col sm:flex-row items-center text-sm">
@@ -73,7 +73,7 @@ const Athlete = () => {
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     {
                         athleteResultsData.map((item, key) =>
-                            <Marker key={key} position={[item.stage.coordinates.latitude, item.stage.coordinates.longitude]} icon={item.activity && item.activityResult ? (item.activity.position === 1 ? goldIcon : greenIcon) : blueIcon}>
+                            <Marker key={key} position={[item.stage.coordinates.latitude, item.stage.coordinates.longitude]} icon={icon(item.activity && item.activityResult ? (item.activity.position === 1 ? "gold" : "green") : "blue")}>
                                 <Popup>
                                     <AppLink to={`/etapa/${item.stage.number}`} >{formatStageNumber(item.stage.number) + " - " + item.stage.name}</AppLink>
                                 </Popup>
@@ -88,7 +88,7 @@ const Athlete = () => {
                     <Table options={tableOptions} data={filteredData} />
                 </Box>
             </PageBox>
-        </Page >
+        </>
     )
 }
 

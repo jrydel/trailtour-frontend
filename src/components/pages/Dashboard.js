@@ -3,19 +3,17 @@ import React from "react";
 import useSWR from "swr";
 import moment from "moment";
 
-import Page, { PageTitle, PageError, PageBox, PageHeader, PageLoading } from "./layout/Page";
+import { PageTitle, PageError, PageBox, PageLoading } from "./layout/Page";
 import { Table } from "../utils/TableUtils";
-import { defaultGetOptions, fetcher } from "../utils/FetchUtils";
+import { defaultGetOptions, fetcher, API_URL } from "../utils/FetchUtils";
 import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
-import { ExternalLink, AppLink, pageClasses } from "../utils/NavUtils";
+import { ExternalLink, AppLink, tableClasses } from "../utils/NavUtils";
 import { Box } from "../utils/LayoutUtils";
 
-const Dashboard = props => {
-
-    moment.locale("cs");
+const Dashboard = () => {
 
     const [limit, setLimit] = React.useState(50);
-    const { data, error } = useSWR(`https://api.orank.cz/trailtour/getFeed?database=trailtour_cz&limit=${limit}`, url => fetcher(url, defaultGetOptions));
+    const { data, error } = useSWR(`${API_URL}/getFeed?database=trailtour_cz&limit=${limit}`, url => fetcher(url, defaultGetOptions));
 
     const tableOptions = [
         { header: "Nahráno", align: "center", sort: { id: "activity.created", direction: "desc" }, render: row => moment(row.activity.created).startOf("hour").fromNow() },
@@ -31,21 +29,24 @@ const Dashboard = props => {
     if (!data) return <PageLoading full={true} />
 
     return (
-        <Page>
-            <PageHeader>
-                <PageTitle>Novinky</PageTitle>
-                <div className="flex flex-row items-center justify-between">
-                    <div onClick={() => setLimit(50)} className={`${pageClasses.className} ${limit === 50 ? pageClasses.activeClassName : pageClasses.inactiveClassName}`}>50</div>
-                    <div onClick={() => setLimit(100)} className={`${pageClasses.className} ${limit === 100 ? pageClasses.activeClassName : pageClasses.inactiveClassName}`}>100</div>
-                    <div onClick={() => setLimit(500)} className={`${pageClasses.className} ${limit === 500 ? pageClasses.activeClassName : pageClasses.inactiveClassName}`}>500</div>
+        <>
+            <PageBox>
+                <div className="flex justify-center sm:justify-start">
+                    <PageTitle>Novinky</PageTitle>
                 </div>
-            </PageHeader>
+            </PageBox>
             <PageBox>
                 <Box>
+                    <div className="flex flex-row items-center justify-center sm:justify-end p-2">
+                        <div onClick={() => setLimit(50)} className={`${tableClasses.className} ${limit === 50 ? tableClasses.activeClassName : tableClasses.inactiveClassName}`}>50</div>
+                        <div onClick={() => setLimit(100)} className={`${tableClasses.className} ${limit === 100 ? tableClasses.activeClassName : tableClasses.inactiveClassName}`}>100</div>
+                        <div onClick={() => setLimit(500)} className={`${tableClasses.className} ${limit === 500 ? tableClasses.activeClassName : tableClasses.inactiveClassName}`}>500</div>
+
+                    </div>
                     <Table options={tableOptions} data={data} />
                 </Box>
             </PageBox>
-        </Page>
+        </>
     )
 }
 

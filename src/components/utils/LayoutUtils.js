@@ -2,7 +2,7 @@ import React from "react";
 
 export const FlexBoxRow = ({ children }) => <div className="flex flex-row items-center justify-between">{children}</div>;
 
-export const Box = ({ children, className = "" }) => <div className={`${className} bg-light border-l border-t border-r shadow-navbar rounded w-auto`}>{children}</div>
+export const Box = ({ children, className = "" }) => <div className={`${className} bg-light border-l border-t border-r shadow-navbar rounded`}>{children}</div>
 
 export const Card = ({ title, children }) => {
 

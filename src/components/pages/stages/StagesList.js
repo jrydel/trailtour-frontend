@@ -4,14 +4,14 @@ import useSWR from "swr";
 
 import { formatStageNumber, formatNumber } from "../../utils/FormatUtils";
 import { PageError, PageLoading, PageBox } from "../layout/Page";
-import { fetcher, defaultGetOptions } from "../../utils/FetchUtils";
+import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
 import { Table } from "../../utils/TableUtils";
 import { AppLink } from "../../utils/NavUtils";
 import { Box } from "../../utils/LayoutUtils";
 
-const StageList = props => {
+const StagesList = () => {
 
-    const { data, error } = useSWR("https://api.orank.cz/trailtour/getStages?database=trailtour_cz", url => fetcher(url, defaultGetOptions));
+    const { data, error } = useSWR(`${API_URL}/getStages?database=trailtour_cz`, url => fetcher(url, defaultGetOptions));
 
     const tableOptions = [
         { header: "Číslo", align: "center", sort: { id: "number", direction: "asc" }, render: row => formatStageNumber(row.number) },
@@ -35,7 +35,7 @@ const StageList = props => {
     if (error) {
         return <PageError />
     }
-    if (!data) return <PageLoading />
+    if (!data) return <PageLoading full={false} />
 
     return (
         <PageBox>
@@ -46,4 +46,4 @@ const StageList = props => {
     );
 }
 
-export default StageList;
+export default StagesList;

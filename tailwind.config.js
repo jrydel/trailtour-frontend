@@ -20,9 +20,7 @@ module.exports = {
         background: "#f5f7fb"
       },
       height: {
-        navbar: "3.5rem",
-        header: "6rem",
-        headersm: "3rem"
+        navbar: "3.5rem"
       },
       width: {
         changelog: "21px"
@@ -35,6 +33,9 @@ module.exports = {
       },
       boxShadow: {
         navbar: "inset 0 -1px 0 0 rgba(110,117,130,.2)"
+      },
+      fontSize: {
+        "404": "10rem"
       }
     },
   },

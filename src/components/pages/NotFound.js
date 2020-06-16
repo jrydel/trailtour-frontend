@@ -1,10 +1,7 @@
 import React from "react";
 
-const NotFound = () => {
+import { PageError } from "./layout/Page";
 
-    return (
-        <p>NotFound</p>
-    )
-}
+const NotFound = () => (<PageError />);
 
 export default NotFound;

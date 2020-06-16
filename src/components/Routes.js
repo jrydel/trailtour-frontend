@@ -6,18 +6,14 @@ import Stage from "./pages/stages/Stage";
 import Stages from "./pages/stages/Stages";
 import StagesMap from "./pages/stages/StagesMap";
 import StagesList from "./pages/stages/StagesList";
-import Athlete from "./pages/Athlete";
 import NotFound from "./pages/NotFound";
-import Login from "./pages/Login";
+import Athlete from "./pages/athlete/Athlete";
+import StageList from "./pages/stages/StageList";
+import StageMap from "./pages/stages/StageMap";
 
 export const routes = [
     {
-        path: "login",
-        element: <Login />
-    },
-    {
         path: "/",
-        exact: true,
         element: <Dashboard />
     },
     {
@@ -25,7 +21,7 @@ export const routes = [
         element: <Stages />,
         children: [
             {
-                path: "/",
+                path: "mapa",
                 element: <StagesMap />
             },
             {
@@ -36,7 +32,17 @@ export const routes = [
     },
     {
         path: "/etapa/:number",
-        element: <Stage />
+        element: <Stage />,
+        children: [
+            {
+                path: "vysledky",
+                element: <StageList />
+            },
+            {
+                path: "mapa",
+                element: <StageMap />
+            }
+        ]
     },
     {
         path: "/zavodnik/:id",

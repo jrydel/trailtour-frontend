@@ -1,3 +1,6 @@
+export const API_URL = "https://api.orank.cz/trailtour";
+
+
 export const defaultGetOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" }

@@ -2,7 +2,7 @@ import React from "react";
 
 import { FiGitPullRequest } from "react-icons/fi";
 
-import Page, { PageTitle, PageHeader, PageBox } from "./layout/Page";
+import { PageTitle, PageBox } from "./layout/Page";
 import { Box } from "../utils/LayoutUtils";
 
 const list = [
@@ -98,13 +98,15 @@ const Release = ({ version, date, children }) => {
     </div>
 }
 
-const Changelog = props => {
+const Changelog = () => {
 
     return (
-        <Page>
-            <PageHeader>
-                <PageTitle>Changelog</PageTitle>
-            </PageHeader>
+        <>
+            <PageBox>
+                <div className="flex justify-center sm:justify-start">
+                    <PageTitle>Changelog</PageTitle>
+                </div>
+            </PageBox>
             <PageBox>
                 <div className={"relative flex flex-col"}>
                     <div className="w-changelog h-full border-r-2 border-success border-dotted absolute" />
@@ -121,7 +123,7 @@ const Changelog = props => {
                     }
                 </div>
             </PageBox>
-        </Page>
+        </>
     )
 }
 

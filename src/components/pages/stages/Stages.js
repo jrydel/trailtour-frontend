@@ -1,26 +1,39 @@
 import React from "react";
 
-import { Outlet } from "react-router";
+import { Outlet, useNavigate, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { FiMapPin, FiList } from "react-icons/fi";
 
-import Page, { PageTitle, PageHeader } from "../layout/Page";
+import { PageTitle, PageBox } from "../layout/Page";
 
-import NavLink, { pageClasses } from "../../utils/NavUtils";
+import NavLink, { pageClasses, lastUrlPath } from "../../utils/NavUtils";
 
-const Stages = props => {
+
+const Stages = () => {
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const path = lastUrlPath(location.pathname);
+
+    React.useEffect(() => {
+        if (path === "etapy") {
+            navigate("mapa", { replace: true });
+        }
+    }, [path]);
 
     return (
-        <Page>
-            <PageHeader>
-                <PageTitle>Etapy</PageTitle>
-                <div className="flex flex-row items-center justify-between">
-                    <NavLink to="" component={Link} classes={pageClasses} exact={true} ><FiMapPin className="mr-2" />Mapa</NavLink>
-                    <NavLink to="seznam" component={Link} classes={pageClasses} ><FiList className="mr-2" />Seznam</NavLink>
+        <>
+            <PageBox>
+                <div className="flex flex-col sm:flex-row items-center justify-between">
+                    <PageTitle>Etapy</PageTitle>
+                    <div className="flex flex-row items-center justify-between">
+                        <NavLink to="mapa" component={Link} classes={pageClasses} exact={true} ><FiMapPin className="mr-2" />Mapa</NavLink>
+                        <NavLink to="seznam" component={Link} classes={pageClasses} ><FiList className="mr-2" />Seznam</NavLink>
+                    </div>
                 </div>
-            </PageHeader>
+            </PageBox>
             <Outlet />
-        </Page>
+        </>
     )
 }
 
