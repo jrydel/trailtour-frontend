@@ -75,9 +75,7 @@ const Navbar = props => {
                         </button>
                     </div>
                     <Link to="/" className="font-bold text-light text-xl">KamTT 2020</Link>
-                    <button className="focus:outline-none">
-                        <FiLogOut className="h-6 w-6 text-light" />
-                    </button>
+                    <div />
                 </div>
             </header>
             <nav className={`${open ? "block" : "hidden"} bg-light min-h-navbar sm:flex justify-between items-center shadow-navbar`}>
