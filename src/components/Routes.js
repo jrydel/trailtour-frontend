@@ -48,10 +48,10 @@ export const routes = [
         path: "/zavodnik/:id",
         element: <Athlete />
     },
-    {
-        path: "/changelog",
-        element: <Changelog />
-    },
+    // {
+    //     path: "/changelog",
+    //     element: <Changelog />
+    // },
     {
         path: "*",
         element: <NotFound />

@@ -87,7 +87,7 @@ const Navbar = props => {
                             <NavLink to="/" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiRepeat className="mr-2" />Novinky</NavLink>
                             <NavLink to="/etapy" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiNavigation className="mr-2" />Etapy</NavLink>
                             {/* <NavLink to="/vysledky" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiCalendar className="mr-2" />Výsledky</NavLink> */}
-                            <NavLink to="/changelog" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiGitPullRequest className="mr-2" />Changelog</NavLink>
+                            {/* <NavLink to="/changelog" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiGitPullRequest className="mr-2" />Changelog</NavLink> */}
                         </div>
                         <SearchBar />
                     </div>
