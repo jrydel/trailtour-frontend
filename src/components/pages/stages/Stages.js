@@ -4,7 +4,7 @@ import { Outlet, useNavigate, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { FiMapPin, FiList } from "react-icons/fi";
 
-import { PageTitle, PageBox } from "../layout/Page";
+import Page, { PageTitle, PageBox } from "../layout/Page";
 
 import NavLink, { pageClasses, lastUrlPath } from "../../utils/NavUtils";
 
@@ -22,7 +22,7 @@ const Stages = () => {
     }, [path]);
 
     return (
-        <>
+        <Page>
             <PageBox>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
                     <PageTitle>Etapy</PageTitle>
@@ -33,7 +33,7 @@ const Stages = () => {
                 </div>
             </PageBox>
             <Outlet />
-        </>
+        </Page>
     )
 }
 

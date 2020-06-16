@@ -8,7 +8,7 @@ import FullscreenControl from "react-leaflet-fullscreen";
 
 import { formatStageNumber, formatSeconds } from "../../utils/FormatUtils";
 import { AppLink, ExternalLink, pageClasses } from "../../utils/NavUtils";
-import { PageTitle, PageError, PageLoading, PageBox } from "../layout/Page";
+import Page, { PageTitle, PageError, PageLoading, PageBox } from "../layout/Page";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
 import { Box, FlexBoxRow } from "../../utils/LayoutUtils";
 import { Table } from "../../utils/TableUtils";
@@ -47,7 +47,7 @@ const Athlete = () => {
     const trailtourAverage = computeAverage(filteredData.map(item => item.activityResult.trailtourPoints).filter(x => x));
 
     return (
-        <>
+        <Page>
             <PageBox>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
                     <PageTitle>{athleteData.name}</PageTitle>
@@ -73,7 +73,7 @@ const Athlete = () => {
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     {
                         athleteResultsData.map((item, key) =>
-                            <Marker key={key} position={[item.stage.coordinates.latitude, item.stage.coordinates.longitude]} icon={icon(item.activity && item.activityResult ? (item.activity.position === 1 ? "gold" : "green") : "blue")}>
+                            <Marker key={key} position={[item.stage.coordinates.latitude, item.stage.coordinates.longitude]} icon={icon(item.activity && item.activityResult ? (item.activity.position === 1 ? "gold" : "blue") : "grey")}>
                                 <Popup>
                                     <AppLink to={`/etapa/${item.stage.number}`} >{formatStageNumber(item.stage.number) + " - " + item.stage.name}</AppLink>
                                 </Popup>
@@ -88,7 +88,7 @@ const Athlete = () => {
                     <Table options={tableOptions} data={filteredData} />
                 </Box>
             </PageBox>
-        </>
+        </Page>
     )
 }
 

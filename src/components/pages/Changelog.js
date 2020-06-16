@@ -2,7 +2,7 @@ import React from "react";
 
 import { FiGitPullRequest } from "react-icons/fi";
 
-import { PageTitle, PageBox } from "./layout/Page";
+import Page, { PageTitle, PageBox } from "./layout/Page";
 import { Box } from "../utils/LayoutUtils";
 
 const list = [
@@ -101,7 +101,7 @@ const Release = ({ version, date, children }) => {
 const Changelog = () => {
 
     return (
-        <>
+        <Page>
             <PageBox>
                 <div className="flex justify-center sm:justify-start">
                     <PageTitle>Changelog</PageTitle>
@@ -123,7 +123,7 @@ const Changelog = () => {
                     }
                 </div>
             </PageBox>
-        </>
+        </Page>
     )
 }
 

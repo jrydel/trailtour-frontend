@@ -4,7 +4,7 @@ import { useParams, Outlet, useNavigate, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import useSWR from "swr";
 
-import { PageTitle, PageBox, PageError, PageLoading } from "../layout/Page";
+import Page, { PageTitle, PageBox, PageError, PageLoading } from "../layout/Page";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
 import NavLink, { ExternalLink, pageClasses, lastUrlPath } from "../../utils/NavUtils";
 import { formatStageNumber } from "../../utils/FormatUtils";
@@ -37,7 +37,7 @@ const Stage = props => {
     if (!stageData) return <PageLoading full={true} />
 
     return (
-        <>
+        <Page>
             <PageBox>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
                     <PageTitle>{`${formatStageNumber(stageData.number)} - ${stageData.name}`}</PageTitle>
@@ -56,7 +56,7 @@ const Stage = props => {
                 </div>
             </PageBox>
             <Outlet />
-        </>
+        </Page>
     )
 }
 

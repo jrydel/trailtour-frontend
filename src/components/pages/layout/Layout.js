@@ -14,10 +14,7 @@ const Layout = () => {
     return (
         <div className="antialiased">
             <div className="bg-background min-h-screen">
-                <Navbar />
-                <LayoutContainer>
-                    {router}
-                </LayoutContainer>
+                {router}
             </div>
         </div >
     );

@@ -3,7 +3,7 @@ import React from "react";
 import useSWR from "swr";
 import moment from "moment";
 
-import { PageTitle, PageError, PageBox, PageLoading } from "./layout/Page";
+import Page, { PageTitle, PageError, PageBox, PageLoading } from "./layout/Page";
 import { Table } from "../utils/TableUtils";
 import { defaultGetOptions, fetcher, API_URL } from "../utils/FetchUtils";
 import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
@@ -29,7 +29,7 @@ const Dashboard = () => {
     if (!data) return <PageLoading full={true} />
 
     return (
-        <>
+        <Page>
             <PageBox>
                 <div className="flex justify-center sm:justify-start">
                     <PageTitle>Novinky</PageTitle>
@@ -46,7 +46,7 @@ const Dashboard = () => {
                     <Table options={tableOptions} data={data} />
                 </Box>
             </PageBox>
-        </>
+        </Page>
     )
 }
 

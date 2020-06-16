@@ -80,7 +80,7 @@ const Navbar = props => {
                     </div>
                 </LayoutContainer>
             </header>
-            <nav className={`${open ? "flex" : "hidden"} bg-light min-h-navbar sm:flex justify-between items-center shadow-navbar`}>
+            <nav className={`${open ? "block" : "hidden"} bg-light min-h-navbar sm:flex justify-between items-center shadow-navbar`}>
                 <LayoutContainer>
                     <div className="flex flex-col sm:flex-row items-center justify-between">
                         <div className="flex flex-col sm:flex-row items-start py-4 sm:py-0 sm:pt-0 w-full">
