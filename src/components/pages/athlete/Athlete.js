@@ -73,7 +73,7 @@ const Athlete = () => {
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     {
                         athleteResultsData.map((item, key) =>
-                            <Marker key={key} position={[item.stage.coordinates.latitude, item.stage.coordinates.longitude]} icon={icon(item.activity && item.activityResult ? (item.activity.position === 1 ? "gold" : "blue") : "grey")}>
+                            <Marker key={key} position={[item.stage.coordinates.latitude, item.stage.coordinates.longitude]} icon={icon(item.activity && item.activityResult ? (item.activity.position === 1 ? "gold" : "green") : "grey")}>
                                 <Popup>
                                     <AppLink to={`/etapa/${item.stage.number}`} >{formatStageNumber(item.stage.number) + " - " + item.stage.name}</AppLink>
                                 </Popup>
