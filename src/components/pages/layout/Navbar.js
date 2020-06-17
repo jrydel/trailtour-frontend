@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiRepeat, FiNavigation, FiGitPullRequest, FiCalendar, FiSearch } from "react-icons/fi";
 
-import { LayoutContainer } from "../layout/Layout";
+import { NavbarContainer } from "../layout/Layout";
 import NavLink, { menuClasses } from "../../utils/NavUtils";
 import useSWR from "swr";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
@@ -14,7 +14,7 @@ const SearchBar = () => {
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const [query, setQuery] = React.useState("");
-    const { data } = useSWR(`${API_URL}/fulltext?database=trailtour_cz&match=${query}`, url => fetcher(url, defaultGetOptions));
+    const { data } = useSWR(query !== "" ? `${API_URL}/fulltext?database=trailtour_cz&match=${query}` : null, url => fetcher(url, defaultGetOptions));
 
     React.useEffect(() => {
         setOpen(query !== "");
@@ -58,7 +58,7 @@ const Navbar = props => {
     return (
         <>
             <header className="bg-dark h-navbar flex flex-row items-center">
-                <LayoutContainer>
+                <NavbarContainer>
                     <div className="flex flex-row items-center justify-between">
                         <div className="sm:hidden">
                             <button className={"block text-light focus:outline-none"} type="button" onClick={() => setOpen(prev => !prev)}>
@@ -78,10 +78,10 @@ const Navbar = props => {
                         <Link to="/" className="font-bold text-light text-xl">KamTT 2020</Link>
                         <div />
                     </div>
-                </LayoutContainer>
+                </NavbarContainer>
             </header>
             <nav className={`${open ? "block" : "hidden"} bg-light min-h-navbar sm:flex justify-between items-center shadow-navbar`}>
-                <LayoutContainer>
+                <NavbarContainer>
                     <div className="flex flex-col sm:flex-row items-center justify-between">
                         <div className="flex flex-col sm:flex-row items-start py-4 sm:py-0 sm:pt-0 w-full">
                             <NavLink to="/" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiRepeat className="mr-2" />Novinky</NavLink>
@@ -91,7 +91,7 @@ const Navbar = props => {
                         </div>
                         <SearchBar />
                     </div>
-                </LayoutContainer>
+                </NavbarContainer>
             </nav>
         </>
     );

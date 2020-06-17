@@ -30,7 +30,9 @@ export const PageLoading = ({ full = true }) => (
         (
             <Page>
                 <PageBox>
-                    <div className="flex flex-col items-center justify-center"><div className="loader" /></div>
+                    <div className="flex flex-col items-center justify-center">
+                        <div className="loader" />
+                    </div>
                 </PageBox>
             </Page>
         ) : (

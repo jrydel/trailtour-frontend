@@ -1,6 +1,6 @@
 import React from "react";
 
-import useSWR from "swr";
+import useSWR, { useSWRPages, useSWRInfinite } from "swr";
 import moment from "moment";
 
 import Page, { PageTitle, PageError, PageBox, PageLoading } from "./layout/Page";
@@ -12,8 +12,16 @@ import { Box } from "../utils/LayoutUtils";
 
 const Dashboard = () => {
 
-    const [limit, setLimit] = React.useState(50);
-    const { data, error } = useSWR(`${API_URL}/getFeed?database=trailtour_cz&limit=${limit}`, url => fetcher(url, defaultGetOptions));
+    const limit = 50;
+    const { data, error, setPage } = useSWRInfinite(
+        (offset, previousPageData) => {
+            console.log(offset);
+            if (previousPageData && previousPageData.length === 0) return null;
+            return `${API_URL}/getFeed?database=trailtour_cz&limit=${limit}&offset=${offset * limit}`;
+        },
+        url => fetcher(url, defaultGetOptions)
+    );
+    console.log(data);
 
     const tableOptions = [
         { header: "Nahráno", align: "center", sort: { id: "activity.created", direction: "desc" }, render: row => moment(row.activity.created).startOf("hour").fromNow() },
@@ -37,13 +45,10 @@ const Dashboard = () => {
             </PageBox>
             <PageBox>
                 <Box>
-                    <div className="flex flex-row items-center justify-center sm:justify-end p-2">
-                        <div onClick={() => setLimit(50)} className={`${tableClasses.className} ${limit === 50 ? tableClasses.activeClassName : tableClasses.inactiveClassName}`}>50</div>
-                        <div onClick={() => setLimit(100)} className={`${tableClasses.className} ${limit === 100 ? tableClasses.activeClassName : tableClasses.inactiveClassName}`}>100</div>
-                        <div onClick={() => setLimit(500)} className={`${tableClasses.className} ${limit === 500 ? tableClasses.activeClassName : tableClasses.inactiveClassName}`}>500</div>
-
+                    <Table options={tableOptions} data={[].concat(...data)} />
+                    <div className="flex flex-row justify-center py-4">
+                        <div onClick={() => setPage(prev => prev + 1)} className={`${tableClasses.className} ${limit === 500 ? tableClasses.activeClassName : tableClasses.inactiveClassName}`}>Dalších 50</div>
                     </div>
-                    <Table options={tableOptions} data={data} />
                 </Box>
             </PageBox>
         </Page>

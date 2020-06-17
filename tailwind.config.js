@@ -1,9 +1,6 @@
 module.exports = {
   purge: [],
   theme: {
-    fontFamily: {
-      body: ["Ubuntu", "sans-serif"]
-    },
     screens: {
       sm: "640px",
       md: "768px",
@@ -12,7 +9,7 @@ module.exports = {
     },
     extend: {
       colors: {
-        primary: "#007bff",
+        primary: "#197BBD",
         success: "#28a745",
         danger: "#D61A3C",
         dark: "#354052",
