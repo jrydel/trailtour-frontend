@@ -37,8 +37,26 @@ const StagesMap = () => {
                     return (
                         <div key={key}>
                             <Marker position={data[0]} >
-                                <Popup>
-                                    <AppLink to={`/etapa/${stage.number}`} >{formatStageNumber(stage.number) + " - " + stage.name}</AppLink>
+                                <Popup className="">
+                                    <div className="flex flex-col p-2 items-start justify-center">
+                                        <div className="mb-2">
+                                            <AppLink to={`/etapa/${stage.number}`} >{formatStageNumber(stage.number) + " - " + stage.name}</AppLink>
+                                        </div>
+                                        <div className="mb-2 flex flex-row items-center justify-start">
+                                            <div class="tooltip">
+                                                <img className="w-5" src="../src/assets/images/strava-kom.png" />
+                                                <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší muž</span>
+                                            </div>
+                                            <span className="ml-2">--:--:-- (Miloš Nykodým)</span>
+                                        </div>
+                                        <div className="flex flex-row items-center justify-start">
+                                            <div class="tooltip">
+                                                <img className="w-5" src="../src/assets/images/strava-kom.png" />
+                                                <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší žena</span>
+                                            </div>
+                                            <span className="ml-2">--:--:-- (Miloš Nykodým)</span>
+                                        </div>
+                                    </div>
                                 </Popup>
                             </Marker>
                             <Polyline positions={data} color="red" />

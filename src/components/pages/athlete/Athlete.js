@@ -5,12 +5,13 @@ import moment from "moment";
 import { useParams } from "react-router";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import FullscreenControl from "react-leaflet-fullscreen";
+import { RiTimerLine, RiTimerFlashLine } from "react-icons/ri";
 
 import { formatStageNumber, formatSeconds } from "../../utils/FormatUtils";
 import { AppLink, ExternalLink, pageClasses } from "../../utils/NavUtils";
 import Page, { PageTitle, PageError, PageLoading, PageBox } from "../layout/Page";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
-import { Box, FlexBoxRow } from "../../utils/LayoutUtils";
+import { Box } from "../../utils/LayoutUtils";
 import { Table } from "../../utils/TableUtils";
 import StravaImage from "../../../assets/images/strava.jpg";
 import { icon } from "../../utils/MapUtils";
@@ -75,7 +76,33 @@ const Athlete = () => {
                         athleteResultsData.map((item, key) =>
                             <Marker key={key} position={[item.stage.coordinates.latitude, item.stage.coordinates.longitude]} icon={icon(item.activity && item.activityResult ? (item.activity.position === 1 ? "gold" : "green") : "grey")}>
                                 <Popup>
-                                    <AppLink to={`/etapa/${item.stage.number}`} >{formatStageNumber(item.stage.number) + " - " + item.stage.name}</AppLink>
+                                    <div className="flex flex-col p-2 items-start">
+                                        <div className="mb-2">
+                                            <AppLink to={`/etapa/${item.stage.number}`} >{formatStageNumber(item.stage.number) + " - " + item.stage.name}</AppLink>
+                                        </div>
+                                        <div className="mb-2 flex flex-row items-center justify-start">
+                                            <div class="tooltip">
+                                                <RiTimerLine className="w-5 h-5" />
+                                                <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-5">Zaběhnutý čas</span>
+                                            </div>
+                                            <span className="ml-2">--:--:--</span>
+                                        </div>
+                                        <div className="mb-2 flex flex-row items-center justify-start">
+                                            <div class="tooltip">
+                                                <RiTimerFlashLine className="w-5 h-5" />
+                                                <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-5">Odhadovaný čas</span>
+                                            </div>
+                                            <span className="ml-2">--:--:--</span>
+
+                                        </div>
+                                        <div className="flex flex-row items-center justify-start">
+                                            <div class="tooltip">
+                                                <img className="w-5" src="../src/assets/images/strava-kom.png" />
+                                                <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší čas</span>
+                                            </div>
+                                            <span className="ml-2">--:--:-- (Miloš Nykodým)</span>
+                                        </div>
+                                    </div>
                                 </Popup>
                             </Marker>
                         )
@@ -88,7 +115,7 @@ const Athlete = () => {
                     <Table options={tableOptions} data={filteredData} />
                 </Box>
             </PageBox>
-        </Page>
+        </Page >
     )
 }
 

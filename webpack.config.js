@@ -30,14 +30,18 @@ module.exports = {
             },
             {
                 test: /\.(png|jpe?g|gif)$/i,
-                loader: "file-loader"
+                loader: "file-loader",
+                options: {
+                    name: "[name].[ext]?[hash]"
+                }
             },
         ]
     },
     plugins: [
         new HtmlWebPackPlugin({
             template: "./public/index.html",
-            filename: "./index.html"
+            filename: "./index.html",
+            favicon: "./src/assets/favicon.png"
         }),
         new MiniCssExtractPlugin({
             filename: '[name].bundle.css',
