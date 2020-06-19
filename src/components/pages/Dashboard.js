@@ -30,14 +30,14 @@ const Dashboard = () => {
     if (!data) return <PageLoading full={true} />
 
     const lastPage = Math.round(data.count / limit);
-    const lastUpdate = moment(data.update).startOf("hour").fromNow();
+    const lastUpdate = moment(data.lastUpdate).format("HH:mm:ss");
 
     return (
         <Page>
             <PageBox>
-                <div className="flex flex-col sm:flex-row items-center justify-between sm:justify-center">
+                <div className="flex flex-col sm:flex-row items-center justify-between">
                     <PageTitle>Novinky</PageTitle>
-                    <span>{`Aktualizace: ${lastUpdate}`}</span>
+                    <span>{`Poslední aktualizace: ${lastUpdate}`}</span>
                 </div>
             </PageBox>
             <PageBox>
