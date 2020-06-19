@@ -8,6 +8,7 @@ import { defaultGetOptions, fetcher, API_URL } from "../../utils/FetchUtils";
 import { PageLoading, PageError, PageBox } from "../layout/Page";
 import { AppLink } from "../../utils/NavUtils";
 import { formatStageNumber } from "../../utils/FormatUtils";
+import StravaKomIcon from "../../../assets//images/strava-kom.png";
 
 const StagesMap = () => {
 
@@ -44,14 +45,14 @@ const StagesMap = () => {
                                         </div>
                                         <div className="mb-2 flex flex-row items-center justify-start">
                                             <div class="tooltip">
-                                                <img className="w-5" src="../src/assets/images/strava-kom.png" />
+                                                <img src={StravaKomIcon} className="w-5" />
                                                 <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší muž</span>
                                             </div>
                                             <span className="ml-2">--:--:-- (Miloš Nykodým)</span>
                                         </div>
                                         <div className="flex flex-row items-center justify-start">
                                             <div class="tooltip">
-                                                <img className="w-5" src="../src/assets/images/strava-kom.png" />
+                                                <img src={StravaKomIcon} className="w-5" />
                                                 <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší žena</span>
                                             </div>
                                             <span className="ml-2">--:--:-- (Miloš Nykodým)</span>
