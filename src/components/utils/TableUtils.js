@@ -21,7 +21,7 @@ const SortableHeader = ({ option, sort }) => {
     return <div className={`flex flex-row items-center ${justifyClass}`}>
         {option.header}
         {
-            sort.direction === "asc" ? <FiArrowUp className={`${orderClass} w-3 h-3 ${colorClass}`} /> : <FiArrowDown className={`${orderClass} w-3 h-3 ${colorClass}`} />
+            sort.direction === "asc" ? <FiArrowUp className={`${orderClass} w-4 h-4 ${colorClass}`} /> : <FiArrowDown className={`${orderClass} w-4 h-4 ${colorClass}`} />
         }
     </div>
 };
@@ -43,7 +43,7 @@ export const Table = ({ options, data }) => {
                                 }
                                 if (option.sort) {
                                     return <th key={`table-header-${index}`}
-                                        className={`py-4 px-6 border-b border-grey-light cursor-pointer`}
+                                        className={`py-4 px-6 border-b border-grey-light cursor-pointer uppercase text-sm`}
                                         onClick={() => setTableSort(prev => ({ id: option.sort.id, direction: prev.direction === "asc" ? "desc" : "asc" }))} >
                                         <SortableHeader option={option} sort={tableSort} />
                                     </th>
@@ -69,11 +69,29 @@ export const Table = ({ options, data }) => {
                         ))
                     }
                 </tbody>
+
             </table>
         </div >
     )
 }
 
-export const TableRow = props => {
+export const TablePagination = ({ page, lastPage, onNextPageClick, onPreviousPageClick }) => {
 
+    return (
+        <div>
+            <nav className="flex items-center justify-center flex-no-wrap shadow-navbar p-4">
+                <span className="mr-2">{`Stránka: ${1 + page} z ${lastPage}`}</span>
+                <button type="button" className={`flex items-center px-2 py-2 roudned bg-light rounded text-sm font-bold text-dark focus:outline-none border border-gray-300 ${page === 0 ? "opacity-50" : ""}`} onClick={onPreviousPageClick}>
+                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                </button>
+                <button type="button" className={`flex items-center px-2 py-2 roudned bg-light text-sm font-bold text-dark focus:outline-none border border-gray-300 ${page === lastPage ? "opacity-50" : ""}`} onClick={onNextPageClick}>
+                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    )
 }

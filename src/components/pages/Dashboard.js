@@ -1,26 +1,21 @@
 import React from "react";
 
-import useSWR, { useSWRPages, useSWRInfinite } from "swr";
+import useSWR from "swr";
 import moment from "moment";
 
 import Page, { PageTitle, PageError, PageBox, PageLoading } from "./layout/Page";
-import { Table } from "../utils/TableUtils";
+import { Table, TablePagination } from "../utils/TableUtils";
 import { defaultGetOptions, fetcher, API_URL } from "../utils/FetchUtils";
 import { formatStageNumber, formatSeconds } from "../utils/FormatUtils";
-import { ExternalLink, AppLink, tableClasses } from "../utils/NavUtils";
+import { ExternalLink, AppLink } from "../utils/NavUtils";
 import { Box } from "../utils/LayoutUtils";
 
 const Dashboard = () => {
 
     const limit = 50;
-    const { data, error, setPage } = useSWRInfinite(
-        (offset, previousPageData) => {
-            console.log(offset);
-            if (previousPageData && previousPageData.length === 0) return null;
-            return `${API_URL}/getFeed?database=trailtour_cz&limit=${limit}&offset=${offset * limit}`;
-        },
-        url => fetcher(url, defaultGetOptions)
-    );
+    const [page, setPage] = React.useState(0);
+    const { data, error } = useSWR(`${API_URL}/getFeed?database=trailtour_cz&limit=${limit}&offset=${page * limit}`, url => { console.log(url); return fetcher(url, defaultGetOptions); });
+
     console.log(data);
 
     const tableOptions = [
@@ -36,19 +31,21 @@ const Dashboard = () => {
     }
     if (!data) return <PageLoading full={true} />
 
+    const lastPage = Math.round(data.count / limit);
+    const lastUpdate = moment(data.update).startOf("hour").fromNow();
+
     return (
         <Page>
             <PageBox>
-                <div className="flex justify-center sm:justify-start">
+                <div className="flex flex-col sm:flex-row items-center justify-between sm:justify-center">
                     <PageTitle>Novinky</PageTitle>
+                    <span>{`Aktualizace: ${lastUpdate}`}</span>
                 </div>
             </PageBox>
             <PageBox>
                 <Box>
-                    <Table options={tableOptions} data={[].concat(...data)} />
-                    <div className="flex flex-row justify-center py-4">
-                        <div onClick={() => setPage(prev => prev + 1)} className={`${tableClasses.className} ${limit === 500 ? tableClasses.activeClassName : tableClasses.inactiveClassName}`}>Dalších 50</div>
-                    </div>
+                    <Table options={tableOptions} data={[].concat(...data.data)} />
+                    <TablePagination page={page} lastPage={lastPage} onNextPageClick={() => setPage(prev => prev === lastPage ? prev : prev + 1)} onPreviousPageClick={() => setPage(prev => prev === 0 ? prev : prev - 1)} />
                 </Box>
             </PageBox>
         </Page>
