@@ -7,13 +7,13 @@ import ReactGA from "react-ga";
 import "./assets/css/styles.css";
 import Layout from "./components/pages/layout/Layout";
 
+// globalni locale
+moment.locale("cs");
+
+// analytics
+ReactGA.initialize("UA-167777796-1");
+
 const App = () => {
-
-    // globalni locale
-    moment.locale("cs");
-
-    // analytics
-    ReactGA.initialize("UA-167777796-1");
 
     return (
         <BrowserRouter>
