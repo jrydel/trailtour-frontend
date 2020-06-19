@@ -1,9 +1,9 @@
 import React from "react";
 
-import { useRoutes } from "react-router";
+import { useRoutes, useLocation } from "react-router";
+import ReactGA from "react-ga";
 
 import { routes } from "../../Routes";
-import Navbar from "./Navbar";
 
 export const LayoutContainer = ({ children }) => (<div className="container mx-auto max-w-screen-xl px-5 pb-5">{children}</div>);
 export const NavbarContainer = ({ children }) => (<div className="container mx-auto max-w-screen-xl px-5">{children}</div>);
@@ -11,6 +11,11 @@ export const NavbarContainer = ({ children }) => (<div className="container mx-a
 const Layout = () => {
 
     const router = useRoutes(routes);
+
+    const location = useLocation();
+    React.useEffect(() => {
+        ReactGA.pageview(location.pathname);
+    }, [location]);
 
     return (
         <div className="antialiased">
