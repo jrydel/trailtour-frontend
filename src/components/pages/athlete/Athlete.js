@@ -14,6 +14,7 @@ import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
 import { Box } from "../../utils/LayoutUtils";
 import { Table } from "../../utils/TableUtils";
 import StravaImage from "../../../assets/images/strava.jpg";
+import StravaKomIcon from "../../../assets/images/strava-kom.png";
 import { icon } from "../../utils/MapUtils";
 
 const computeAverage = (arr) => arr.reduce((p, c) => p + (c === null ? 0 : c), 0) / arr.length;
@@ -24,13 +25,14 @@ const Athlete = () => {
 
     const { data: athleteData, error: athleteDataError } = useSWR(`${API_URL}/getAthlete?database=trailtour_cz&id=${id}`, url => fetcher(url, defaultGetOptions));
     const { data: athleteResultsData, error: athleteResultsError } = useSWR(() => `${API_URL}/getAthleteResults?database=trailtour_cz&athleteId=${athleteData.id}`, url => fetcher(url, defaultGetOptions));
+    const { data: komData, error: komError } = useSWR(`${API_URL}/getKomResults?database=trailtour_cz`, url => fetcher(url, defaultGetOptions));
 
-    if (athleteDataError || athleteResultsError) {
-        console.log(athleteDataError, athleteResultsError);
+    if (athleteDataError || athleteResultsError || komError) {
+        console.log(athleteDataError, athleteResultsError, komError);
         return <PageError />
     }
 
-    if (!athleteData || !athleteResultsData) return <PageLoading full={true} />
+    if (!athleteData || !athleteResultsData || !komData) return <PageLoading full={true} />
 
     const tableOptions = [
         { header: 'Datum', align: "center", sort: { id: "activity.date", direction: "desc" }, render: row => moment(row.activity.date).format("Do MMMM") },
@@ -73,39 +75,53 @@ const Athlete = () => {
                 >
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     {
-                        athleteResultsData.map((item, key) =>
-                            <Marker key={key} position={[item.stage.coordinates.latitude, item.stage.coordinates.longitude]} icon={icon(item.activity && item.activityResult ? (item.activity.position === 1 ? "gold" : "green") : "grey")}>
+                        athleteResultsData.map((item, key) => {
+                            const kom = komData[item.stage.number][athleteData.gender];
+                            return <Marker key={key} position={[item.stage.coordinates.latitude, item.stage.coordinates.longitude]} icon={icon(item.activity && item.activityResult ? (item.activity.position === 1 ? "gold" : "green") : "grey")}>
                                 <Popup>
                                     <div className="flex flex-col p-2 items-start">
                                         <div className="mb-2">
                                             <AppLink to={`/etapa/${item.stage.number}`} >{formatStageNumber(item.stage.number) + " - " + item.stage.name}</AppLink>
                                         </div>
+                                        {
+                                            item.activity && (
+                                                <div className="mb-2 flex flex-row items-center justify-start">
+                                                    <div className="tooltip">
+                                                        {
+                                                            kom && kom.id === athleteData.id ? <img src={StravaKomIcon} className="w-5" /> : <RiTimerLine className="w-5 h-5" />
+                                                        }
+                                                        <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-5">Zaběhnutý čas</span>
+                                                    </div>
+                                                    <span className="ml-2"><ExternalLink to={`http://strava.com/activities/${item.activity.id}`}>{formatSeconds(item.activity.time)}</ExternalLink></span>
+                                                </div>
+                                            )
+                                        }
                                         <div className="mb-2 flex flex-row items-center justify-start">
-                                            <div class="tooltip">
-                                                <RiTimerLine className="w-5 h-5" />
-                                                <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-5">Zaběhnutý čas</span>
-                                            </div>
-                                            <span className="ml-2">--:--:--</span>
-                                        </div>
-                                        <div className="mb-2 flex flex-row items-center justify-start">
-                                            <div class="tooltip">
+                                            <div className="tooltip">
                                                 <RiTimerFlashLine className="w-5 h-5" />
                                                 <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-5">Odhadovaný čas</span>
                                             </div>
                                             <span className="ml-2">--:--:--</span>
 
                                         </div>
-                                        <div className="flex flex-row items-center justify-start">
-                                            <div class="tooltip">
-                                                <img className="w-5" src="../src/assets/images/strava-kom.png" />
-                                                <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší čas</span>
-                                            </div>
-                                            <span className="ml-2">--:--:-- (Miloš Nykodým)</span>
-                                        </div>
+                                        {
+                                            kom && kom.id !== athleteData.id && (
+                                                <div className="flex flex-row items-center justify-start">
+                                                    <div className="tooltip">
+                                                        <img src={StravaKomIcon} className="w-5" />
+                                                        <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší muž</span>
+                                                    </div>
+                                                    <div className="ml-2 flex flex-row">
+                                                        <span className="mr-2"><ExternalLink to={`http://strava.com/activities/${kom.athleteId}`}>{formatSeconds(kom.activityTime)}</ExternalLink></span>
+                                                        <AppLink to={`/zavodnik/${kom.athleteId}`}>{kom.athleteName}</AppLink>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
                                     </div>
                                 </Popup>
                             </Marker>
-                        )
+                        })
                     }
                     <FullscreenControl position="topleft" content={"full"} />
                 </Map >
