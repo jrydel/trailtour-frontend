@@ -57,11 +57,11 @@ const StagesMap = () => {
                                                         <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší muž</span>
                                                     </div>
                                                     <div className="ml-2 flex flex-row flex-no-wrap items-center">
-                                                        <span className="font-bold">{formatSeconds(male.activityTime)}</span>
+                                                        <span className="font-bold">{formatSeconds(male.activity_time)}</span>
                                                         <div className="ml-2 flex flex-col items-start">
-                                                            <AppLink to={`/zavodnik/${male.athleteId}`}>{male.athleteName}</AppLink>
+                                                            <AppLink to={`/zavodnik/${male.athlete_id}`}>{male.athlete_name}</AppLink>
                                                             {
-                                                                male.clubName && <AppLink to={`/klub/${male.clubId}`}>{male.clubName}</AppLink>
+                                                                male.club_name && <AppLink to={`/klub/${male.club_id}`}>{male.club_name}</AppLink>
                                                             }
                                                         </div>
                                                     </div>
@@ -76,11 +76,11 @@ const StagesMap = () => {
                                                         <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší muž</span>
                                                     </div>
                                                     <div className="ml-2 flex flex-row items-center">
-                                                        <span className="font-bold">{formatSeconds(female.activityTime)}</span>
+                                                        <span className="font-bold">{formatSeconds(female.activity_time)}</span>
                                                         <div className="ml-2 flex flex-col items-start">
-                                                            <AppLink to={`/zavodnik/${female.athleteId}`}>{female.athleteName}</AppLink>
+                                                            <AppLink to={`/zavodnik/${female.athleteId}`}>{female.athlete_name}</AppLink>
                                                             {
-                                                                female.clubName && <AppLink to={`/klub/${female.clubId}`}>{female.clubName}</AppLink>
+                                                                female.club_name && <AppLink to={`/klub/${female.club_id}`}>{female.club_name}</AppLink>
                                                             }
                                                         </div>
 
