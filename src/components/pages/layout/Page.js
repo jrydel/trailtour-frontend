@@ -3,7 +3,8 @@ import { LayoutContainer } from "./Layout";
 import Navbar from "./Navbar";
 
 export const PageBox = ({ children }) => <div className="mt-5">{children}</div>;
-export const PageTitle = ({ children }) => <h1 className="truncate w-3/4 text-center sm:text-left text-2xl text-dark">{children}</h1>;
+export const PageTitle = ({ children }) => <h1 className="truncate w-64 sm:w-auto text-center text-2xl text-dark">{children}</h1>;
+export const PageSubtitle = ({ children }) => <h2 className="truncate w-64 sm:w-auto text-center text-xl text-dark">{children}</h2>;
 
 export const PageError = ({ full = true, status = 404, message = "Stránka nenalezena." }) => (
     full ?

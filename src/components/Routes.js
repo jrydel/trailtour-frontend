@@ -1,6 +1,5 @@
 import React from "react";
 
-import Changelog from "./pages/Changelog";
 import Dashboard from "./pages/Dashboard";
 import Stage from "./pages/stages/Stage";
 import Stages from "./pages/stages/Stages";
@@ -48,10 +47,6 @@ export const routes = [
         path: "/zavodnik/:id",
         element: <Athlete />
     },
-    // {
-    //     path: "/changelog",
-    //     element: <Changelog />
-    // },
     {
         path: "*",
         element: <NotFound />

@@ -11,15 +11,19 @@ import { Box } from "../../utils/LayoutUtils";
 
 const StagesList = () => {
 
-    const { data, error } = useSWR(`${API_URL}/getStages?database=trailtour_cz`, url => fetcher(url, defaultGetOptions));
+    const { data, error } = useSWR(`${API_URL}/getAllStages?database=trailtour`, url => fetcher(url, defaultGetOptions));
+
+    if (error) {
+        return <PageError full={false} />
+    }
+    if (!data) return <PageLoading full={false} />
 
     const tableOptions = [
         { header: "Číslo", align: "center", sort: { id: "number", direction: "asc" }, render: row => formatStageNumber(row.number) },
         { header: "Název", align: "left", sort: { id: "name" }, render: row => <AppLink to={`/etapa/${row.number}`}>{row.name}</AppLink> },
         { header: "Typ", align: "left", sort: { id: "type" }, render: row => row.type },
         { header: "Délka (m)", align: "right", sort: { id: "distance" }, render: row => formatNumber(row.distance) },
-        { header: "Převýšení (m)", align: "right", sort: { id: "elevation" }, render: row => formatNumber(row.elevation) },
-        { header: "Aktivity", align: "right", sort: { id: "activities" }, render: row => formatNumber(row.activities) },
+        { header: "Převýšení (m)", align: "right", sort: { id: "elevation" }, render: row => formatNumber(row.elevation) }
         // {
         //     header: <button className="bg-primary text-white text-sm font-bold px-2 py-1 rounded" >Vytvořit</button>,
         //     align: "center",
@@ -31,11 +35,6 @@ const StagesList = () => {
         //     )
         // },
     ];
-
-    if (error) {
-        return <PageError />
-    }
-    if (!data) return <PageLoading full={false} />
 
     return (
         <PageBox>

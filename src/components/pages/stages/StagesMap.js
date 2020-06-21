@@ -13,18 +13,19 @@ import { formatTime } from "../../utils/FormatUtils";
 
 const StagesMap = () => {
 
-    const { data: stageData, error: stageError } = useSWR(`${API_URL}/getStagesData?database=trailtour_cz`, url => fetcher(url, defaultGetOptions));
-    const { data: komData, error: komError } = useSWR(`${API_URL}/getKomResults?database=trailtour_cz`, url => fetcher(url, defaultGetOptions));
+    const { data: stageData, error: stageError } = useSWR(`${API_URL}/getAllStages?database=trailtour`, url => fetcher(url, defaultGetOptions));
+    const { data: stageGPSData, error: stageGPSError } = useSWR(`${API_URL}/getAllStagesGPSData?database=trailtour`, url => fetcher(url, defaultGetOptions));
+    const { data: komData, error: komError } = useSWR(`${API_URL}/getKomResults?database=trailtour`, url => fetcher(url, defaultGetOptions));
 
-    if (stageError || komError) {
+    if (stageError || stageGPSError || komError) {
         return <PageError full={false} />
     }
-    if (!stageData || !komData) return <PageLoading full={false} />
+    if (!stageData || !stageGPSData || !komData) return <PageLoading full={false} />
 
     let bounds = [];
-    stageData.map(stage => {
-        const temp = JSON.parse(stage.stravaData).latlng;
-        bounds = [...bounds, ...temp];
+    stageData.map((stage, key) => {
+        const gpsData = JSON.parse(stageGPSData[stage.number]).latlng;
+        bounds = bounds.concat(gpsData);
     });
 
     return (
@@ -36,12 +37,13 @@ const StagesMap = () => {
             >
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 {stageData.map((stage, key) => {
-                    const data = JSON.parse(stage.stravaData).latlng;
                     const male = komData[stage.number].M;
                     const female = komData[stage.number].F;
+                    const gpsData = JSON.parse(stageGPSData[stage.number]).latlng;
+                    bounds = bounds.concat(gpsData);
                     return (
                         <div key={key}>
-                            <Marker position={data[0]} >
+                            <Marker position={gpsData[0]} >
                                 <Popup className="">
                                     <div className="flex flex-col p-2 items-start justify-center">
                                         <div className="mb-2">
@@ -54,9 +56,14 @@ const StagesMap = () => {
                                                         <img src={StravaKomIcon} className="w-5" />
                                                         <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší muž</span>
                                                     </div>
-                                                    <div className="ml-2 flex flex-row">
-                                                        <span className="mr-2">{formatSeconds(male.activityTime)}</span>
-                                                        <AppLink to={`/zavodnik/${male.athleteId}`}>{male.athleteName}</AppLink>
+                                                    <div className="ml-2 flex flex-row flex-no-wrap items-center">
+                                                        <span className="font-bold">{formatSeconds(male.activityTime)}</span>
+                                                        <div className="ml-2 flex flex-col items-start">
+                                                            <AppLink to={`/zavodnik/${male.athleteId}`}>{male.athleteName}</AppLink>
+                                                            {
+                                                                male.clubName && <AppLink to={`/klub/${male.clubId}`}>{male.clubName}</AppLink>
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )
@@ -68,9 +75,15 @@ const StagesMap = () => {
                                                         <img src={StravaKomIcon} className="w-5" />
                                                         <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší muž</span>
                                                     </div>
-                                                    <div className="ml-2 flex flex-row">
-                                                        <span className="mr-2">{formatSeconds(female.activityTime)}</span>
-                                                        <AppLink to={`/zavodnik/${female.athleteId}`}>{female.athleteName}</AppLink>
+                                                    <div className="ml-2 flex flex-row items-center">
+                                                        <span className="font-bold">{formatSeconds(female.activityTime)}</span>
+                                                        <div className="ml-2 flex flex-col items-start">
+                                                            <AppLink to={`/zavodnik/${female.athleteId}`}>{female.athleteName}</AppLink>
+                                                            {
+                                                                female.clubName && <AppLink to={`/klub/${female.clubId}`}>{female.clubName}</AppLink>
+                                                            }
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                             )
@@ -78,7 +91,7 @@ const StagesMap = () => {
                                     </div>
                                 </Popup>
                             </Marker>
-                            <Polyline positions={data} color="red" />
+                            <Polyline positions={gpsData} color="red" />
                         </div>
                     )
                 })}

@@ -12,7 +12,7 @@ import { icon } from "../../utils/MapUtils";
 const StageMap = () => {
 
     const { number } = useParams();
-    const { data, error } = useSWR(`${API_URL}/getStageStravaData?database=trailtour_cz&number=${number}`, url => fetcher(url, defaultGetOptions));
+    const { data, error } = useSWR(`${API_URL}/getStageGPSData?database=trailtour&number=${number}`, url => fetcher(url, defaultGetOptions));
 
     if (error) {
         return <PageError full={false} />

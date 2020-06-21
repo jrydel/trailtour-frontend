@@ -13,7 +13,7 @@ import MapyCZImage from "../../../assets/images/mapycz.png";
 import TrailtourImage from "../../../assets/images/trailtour.jpg";
 import { FiMapPin, FiList, FiHelpCircle } from "react-icons/fi";
 
-const Stage = props => {
+const Stage = () => {
 
     const { number } = useParams();
     const navigate = useNavigate();
@@ -26,15 +26,15 @@ const Stage = props => {
         }
     }, [path]);
 
+    const { data: stageData, error: stageDataError } = useSWR(`${API_URL}/getStage?database=trailtour&number=${number}`, url => fetcher(url, defaultGetOptions));
+    const { data: countData, error: countDataError } = useSWR(`${API_URL}/getStageCounts?database=trailtour&number=${number}`, url => fetcher(url, defaultGetOptions));
 
-    const { data: stageData, error: stageDataError } = useSWR(`${API_URL}/getStage?database=trailtour_cz&number=${number}`, url => fetcher(url, defaultGetOptions));
-
-    if (stageDataError) {
-        console.log(stageDataError);
+    if (stageDataError || countDataError) {
+        console.log(stageDataError, countDataError);
         return <PageError />
     }
 
-    if (!stageData) return <PageLoading full={true} />
+    if (!stageData || !countData) return <PageLoading full={true} />
 
     return (
         <Page>
@@ -50,9 +50,9 @@ const Stage = props => {
             </PageBox>
             <PageBox>
                 <div className="flex flex-row items-center justify-center sm:justify-end">
-                    <NavLink to="vysledky" component={Link} classes={pageClasses} ><FiList className="mr-2" />{`Výsledky (${stageData.activities})`}</NavLink>
+                    <NavLink to="vysledky" component={Link} classes={pageClasses} ><FiList className="mr-2" />{`Výsledky (${countData.activityCount})`}</NavLink>
                     <NavLink to="mapa" component={Link} classes={pageClasses} exact={true} ><FiMapPin className="mr-2" />Mapa</NavLink>
-                    <NavLink to="info" component={Link} classes={pageClasses} ><FiHelpCircle className="mr-2" />{`Info (${stageData.infos})`}</NavLink>
+                    <NavLink to="info" component={Link} classes={pageClasses} ><FiHelpCircle className="mr-2" />{`Info (${countData.infoCount})`}</NavLink>
                 </div>
             </PageBox>
             <Outlet />

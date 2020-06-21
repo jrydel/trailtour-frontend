@@ -14,7 +14,7 @@ const Dashboard = () => {
 
     const limit = 50;
     const [page, setPage] = React.useState(0);
-    const { data, error } = useSWR(`${API_URL}/getFeed?database=trailtour_cz&limit=${limit}&offset=${page * limit}`, url => fetcher(url, defaultGetOptions));
+    const { data, error } = useSWR(`${API_URL}/getFeed?database=trailtour&limit=${limit}&offset=${page * limit}`, url => fetcher(url, defaultGetOptions));
 
     const tableOptions = [
         { header: "Nahráno", align: "center", sort: { id: "activity.created", direction: "desc" }, render: row => moment(row.activity.created).startOf("hour").fromNow() },
