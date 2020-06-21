@@ -78,7 +78,7 @@ const StagesMap = () => {
                                                     <div className="ml-2 flex flex-row items-center">
                                                         <span className="font-bold">{formatSeconds(female.activity_time)}</span>
                                                         <div className="ml-2 flex flex-col items-start">
-                                                            <AppLink to={`/zavodnik/${female.athleteId}`}>{female.athlete_name}</AppLink>
+                                                            <AppLink to={`/zavodnik/${female.athlete_id}`}>{female.athlete_name}</AppLink>
                                                             {
                                                                 female.club_name && <AppLink to={`/klub/${female.club_id}`}>{female.club_name}</AppLink>
                                                             }
