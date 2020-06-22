@@ -14,7 +14,7 @@ const SearchBar = () => {
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const [query, setQuery] = React.useState("");
-    const { data } = useSWR(query !== "" ? `${API_URL}/fulltext?database=trailtour_cz&match=${query}` : null, url => fetcher(url, defaultGetOptions));
+    const { data } = useSWR(query !== "" ? `${API_URL}/fulltext?database=trailtour&match=${query}` : null, url => fetcher(url, defaultGetOptions));
 
     React.useEffect(() => {
         setOpen(query !== "");
@@ -43,7 +43,13 @@ const SearchBar = () => {
                 <div className="inline-flex flex-col p-2">
                     <p className="text-sm font-bold">Závodníci</p>
                     {
-                        data && data.athletes.map((val, index) => <div onMouseDown={() => navigate(`/zavodnik/${val.id}`)} key={index} className="p-2 text-primary hover:underline cursor-pointer">{`${val.name} (${val.id})`}</div>)
+                        data && data.athletes.map((val, index) => <div onMouseDown={() => navigate(`/zavodnik/${val.id}`)} key={index} className="p-2 text-primary hover:underline cursor-pointer">{`${val.name} ${val.club ? `(${val.club})` : ""}`}</div>)
+                    }
+                </div>
+                <div className="inline-flex flex-col p-2">
+                    <p className="text-sm font-bold">Kluby</p>
+                    {
+                        data && data.clubs.map((val, index) => <div onMouseDown={() => navigate(`/klub/${val.id}`)} key={index} className="p-2 text-primary hover:underline cursor-pointer">{val.name}</div>)
                     }
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useLocation, useResolvedLocation, Link, matchRoutes } from "react-router-dom";
+import { useLocation, Link, matchRoutes, useResolvedPath } from "react-router-dom";
 import { routes } from "../Routes";
 
 export const lastUrlPath = location => location.substring(location.lastIndexOf("/") + 1);
@@ -25,7 +25,7 @@ export const tableClasses = {
 
 export const NavLink = ({ to, exact, classes, component: Component, ...rest }) => {
     const location = useLocation();
-    const resolvedLocation = useResolvedLocation(to);
+    const resolvedLocation = useResolvedPath(to);
     const routeMatches = matchRoutes(routes, location);
 
     const isActive = exact ? location.pathname === resolvedLocation.pathname : routeMatches.some(match => match.pathname === resolvedLocation.pathname);
