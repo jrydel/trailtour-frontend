@@ -11,6 +11,11 @@ import { formatSeconds } from "../../utils/FormatUtils";
 import { Table } from "../../utils/TableUtils";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
 
+const getDefaultSort = data => {
+    if (data.every(el => el.trailtour_time)) {
+    }
+};
+
 const StageList = () => {
 
     const { number } = useParams();
@@ -26,15 +31,16 @@ const StageList = () => {
 
     if (!resultData || !countData) return <PageLoading full={false} />
 
+    const tableData = resultData.filter(val => val.athlete_gender === filter);
+
     const tableOptions = [
-        { header: "Pozice", align: "center", sort: { id: "position", direction: "asc" }, render: row => row.position },
+        { header: "Pozice TT (Pozice)", align: "center", sort: { id: "position" }, render: row => `${row.trailtour_position ? row.trailtour_position : "---"} (${row.position ? row.position : "---"})` },
         { header: "Jméno", align: "left", sort: { id: "athlete_name" }, render: row => <AppLink to={`/zavodnik/${row.athlete_id}`}>{row.athlete_name}</AppLink> },
         { header: "Klub", align: "left", sort: { id: "club_name" }, render: row => <AppLink to={`/klub/${row.club_id}`}>{row.club_name}</AppLink> },
-        { header: "Čas", align: "right", sort: { id: "activity_time" }, render: row => <ExternalLink to={`https://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink> },
-        { header: "Body", align: "right", sort: { id: "points" }, render: row => row.points },
+        { header: "Čas TT (Čas)", align: "right", sort: { id: "activity_time", direction: "asc" }, render: row => <><span>{row.trailtour_time ? formatSeconds(row.trailtour_time) : "---"}</span> (<ExternalLink to={`https://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink>)</> },
+        { header: "Body TT (Body)", align: "right", sort: { id: "points" }, render: row => `${row.trailtour_points ? row.trailtour_points : "---"} (${row.points ? row.points : "---"})` },
     ];
 
-    const tableData = resultData.filter(val => val.athlete_gender === filter);
 
     const link = (text, count) => (
         <p>{`${text} (${count})`}</p>
