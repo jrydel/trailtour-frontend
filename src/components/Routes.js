@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Athlete from "./pages/athlete/Athlete";
 import StageList from "./pages/stages/StageList";
 import StageMap from "./pages/stages/StageMap";
+import Club from "./pages/club/Club";
 
 export const routes = [
     {
@@ -46,6 +47,10 @@ export const routes = [
     {
         path: "/zavodnik/:id",
         element: <Athlete />
+    },
+    {
+        path: "/klub/:id",
+        element: <Club />
     },
     {
         path: "*",
