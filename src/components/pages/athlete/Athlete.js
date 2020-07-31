@@ -7,7 +7,7 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import FullscreenControl from "react-leaflet-fullscreen";
 import { RiTimerLine, RiTimerFlashLine } from "react-icons/ri";
 
-import { formatStageNumber, formatSeconds } from "../../utils/FormatUtils";
+import { formatStageNumber, formatSeconds, formatNumber } from "../../utils/FormatUtils";
 import { AppLink, ExternalLink, pageClasses } from "../../utils/NavUtils";
 import Page, { PageTitle, PageError, PageLoading, PageBox } from "../layout/Page";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
@@ -36,11 +36,11 @@ const Athlete = () => {
     if (!athleteData || !athleteResultsData || !komData || !stagesGPSData) return <PageLoading full={true} />
 
     const tableOptions = [
-        { header: "Pozice", align: "center", sort: { id: "position" }, render: row => row.position },
+        { header: "Pozice TT (Pozice)", align: "center", sort: { id: "trailtour_position" }, render: row => `${row.trailtour_position ? formatNumber(row.trailtour_position) : " --- "} (${row.position ? formatNumber(row.position) : " --- "})` },
         { header: 'Etapa', align: "left", sort: { id: "stage_number" }, render: row => <AppLink to={`/etapa/${row.stage_number}`}>{formatStageNumber(row.stage_number) + " - " + row.stage_name}</AppLink> },
         { header: 'Datum', align: "center", sort: { id: "activity_date", direction: "desc" }, render: row => moment(row.activity_date).format("Do MMMM") },
-        { header: "Čas", align: "right", sort: { id: "activity_time" }, render: row => <ExternalLink to={`https://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink> },
-        { header: "Body", align: "right", sort: { id: "points" }, render: row => row.points },
+        { header: "Čas TT (Čas)", align: "right", sort: { id: "activity_time" }, render: row => <div><span>{row.trailtour_time ? formatSeconds(row.trailtour_time) : " --- "}</span> {row.activity_id ? <ExternalLink to={`https://strava.com/activities/${row.activity_id}`}>{`(${formatSeconds(row.activity_time)})`}</ExternalLink> : " --- "}</div > },
+        { header: "Body TT (Body)", align: "right", sort: { id: "points" }, render: row => `${row.trailtour_points ? formatNumber(row.trailtour_points) : " --- "} (${row.points ? formatNumber(row.position) : " --- "})` },
     ];
 
     const average = computeAverage(athleteResultsData.map(item => item.points));

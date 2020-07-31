@@ -1,3 +1,4 @@
+
 import React from "react";
 
 import useSWR from "swr";
@@ -7,9 +8,10 @@ import FullscreenControl from "react-leaflet-fullscreen";
 import { defaultGetOptions, fetcher, API_URL } from "../../utils/FetchUtils";
 import { PageLoading, PageError, PageBox } from "../layout/Page";
 import { AppLink } from "../../utils/NavUtils";
-import { formatStageNumber, formatSeconds } from "../../utils/FormatUtils";
+import { formatStageNumber, formatSeconds, formatNumber } from "../../utils/FormatUtils";
 import StravaKomIcon from "../../../assets//images/strava-kom.png";
-import { formatTime } from "../../utils/FormatUtils";
+
+import { FiArrowRight, FiArrowUp } from "react-icons/fi";
 
 const StagesMap = () => {
 
@@ -48,6 +50,16 @@ const StagesMap = () => {
                                     <div className="flex flex-col p-2 items-start justify-center">
                                         <div className="mb-2">
                                             <AppLink to={`/etapa/${stage.number}`} >{formatStageNumber(stage.number) + " - " + stage.name}</AppLink>
+                                        </div>
+                                        <div className="flex flex-row items-center mb-4">
+                                            <div className="flex flex-row">
+                                                <FiArrowRight className="w-5 h-4" />
+                                                <span>{`${formatNumber(stage.distance)} m`}</span>
+                                            </div>
+                                            <div className="flex flex-row ml-4">
+                                                <FiArrowUp className="w-4 h-4" />
+                                                <span>{`${formatNumber(stage.elevation)} m`}</span>
+                                            </div>
                                         </div>
                                         {
                                             male && (
