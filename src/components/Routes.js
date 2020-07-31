@@ -10,6 +10,9 @@ import Athlete from "./pages/athlete/Athlete";
 import StageList from "./pages/stages/StageList";
 import StageMap from "./pages/stages/StageMap";
 import Club from "./pages/club/Club";
+import Ladder from "./pages/ladder/Ladder";
+import ClubLadder from "./pages/ladder/ClubLadder";
+import AthleteLadder from "./pages/ladder/AthleteLadder";
 
 export const routes = [
     {
@@ -41,6 +44,24 @@ export const routes = [
             {
                 path: "mapa",
                 element: <StageMap />
+            }
+        ]
+    },
+    {
+        path: "/poradi",
+        element: <Ladder />,
+        children: [
+            {
+                path: "muzi",
+                element: <AthleteLadder gender="M" />
+            },
+            {
+                path: "zeny",
+                element: <AthleteLadder gender="F" />
+            },
+            {
+                path: "kluby",
+                element: <ClubLadder />
             }
         ]
     },

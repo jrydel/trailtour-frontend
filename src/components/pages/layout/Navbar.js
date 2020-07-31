@@ -92,7 +92,7 @@ const Navbar = props => {
                         <div className="flex flex-col sm:flex-row items-start py-4 sm:py-0 sm:pt-0 w-full">
                             <NavLink to="/" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiRepeat className="mr-2" />Novinky</NavLink>
                             <NavLink to="/etapy" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiNavigation className="mr-2" />Etapy</NavLink>
-                            {/* <NavLink to="/poradi" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiCalendar className="mr-2" />Pořadí</NavLink> */}
+                            <NavLink to="/poradi" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiCalendar className="mr-2" />Pořadí</NavLink>
                             {/* <NavLink to="/changelog" component={Link} classes={menuClasses} onClick={() => setOpen(prev => !prev)}><FiGitPullRequest className="mr-2" />Changelog</NavLink> */}
                         </div>
                         <SearchBar />
