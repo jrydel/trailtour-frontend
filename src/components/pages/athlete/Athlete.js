@@ -40,7 +40,7 @@ const Athlete = () => {
         { header: 'Etapa', align: "left", sort: { id: "stage_number" }, render: row => <AppLink to={`/etapa/${row.stage_number}`}>{formatStageNumber(row.stage_number) + " - " + row.stage_name}</AppLink> },
         { header: 'Datum', align: "center", sort: { id: "activity_date", direction: "desc" }, render: row => moment(row.activity_date).format("Do MMMM") },
         { header: "Čas TT (Čas)", align: "right", sort: { id: "activity_time" }, render: row => <div><span>{row.trailtour_time ? formatSeconds(row.trailtour_time) : " --- "}</span> {row.activity_id ? <ExternalLink to={`https://strava.com/activities/${row.activity_id}`}>{`(${formatSeconds(row.activity_time)})`}</ExternalLink> : " --- "}</div > },
-        { header: "Body TT (Body)", align: "right", sort: { id: "points" }, render: row => `${row.trailtour_points ? formatNumber(row.trailtour_points) : " --- "} (${row.points ? formatNumber(row.position) : " --- "})` },
+        { header: "Body TT (Body)", align: "right", sort: { id: "points" }, render: row => `${row.trailtour_points ? formatNumber(row.trailtour_points) : " --- "} (${row.points ? formatNumber(row.points) : " --- "})` },
     ];
 
     const average = computeAverage(athleteResultsData.map(item => item.points));
