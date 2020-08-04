@@ -6,8 +6,9 @@ import { useParams } from "react-router";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import FullscreenControl from "react-leaflet-fullscreen";
 import { RiTimerLine, RiTimerFlashLine } from "react-icons/ri";
+import { DiGitCompare } from "react-icons/di";
 
-import { formatStageNumber, formatSeconds, formatNumber } from "../../utils/FormatUtils";
+import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault, formatSecondsWithDefault } from "../../utils/FormatUtils";
 import { AppLink, ExternalLink, pageClasses } from "../../utils/NavUtils";
 import Page, { PageTitle, PageError, PageLoading, PageBox } from "../layout/Page";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
@@ -16,6 +17,7 @@ import { Table } from "../../utils/TableUtils";
 import StravaImage from "../../../assets/images/strava.jpg";
 import StravaKomIcon from "../../../assets/images/strava-kom.png";
 import { icon } from "../../utils/MapUtils";
+import { useStateValue } from "../../StateContext";
 
 const computeAverage = (arr) => arr.reduce((p, c) => p + (c === null ? 0 : c), 0) / arr.length;
 
@@ -23,24 +25,79 @@ const Athlete = () => {
 
     const { id } = useParams();
 
+    const [{ user }, dispatch] = useStateValue();
+
     const { data: athleteData, error: athleteDataError } = useSWR(`${API_URL}/getAthlete?database=trailtour&id=${id}`, url => fetcher(url, defaultGetOptions));
+    const { data: compareResultsData, error: compareResultsError } = useSWR(user ? `${API_URL}/getAthleteResults?database=trailtour&id=${user.id}` : null, url => fetcher(url, defaultGetOptions));
     const { data: athleteResultsData, error: athleteResultsError } = useSWR(() => `${API_URL}/getAthleteResults?database=trailtour&id=${athleteData.id}`, url => fetcher(url, defaultGetOptions));
     const { data: komData, error: komError } = useSWR(`${API_URL}/getKomResults?database=trailtour`, url => fetcher(url, defaultGetOptions));
     const { data: stagesGPSData, error: stagesGPSError } = useSWR(`${API_URL}/getAllStagesGPSStart?database=trailtour`, url => fetcher(url, defaultGetOptions));
 
-    if (athleteDataError || athleteResultsError || komError || stagesGPSError) {
-        console.log(athleteDataError, athleteResultsError, komError, stagesError);
+    if (athleteDataError || user ? compareResultsError : false || athleteResultsError || komError || stagesGPSError) {
+        console.log(athleteDataError, compareResultsData, athleteResultsError, komError, stagesGPSError);
         return <PageError />
     }
 
-    if (!athleteData || !athleteResultsData || !komData || !stagesGPSData) return <PageLoading full={true} />
+    if (!athleteData || user ? !compareResultsData : false, !athleteResultsData || !komData || !stagesGPSData) return <PageLoading full={true} />
+
+    athleteResultsData.map(item => {
+        const temp = compareResultsData?.find(val => val.stage_number === item.stage_number);
+        if (temp) {
+            item.compare_trailtour_points = temp.trailtour_points;
+            item.compare_points = temp.points;
+            item.compare_trailtour_time = temp.trailtour_time;
+            item.compare_activity_id = temp.activity_id;
+            item.compare_activity_time = temp.activity_time;
+            item.compare_trailtour_position = temp.trailtour_position;
+            item.compare_position = temp.position;
+        }
+    });
 
     const tableOptions = [
-        { header: "Pozice TT (Pozice)", align: "center", sort: { id: "trailtour_position" }, render: row => `${row.trailtour_position ? formatNumber(row.trailtour_position) : " --- "} (${row.position ? formatNumber(row.position) : " --- "})` },
+        {
+            header: "Pozice TT (Pozice)", align: "center", sort: { id: "trailtour_position" }, render: row => {
+                return (
+                    <div className="flex flex-col">
+                        <p>{formatNumberWithDefault(row.trailtour_position, " --- ")} ({formatNumberWithDefault(row.position, " --- ")})</p>
+                        {user && row.compare_trailtour_position && row.compare_position &&
+                            < div className={row.trailtour_position === row.compare_trailtour_position ? "bg-blue-400" : row.trailtour_position > row.compare_trailtour_position ? "bg-green-400" : "bg-red-400"}>
+                                <p>{formatNumberWithDefault(row.compare_trailtour_position, " --- ")} ({formatNumberWithDefault(row.compare_position, " --- ")})</p>
+                            </div>
+                        }
+                    </div>
+                )
+            }
+        },
         { header: 'Etapa', align: "left", sort: { id: "stage_number" }, render: row => <AppLink to={`/etapa/${row.stage_number}`}>{formatStageNumber(row.stage_number) + " - " + row.stage_name}</AppLink> },
         { header: 'Datum', align: "center", sort: { id: "activity_date", direction: "desc" }, render: row => moment(row.activity_date).format("Do MMMM") },
-        { header: "Čas TT (Čas)", align: "right", sort: { id: "activity_time" }, render: row => <div><span>{row.trailtour_time ? formatSeconds(row.trailtour_time) : " --- "}</span> {row.activity_id ? <ExternalLink to={`https://strava.com/activities/${row.activity_id}`}>{`(${formatSeconds(row.activity_time)})`}</ExternalLink> : " --- "}</div > },
-        { header: "Body TT (Body)", align: "right", sort: { id: "points" }, render: row => `${row.trailtour_points ? formatNumber(row.trailtour_points) : " --- "} (${row.points ? formatNumber(row.points) : " --- "})` },
+        {
+            header: "Čas TT (Čas)", align: "right", sort: { id: "activity_time" }, render: row => {
+                return (
+                    <div className="flex flex-col">
+                        <p>{formatSecondsWithDefault(row.trailtour_time, " --- ")} {row.activity_id ? <ExternalLink to={`https://strava.com/activities/${row.activity_id}`}>{`(${formatSeconds(row.activity_time)})`}</ExternalLink> : " --- "}</p>
+                        {user && row.compare_activity_id &&
+                            < div className={row.activity_time === row.compare_activity_time ? "bg-blue-400" : row.activity_time > row.compare_activity_time ? "bg-green-400" : "bg-red-400"}>
+                                <p>{formatSecondsWithDefault(row.compare_trailtour_time, " --- ")} {row.compare_activity_id ? <ExternalLink to={`https://strava.com/activities/${row.compare_activity_id}`}>{`(${formatSeconds(row.compare_activity_time)})`}</ExternalLink> : " --- "}</p>
+                            </div>
+                        }
+                    </div >
+                );
+            }
+        },
+        {
+            header: "Body TT (Body)", align: "right", sort: { id: "points" }, render: row => {
+                return (
+                    <div className="flex flex-col">
+                        <p>{formatNumberWithDefault(row.trailtour_points, " --- ")} ({formatNumberWithDefault(row.points, " --- ")})</p>
+                        {user && row.compare_trailtour_points && row.compare_points &&
+                            < div className={row.trailtour_points === row.compare_trailtour_points ? "bg-blue-400" : row.trailtour_points > row.compare_trailtour_points ? "bg-red-400" : "bg-green-400"}>
+                                <p>{formatNumberWithDefault(row.compare_trailtour_points, " --- ")} ({formatNumberWithDefault(row.compare_points, " --- ")})</p>
+                            </div>
+                        }
+                    </div >
+                );
+            }
+        },
     ];
 
     const average = computeAverage(athleteResultsData.map(item => item.points));
@@ -60,7 +117,10 @@ const Athlete = () => {
                             athleteData.club_name && <div className="ml-2 text-center"><AppLink to={`/klub/${athleteData.club_id}`}>{athleteData.club_name}</AppLink></div>
                         }
                     </div>
-                    <ExternalLink to={`https://www.strava.com/athletes/${athleteData.id}`} className={pageClasses.className}><img className="w-15 h-10 rounded" src={StravaImage} alt="Strava" /></ExternalLink>
+                    <div className="flex flex-row items-center justify-center sm:justify-end">
+                        <ExternalLink to={`https://www.strava.com/athletes/${athleteData.id}`} className={pageClasses.className}><img className="w-15 h-10 rounded" src={StravaImage} alt="Strava" /></ExternalLink>
+                        <button className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-15 h-10" onClick={() => dispatch({ type: "SET_USER", user: { id: athleteData.id, name: athleteData.name } })}><DiGitCompare className="h-6 w-6" /></button>
+                    </div>
                 </div>
             </PageBox>
             <PageBox>
@@ -135,7 +195,6 @@ const Athlete = () => {
                                     </div>
                                 </Popup>
                             </Marker>
-
                         })
                     }
                     <FullscreenControl position="topleft" content={"full"} />

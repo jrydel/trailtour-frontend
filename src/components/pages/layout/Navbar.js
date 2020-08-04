@@ -1,13 +1,15 @@
 import React from "react";
 
 import { Link, useNavigate } from "react-router-dom";
-import { FiRepeat, FiNavigation, FiGitPullRequest, FiCalendar, FiSearch } from "react-icons/fi";
+import { FiRepeat, FiNavigation, FiTrash2, FiCalendar, FiSearch } from "react-icons/fi";
 
 import { NavbarContainer } from "../layout/Layout";
 import NavLink, { menuClasses } from "../../utils/NavUtils";
 import useSWR from "swr";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
 import { formatStageNumber } from "../../utils/FormatUtils";
+import { useStateValue } from "../../StateContext";
+
 
 const SearchBar = () => {
 
@@ -60,6 +62,7 @@ const SearchBar = () => {
 const Navbar = props => {
 
     const [open, setOpen] = React.useState(false);
+    const [{ user }, dispatch] = useStateValue();
 
     return (
         <>
@@ -82,7 +85,7 @@ const Navbar = props => {
                             </button>
                         </div>
                         <Link to="/" className="font-bold text-light text-xl">KamTT 2020</Link>
-                        <div />
+                        {user ? <div className="flex flex-row items-center justify-around"><p className="font-bold text-light text-md">{user.name}</p> <button className="ml-2 focus:outline-none" onClick={() => dispatch({ type: "REMOVE_USER" })}><FiTrash2 className="text-light" /></button></div> : <div />}
                     </div>
                 </NavbarContainer>
             </header>
