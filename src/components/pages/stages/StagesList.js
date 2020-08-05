@@ -8,6 +8,7 @@ import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
 import { Table } from "../../utils/TableUtils";
 import { AppLink } from "../../utils/NavUtils";
 import { Box } from "../../utils/LayoutUtils";
+import ReactStars from "react-stars";
 
 const StagesList = () => {
 
@@ -18,12 +19,15 @@ const StagesList = () => {
     }
     if (!data) return <PageLoading full={false} />
 
+    data?.map(stage => { stage.rating = stage.rating_sum / stage.rating_votes; if (!stage.rating) stage.rating = 0; });
+
     const tableOptions = [
         { header: "Číslo", align: "center", sort: { id: "number", direction: "asc" }, render: row => formatStageNumber(row.number) },
         { header: "Název", align: "left", sort: { id: "name" }, render: row => <AppLink to={`/etapa/${row.number}`}>{row.name}</AppLink> },
         { header: "Typ", align: "left", sort: { id: "type" }, render: row => row.type },
         { header: "Délka (m)", align: "right", sort: { id: "distance" }, render: row => formatNumber(row.distance) },
-        { header: "Převýšení (m)", align: "right", sort: { id: "elevation" }, render: row => formatNumber(row.elevation) }
+        { header: "Převýšení (m)", align: "right", sort: { id: "elevation" }, render: row => formatNumber(row.elevation) },
+        { header: "Hodnocení", align: "right", sort: { id: "rating" }, render: row => <div className="flex justify-end"><ReactStars count={5} size={30} value={row.rating} edit={false} color2={'#ffd700'} /></div> }
         // {
         //     header: <button className="bg-primary text-white text-sm font-bold px-2 py-1 rounded" >Vytvořit</button>,
         //     align: "center",
