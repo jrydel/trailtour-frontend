@@ -60,9 +60,9 @@ const Stage = () => {
                         </div>
                     </div>
                     <div className="flex flex-row items-center justify-between">
-                        <ExternalLink to={stageData.stravaUrl} className={pageClasses.className}><img className="w-15 h-10 rounded mx-1" src={StravaImage} alt="Strava" /></ExternalLink>
-                        <ExternalLink to={stageData.mapyczUrl} className={pageClasses.className}><img className="w-15 h-10 rounded mx-1" src={MapyCZImage} alt="MapyCZ" /></ExternalLink>
-                        <ExternalLink to={stageData.trailtourUrl} className={pageClasses.className}><img className="w-15 h-10 rounded mx-1" src={TrailtourImage} alt="Trailtour" /></ExternalLink>
+                        <ExternalLink to={stageData.strava_url} className={pageClasses.className}><img className="w-15 h-10 rounded mx-1" src={StravaImage} alt="Strava" /></ExternalLink>
+                        <ExternalLink to={stageData.mapycz_url} className={pageClasses.className}><img className="w-15 h-10 rounded mx-1" src={MapyCZImage} alt="MapyCZ" /></ExternalLink>
+                        <ExternalLink to={stageData.trailtour_url} className={pageClasses.className}><img className="w-15 h-10 rounded mx-1" src={TrailtourImage} alt="Trailtour" /></ExternalLink>
                     </div>
                 </div>
             </PageBox>
