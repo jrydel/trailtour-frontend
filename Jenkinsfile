@@ -9,8 +9,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'rm -rf /data/trailtour-frontend/*'
-                sh 'cp -R $WORKSPACE/dist/* /data/trailtour-frontend/'
+                sh 'rm -rf /data/trailtour/frontend/*'
+                sh 'cp -R $WORKSPACE/dist/* /data/trailtour/frontend/'
             }
         }
     }
