@@ -24,6 +24,10 @@ module.exports = {
       },
       minHeight: {
         navbar: "3.5rem",
+        table: "3.5rem"
+      },
+      minWidth: {
+        table: "9rem"
       },
       maxHeight: {
         searchbar: "16rem",

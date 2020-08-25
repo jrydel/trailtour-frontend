@@ -5,7 +5,7 @@ import moment from "moment";
 
 import Page, { PageTitle, PageError, PageBox, PageLoading } from "../layout/Page";
 import { defaultGetOptions, fetcher, API_URL } from "../../utils/FetchUtils";
-import { formatStageNumber, formatSeconds } from "../../utils/FormatUtils";
+import { formatStageNumber, formatSeconds, formatNumberWithDefault } from "../../utils/FormatUtils";
 import { ExternalLink, AppLink } from "../../utils/NavUtils";
 import { Box } from "../../utils/LayoutUtils";
 import { TablePagination } from "../../utils/TableUtils";
@@ -17,28 +17,21 @@ const FeedPage = () => {
     const { data, error } = useSWR(`${API_URL}/getFeed?database=trailtour&limit=${limit}&offset=${page * limit}`, url => fetcher(url, defaultGetOptions));
 
     const Col = ({ children, className }) => (
-        <div className={`flex flex-row items-center w-full ${className}`} >
+        <div className={`px-2 flex flex-row items-center w-full ${className}`} >
             {children}
         </div >
     );
 
     const Row = ({ row }) => {
-        return <div className="flex flex-col sm:flex-row items-center justify-between border-b border-grey-light text-sm">
-            <Col className="h-8 sm:h-12 justify-center">{moment(row.activity.created).startOf("hour").fromNow()}</Col>
-            <Col className="h-8 sm:h-12 justify-center sm:justify-start"><AppLink to={`/etapa/${row.stage.number}`}>{formatStageNumber(row.stage.number) + " - " + row.stage.name}</AppLink></Col>
-            <Col className="h-8 sm:h-12 justify-center sm:justify-start"><AppLink to={`/zavodnik/${row.athlete.id}`}>{row.athlete.name}</AppLink></Col>
-            <Col className="h-8 sm:h-12 justify-center"><ExternalLink to={`http://strava.com/activities/${row.activity.id}`}>{formatSeconds(row.activity.time)}</ExternalLink></Col>
-            <Col className="h-8 sm:h-12 justify-center">{row.activity.position}</Col>
+        return <div className="flex flex-col sm:flex-row items-center justify-between border-b border-grey-light min-h-table">
+            <Col className="justify-center">{moment(row.activity_created).startOf("hour").fromNow()}</Col>
+            <Col className="justify-center sm:justify-start"><AppLink to={`/etapa/${row.stage_number}`}>{formatStageNumber(row.stage_number) + " - " + row.stage_name}</AppLink></Col>
+            <Col className="justify-center sm:justify-start"><AppLink to={`/zavodnik/${row.athlete_id}`}>{row.athlete_name}</AppLink></Col>
+            <Col className="justify-center"><ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink></Col>
+            <Col className="justify-center">{formatNumberWithDefault(row.trailtour_points, " --- ")} ({formatNumberWithDefault(row.points, " --- ")})</Col>
+            <Col className="justify-center">{row.activity_position}</Col>
         </div>
     };
-
-    const tableOptions = [
-        { header: "Nahráno", align: "center", sort: { id: "activity.created", direction: "desc" }, render: row => moment(row.activity.created).startOf("hour").fromNow() },
-        { header: "Etapa", align: "left", sort: { id: "stage.number" }, render: row => <AppLink to={`/etapa/${row.stage.number}`}>{formatStageNumber(row.stage.number) + " - " + row.stage.name}</AppLink> },
-        { header: "Závodník", align: "left", sort: { id: "athlete.name" }, render: row => <AppLink to={`/zavodnik/${row.athlete.id}`}>{row.athlete.name}</AppLink> },
-        { header: "Čas", align: "right", sort: { id: "activity.time" }, render: row => <ExternalLink to={`http://strava.com/activities/${row.activity.id}`}>{formatSeconds(row.activity.time)}</ExternalLink> },
-        { header: "Pozice na segmentu", align: "center", sort: { id: "activity.position" }, render: row => row.activity.position }
-    ];
 
     if (error) {
         return <PageError full={true} />
@@ -58,12 +51,13 @@ const FeedPage = () => {
             </PageBox>
             <PageBox>
                 <Box>
-                    <div className="hidden sm:flex flex-row items-center justify-between border-b border-grey-light uppercase text-sm font-bold">
-                        <Col className="h-12 justify-center">Nahráno</Col>
-                        <Col className="h-12 justify-left">Etapa</Col>
-                        <Col className="h-12 justify-left">Závodník</Col>
-                        <Col className="h-12 justify-center">Čas</Col>
-                        <Col className="h-12 justify-center">Pozice na segmentu</Col>
+                    <div className="hidden sm:flex flex-row items-center justify-between border-b border-grey-light uppercase text-sm font-bold min-h-table">
+                        <Col className="justify-center">Nahráno</Col>
+                        <Col className="justify-left">Etapa</Col>
+                        <Col className="justify-left">Závodník</Col>
+                        <Col className="justify-center">Čas</Col>
+                        <Col className="justify-center">Body TT (Body)</Col>
+                        <Col className="justify-center">Pozice na segmentu</Col>
                     </div>
                     {
                         data.data.map((row, index) => <Row key={index} row={row} />)
