@@ -13,11 +13,12 @@ import Club from "./pages/club/Club";
 import Ladder from "./pages/ladder/Ladder";
 import ClubLadder from "./pages/ladder/ClubLadder";
 import AthleteLadder from "./pages/ladder/AthleteLadder";
+import FeedPage from "./pages/feed/FeedPage";
 
 export const routes = [
     {
         path: "/",
-        element: <Dashboard />
+        element: <FeedPage />
     },
     {
         path: "/etapy",
