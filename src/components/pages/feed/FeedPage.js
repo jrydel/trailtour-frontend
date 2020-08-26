@@ -3,6 +3,8 @@ import React from "react";
 import useSWR from "swr";
 import moment from "moment";
 
+import { FiUser, FiUsers } from "react-icons/fi";
+
 import Page, { PageTitle, PageError, PageBox, PageLoading } from "../layout/Page";
 import { defaultGetOptions, fetcher, API_URL } from "../../utils/FetchUtils";
 import { formatStageNumber, formatSeconds, formatNumberWithDefault } from "../../utils/FormatUtils";
@@ -23,10 +25,24 @@ const FeedPage = () => {
     );
 
     const Row = ({ row }) => {
-        return <div className="flex flex-col sm:flex-row items-center justify-between border-b border-grey-light min-h-table">
+        return <div className="flex flex-col sm:flex-row items-center justify-between border-b border-grey-light min-h-table p-4 sm:p-0">
             <Col className="justify-center">{moment(row.activity_created).startOf("hour").fromNow()}</Col>
             <Col className="justify-center sm:justify-start"><AppLink to={`/etapa/${row.stage_number}`}>{formatStageNumber(row.stage_number) + " - " + row.stage_name}</AppLink></Col>
-            <Col className="justify-center sm:justify-start"><AppLink to={`/zavodnik/${row.athlete_id}`}>{row.athlete_name}</AppLink></Col>
+            <Col className="justify-center sm:justify-start">
+                <div className="flex flex-col">
+                    <div className="flex flex-row items-center">
+                        <FiUser className="mr-2" />
+                        <AppLink to={`/zavodnik/${row.athlete_id}`}>{row.athlete_name}</AppLink>
+                    </div>
+                    {
+                        row.club_name &&
+                        <div className="flex flex-row items-center">
+                            <FiUsers className="mr-2" />
+                            <AppLink to={`/klub/${row.club_id}`}>{row.club_name}</AppLink>
+                        </div>
+                    }
+                </div>
+            </Col>
             <Col className="justify-center"><ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink></Col>
             <Col className="justify-center">{formatNumberWithDefault(row.trailtour_points, " --- ")} ({formatNumberWithDefault(row.points, " --- ")})</Col>
             <Col className="justify-center">{row.activity_position}</Col>
