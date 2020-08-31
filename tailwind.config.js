@@ -24,10 +24,12 @@ module.exports = {
       },
       minHeight: {
         navbar: "3.5rem",
-        table: "3.5rem"
+        table: "3.5rem",
+        icon: "1.2rem"
       },
       minWidth: {
-        table: "9rem"
+        table: "9rem",
+        icon: "1.2rem"
       },
       maxHeight: {
         searchbar: "16rem",

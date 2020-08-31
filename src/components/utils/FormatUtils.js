@@ -1,5 +1,5 @@
 export const formatNumberWithDefault = (number, defaultValue) => number ? number.toLocaleString("cz") : defaultValue;
-export const formatNumber = number => number.toLocaleString("cz");
+export const formatNumber = number => number.toLocaleString("cz", { minimumFractionDigits: 2 });
 export const formatStageNumber = number => number ? (number > 9 ? "#" : "#0") + number : null;
 
 export const formatSeconds = secs => {
