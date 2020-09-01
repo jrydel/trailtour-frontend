@@ -20,7 +20,7 @@ const ClubLadder = () => {
 
     const tableOptions = [
         { header: "Jméno", align: "center", sort: { id: "club_name" }, render: row => <AppLink to={`/klub/${row.club_id}`}>{row.club_name}</AppLink> },
-        { header: "Body TT", align: "left", sort: { id: "trailtour_points", direction: "desc" }, render: row => row.trailtour_points ? formatNumber(row.trailtour_points) : "" },
+        { header: "Body TT", align: "left", sort: { id: "trailtour_points", direction: "desc" }, render: row => row.trailtour_points ? formatNumber(row.trailtour_points, 2) : "" },
         { header: "Pozice TT", align: "center", sort: { id: "trailtour_position" }, render: row => row.trailtour_position ? formatNumber(row.trailtour_position) : "" },
     ];
 

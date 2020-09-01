@@ -95,3 +95,65 @@ export const TablePagination = ({ page, lastPage, onNextPageClick, onPreviousPag
         </div>
     )
 }
+
+export const TableRow = ({ children, className }) => {
+
+    return (
+        <div className={`flex flex-col sm:flex-row p-4 ${className}`}>
+            {children}
+        </div>
+    );
+}
+
+export const TableCol = ({ children, className }) => {
+
+    return (
+        <div className={`flex flex-col sm:flex-row mx-2 ${className}`}>
+            {children}
+        </div>
+    );
+}
+
+export const FlexTable = ({ options, data }) => {
+
+    const [tableSort, setTableSort] = React.useState(options.find(element => element.sort.direction).sort);
+    const { sortedData } = useSortableData(data ? data : [], tableSort);
+
+    return (
+        <div className="flex flex-col">
+            {/* header */}
+            <div className="hidden sm:flex flex-row p-4 border-b border-grey-light uppercase text-sm font-bold">
+                {
+                    options.map((option, index) => {
+                        if (!option.header) return null;
+                        if (option.sort) {
+                            return <div key={`table-header-${index}`}
+                                className="flex-1 cursor-pointer"
+                                onClick={() => setTableSort(prev => ({ id: option.sort.id, direction: prev.direction === "asc" ? "desc" : "asc" }))} >
+                                <SortableHeader option={option} sort={tableSort} />
+                            </div>
+                        } else {
+                            return <div key={`table-header-${index}`}
+                                className="flex-1" >
+                                <SimpleHeader option={option} />
+                            </div>
+                        }
+                    })
+                }
+            </div>
+            {/* body */}
+            {
+                sortedData && sortedData.map((row, index) => (
+                    <div key={`table-row-${index}`} className={`flex flex-col sm:flex-row items-center p-4 border-b border-grey-light`}>
+                        {
+                            options.map((option, index2) => (
+                                <div key={`table-row-${index}-col-${index2}`} className={`flex-1 text-dark text-${option.align} `}>{option.render(row)}</div>
+                            ))
+                        }
+                    </div>
+                ))
+            }
+
+        </div >
+    );
+}
