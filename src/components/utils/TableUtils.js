@@ -147,7 +147,7 @@ export const FlexTable = ({ options, data }) => {
                     <div key={`table-row-${index}`} className={`flex flex-col sm:flex-row items-center p-4 border-b border-grey-light`}>
                         {
                             options.map((option, index2) => (
-                                <div key={`table-row-${index}-col-${index2}`} className={`flex-1 text-dark text-${option.align} `}>{option.render(row)}</div>
+                                <div key={`table-row-${index}-col-${index2}`} className={`flex-1 text-dark items-center justify-center text-center`}>{option.render(row)}</div>
                             ))
                         }
                     </div>
