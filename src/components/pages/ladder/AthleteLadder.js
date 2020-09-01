@@ -23,28 +23,7 @@ const AthleteLadder = ({ gender }) => {
     }
     if (!ladderData) return <PageLoading full={false} />
 
-    const tableOptions = [
-        { header: "Pozice TT", align: "center", sort: { id: "trailtour_position" }, render: row => row.trailtour_position ? formatNumber(row.trailtour_position) : "" },
-        {
-            header: "Jméno", align: "left", sort: { id: "athlete_name" }, render: row =>
-                <div className="flex flex-col items-center sm:items-start">
-                    <div className="flex flex-row items-center">
-                        <FiUser className="min-w-icon min-h-icon mr-1" />
-                        <AppLink to={`/zavodnik/${row.athlete_id}`}>{row.athlete_name}</AppLink>
-                    </div>
-                    {
-                        row.club_id && (
-                            <div className="flex flex-row items-center">
-                                <FiUsers className="min-w-icon min-h-icon mr-1" />
-                                <AppLink to={`/klub/${row.club_id}`}>{row.club_name}</AppLink>
-                            </div>
-                        )
-                    }
-                </div>
-        },
-        { header: "Etap", align: "center", sort: { id: "stage_count" }, render: row => formatNumber(row.stage_count) },
-        { header: "Body TT", align: "center", sort: { id: "trailtour_points", direction: "desc" }, render: row => row.trailtour_points ? `${formatNumber(row.trailtour_points, 2)}.` : "" },
-    ];
+    const maxPoints = Math.max.apply(Math, ladderData.map(o => o.trailtour_points));
 
     return (
         <PageBox>
@@ -56,6 +35,8 @@ const AthleteLadder = ({ gender }) => {
                             const percentText = row.trailtour_points ? `${row.stage_count}/50` : "0/50";
                             const positionText = row.trailtour_position ? formatPosition(row.trailtour_position) : "---";
                             const pointsText = row.trailtour_points ? `${formatNumber(row.trailtour_points, 2)} b.` : "0.00 b.";
+                            const pointsDifferenceText = maxPoints === row.trailtour_points ? null : formatNumber(maxPoints - row.trailtour_points);
+                            const bgColor = percent > 75 ? "bg-success" : percent > 50 ? "bg-yellow-500" : percent > 25 ? "bg-orange-500" : "bg-danger";
                             return (
                                 <div key={index} className="flex flex-col sm:flex-row items-center p-2 border-b border-grey-light">
                                     <div className="flex-1 flex flex-row justify-center p-2">
@@ -80,10 +61,13 @@ const AthleteLadder = ({ gender }) => {
                                     <div className="flex-1 flex flex-row w-full justify-center p-2">
                                         <div className="flex-1 flex flex-row items-center justify-center relative bg-background rounded-md">
                                             <span className="z-50">{percentText}</span>
-                                            <div className="absolute left-0 top-0 w-full h-full bg-success rounded-md text-center text-dark" style={{ width: `${percent}%` }} />
+                                            <div className={`absolute left-0 top-0 w-full h-full ${bgColor} rounded-md text-center text-dark`} style={{ width: `${percent}%` }} />
                                         </div>
                                     </div>
-                                    <div className="flex-1 flex flex-row justify-center p-2">{pointsText}</div>
+                                    <div className="flex-1 flex flex-col items-center p-2">
+                                        <span>{pointsText}</span>
+                                        {pointsDifferenceText && <span className="text-sm text-danger">{`-${pointsDifferenceText}`}</span>}
+                                    </div>
                                 </div>
                             )
                         })

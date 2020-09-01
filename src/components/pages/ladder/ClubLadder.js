@@ -23,6 +23,8 @@ const ClubLadder = () => {
     }
     if (!ladderData) return <PageLoading full={false} />
 
+    const maxPoints = Math.max.apply(Math, ladderData.map(o => o.trailtour_points));
+
     return (
         <PageBox>
             <Box>
@@ -31,6 +33,7 @@ const ClubLadder = () => {
                         ladderData.sort((a, b) => b.trailtour_points - a.trailtour_points).map((row, index) => {
                             const positionText = row.trailtour_position ? formatPosition(row.trailtour_position) : "---";
                             const pointsText = row.trailtour_points ? `${formatNumber(row.trailtour_points, 2)} b.` : "0.00 b.";
+                            const pointsDifferenceText = maxPoints === row.trailtour_points ? null : formatNumber(maxPoints - row.trailtour_points);
                             return (
                                 <div key={index} className="flex flex-col sm:flex-row items-center p-2 border-b border-grey-light">
                                     <div className="flex-1 flex flex-row justify-center p-2">
@@ -42,7 +45,10 @@ const ClubLadder = () => {
                                         <FiUsers className="min-w-icon min-h-icon mr-1" />
                                         <AppLink to={`/klub/${row.club_id}`}>{row.club_name}</AppLink>
                                     </div>
-                                    <div className="flex-1 flex flex-row justify-center p-2">{pointsText}</div>
+                                    <div className="flex-1 flex flex-col items-center p-2">
+                                        <span>{pointsText}</span>
+                                        {pointsDifferenceText && <span className="text-sm text-danger">{`-${pointsDifferenceText}`}</span>}
+                                    </div>
                                 </div>
                             )
                         })
