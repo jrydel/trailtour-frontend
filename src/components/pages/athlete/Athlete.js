@@ -136,7 +136,7 @@ const Athlete = () => {
                     <Box className="p-3">
                         <label className="flex items-center cursor-pointer">
                             <div className="mr-3 text-sm">
-                                Zobrazit průměry v mapě
+                                Zvýraznit podprůměrné výkony
                             </div>
                             <div className="relative">
                                 <input type="checkbox" className="hidden" onClick={() => setApplyAverage(prev => !prev)} />
