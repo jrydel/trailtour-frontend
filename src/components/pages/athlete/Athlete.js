@@ -27,6 +27,8 @@ const Athlete = () => {
 
     const [{ user }, dispatch] = useStateValue();
 
+    const [applyAverage, setApplyAverage] = React.useState(false);
+
     const { data: athleteData, error: athleteDataError } = useSWR(`${API_URL}/getAthlete?database=trailtour&id=${id}`, url => fetcher(url, defaultGetOptions));
     const { data: compareResultsData, error: compareResultsError } = useSWR(user ? `${API_URL}/getAthleteResults?database=trailtour&id=${user.id}` : null, url => fetcher(url, defaultGetOptions));
     const { data: athleteResultsData, error: athleteResultsError } = useSWR(() => `${API_URL}/getAthleteResults?database=trailtour&id=${athleteData.id}`, url => fetcher(url, defaultGetOptions));
@@ -124,12 +126,24 @@ const Athlete = () => {
                 </div>
             </PageBox>
             <PageBox>
-                <div className="flex flex-row items-center justify-center sm:justify-start">
-                    <Box className="p-3 inline-flex flex-col sm:flex-row items-center text-sm">
+                <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between">
+                    <Box className="p-3 flex flex-col sm:flex-row items-center text-sm">
                         <p className="px-2">{`Etapy: ${athleteResultsData.length} / ${stagesGPSData.length}`}</p>
                         <p className="px-2">{`Pozice: ${athleteData.position}`}</p>
                         <p className="px-2">{`Body: ${athleteData.points}`}</p>
                         <p className="px-2">{`Průměr: ${average.toFixed(2)}`}</p>
+                    </Box>
+                    <Box className="p-3">
+                        <label className="flex items-center cursor-pointer">
+                            <div className="mr-3 text-sm">
+                                Zobrazit průměry v mapě
+                            </div>
+                            <div className="relative">
+                                <input type="checkbox" className="hidden" onClick={() => setApplyAverage(prev => !prev)} />
+                                <div className="toggle__line w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
+                                <div className="toggle__dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-2 left-0"></div>
+                            </div>
+                        </label>
                     </Box>
                 </div>
             </PageBox>
@@ -146,7 +160,7 @@ const Athlete = () => {
                             const result = athleteResultsData.find(val => val.stage_number === item.stage_number);
                             const stageGps = stagesGPSData.find(val => val.stage_number === item.stage_number);
 
-                            return <Marker key={`stage-${item.stage_number}`} position={[stageGps.latitude, stageGps.longitude]} icon={icon(result ? (result.position === 1 ? "gold" : result.points > average ? "green" : "orange") : "grey")}>
+                            return <Marker key={`stage-${item.stage_number}`} position={[stageGps.latitude, stageGps.longitude]} icon={icon(result ? (result.position === 1 ? "gold" : applyAverage ? result.points > average ? "green" : "orange" : "green") : "grey")}>
                                 <Popup>
                                     <div className="flex flex-col p-2 items-start">
                                         <div className="mb-2">

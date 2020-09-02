@@ -84,3 +84,14 @@
     height: 5em;
   }
 }
+
+.toggle__dot {
+  top: -.25rem;
+  left: -.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+input:checked ~ .toggle__dot {
+  transform: translateX(100%);
+  background-color: #48bb78;
+}
