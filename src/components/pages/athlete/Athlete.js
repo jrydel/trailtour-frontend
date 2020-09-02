@@ -146,7 +146,7 @@ const Athlete = () => {
                             const result = athleteResultsData.find(val => val.stage_number === item.stage_number);
                             const stageGps = stagesGPSData.find(val => val.stage_number === item.stage_number);
 
-                            return <Marker key={`stage-${item.stage_number}`} position={[stageGps.latitude, stageGps.longitude]} icon={icon(result ? (result.position === 1 ? "gold" : "green") : "grey")}>
+                            return <Marker key={`stage-${item.stage_number}`} position={[stageGps.latitude, stageGps.longitude]} icon={icon(result ? (result.position === 1 ? "gold" : result.points > average ? "green" : "orange") : "grey")}>
                                 <Popup>
                                     <div className="flex flex-col p-2 items-start">
                                         <div className="mb-2">

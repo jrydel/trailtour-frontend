@@ -47,8 +47,9 @@ const ClubLadder = () => {
                                     </div>
                                     <div className="flex-1 flex flex-col items-center p-2">
                                         <span>{pointsText}</span>
-                                        {pointsDifferenceText && <span className="text-sm text-danger">{`-${pointsDifferenceText}`}</span>}
+                                        {pointsDifferenceText && <span className="text-sm text-danger">{`-${pointsDifferenceText} b.`}</span>}
                                     </div>
+
                                 </div>
                             )
                         })
