@@ -7,6 +7,7 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import FullscreenControl from "react-leaflet-fullscreen";
 import { RiTimerLine, RiTimerFlashLine } from "react-icons/ri";
 import { DiGitCompare } from "react-icons/di";
+import { VscCircleSlash } from "react-icons/vsc";
 
 import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault, formatSecondsWithDefault } from "../../utils/FormatUtils";
 import { AppLink, ExternalLink, pageClasses } from "../../utils/NavUtils";

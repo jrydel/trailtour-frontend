@@ -2,7 +2,7 @@ import React from "react";
 import useSWR from "swr";
 
 import { FiUser, FiUsers } from "react-icons/fi";
-import { VscOutput, VscFold, VscSettings } from "react-icons/vsc";
+import { VscOutput, VscFold, VscCircleSlash } from "react-icons/vsc";
 
 import { fetcher, API_URL, defaultGetOptions } from "../../utils/FetchUtils";
 import { PageError, PageLoading, PageBox } from "../layout/Page";
@@ -77,7 +77,7 @@ const AthleteLadder = ({ gender }) => {
                                         </div>
                                     </div>
                                     <div className="flex-1 flex flex-row items-center justify-center p-2">
-                                        <VscSettings className="min-w-icon min-h-icon mr-2" />
+                                        <VscCircleSlash className="min-w-icon min-h-icon mr-2" />
                                         <div className="flex flex-col items-center">
                                             <span>{averageText}</span>
                                             {averageDifferenceText && <span className="text-sm text-danger">{`-${averageDifferenceText} b.`}</span>}

@@ -4,15 +4,15 @@ import useSWR from "swr";
 import moment from "moment";
 
 import { FiUser, FiUsers, FiMapPin, FiTrendingUp } from "react-icons/fi";
-import { BsGraphUp } from "react-icons/bs";
+import { VscGitCompare, VscSettings } from "react-icons/vsc";
 import { MdTimer } from "react-icons/md";
 
 import Page, { PageTitle, PageError, PageBox, PageLoading } from "../layout/Page";
 import { defaultGetOptions, fetcher, API_URL } from "../../utils/FetchUtils";
-import { formatStageNumber, formatSeconds, formatNumber } from "../../utils/FormatUtils";
+import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault } from "../../utils/FormatUtils";
 import { ExternalLink, AppLink } from "../../utils/NavUtils";
 import { Box } from "../../utils/LayoutUtils";
-import { TablePagination } from "../../utils/TableUtils";
+import { useStateValue } from "../../StateContext";
 
 const groups = data => {
     const result = [];
@@ -29,6 +29,16 @@ const FeedPage = () => {
     const limit = 50;
     const [page, setPage] = React.useState(0);
     const { data, error } = useSWR(`${API_URL}/getFeed?database=trailtour&limit=${limit}&offset=${page * limit}`, url => fetcher(url, defaultGetOptions));
+
+    const [{ user }, dispatch] = useStateValue();
+    const { data: compareResultsData, error: compareResultsError } = useSWR(user ? `${API_URL}/getAthleteResults?database=trailtour&id=${user.id}` : null, url => fetcher(url, defaultGetOptions));
+
+    if (user && compareResultsError) {
+        console.log(compareResultsError);
+        return <PageError />
+    }
+
+    if (user && !compareResultsData) return <PageLoading full={true} />
 
     const Col = ({ children, className }) => (
         <div className={`px-2 flex flex-row items-center w-full ${className}`} >
@@ -55,7 +65,16 @@ const FeedPage = () => {
                     }
                 </div>
             </Col>
-            <Col className="justify-center"><ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink></Col>
+            <Col className="justify-center">
+                <ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>
+                    {formatSeconds(row.activity_time)}
+                </ExternalLink>
+                {user &&
+                    < div className={row.activity_time === row.compare_activity_time ? "bg-blue-400" : row.activity_time > row.compare_activity_time ? "bg-green-400" : "bg-red-400"}>
+                        <p>{formatSecondsWithDefault(row.compare_trailtour_time, " --- ")} {row.compare_activity_id ? <ExternalLink to={`https://strava.com/activities/${row.compare_activity_id}`}>{`(${formatSeconds(row.compare_activity_time)})`}</ExternalLink> : " --- "}</p>
+                    </div>
+                }
+            </Col>
             <Col className="justify-center">{formatNumberWithDefault(row.trailtour_points, " --- ")} ({formatNumberWithDefault(row.points, " --- ")})</Col>
             <Col className="justify-center">{row.activity_position}</Col>
         </div>
@@ -69,6 +88,15 @@ const FeedPage = () => {
     const lastPage = Math.round(data.count / limit);
     const lastUpdate = moment(data.lastUpdate).format("HH:mm:ss");
     const groupData = groups(data.data);
+
+    data.data.map(item => {
+        const temp = compareResultsData?.find(val => val.stage_number === item.stage_number);
+        if (temp) {
+            item.compare_trailtour_points = temp.trailtour_points;
+            item.compare_points = temp.points;
+            item.compare_activity_time = temp.activity_time;
+        }
+    });
 
     return (
         <Page>
@@ -112,15 +140,28 @@ const FeedPage = () => {
                                                         <ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink>
                                                         <span className="ml-1">({row.activity_position})</span>
                                                     </div>
+                                                    {user && row.compare_activity_time &&
+                                                        <div className={`flex flex-row items-center ${row.activity_time === row.compare_activity_time ? "bg-blue-400" : row.activity_time > row.compare_activity_time ? "bg-green-400" : "bg-red-400"}`}>
+                                                            <VscGitCompare className="min-w-icon min-h-icon mr-1" />
+                                                            <span>{formatSeconds(row.compare_activity_time, " --- ")}</span>
+                                                        </div>
+                                                    }
                                                     <div className="flex flex-row items-center">
                                                         <div className="flex flex-row items-center">
-                                                            <FiTrendingUp className="min-w-icon min-h-icon mr-1" />
                                                             {
                                                                 row.trailtour_points ?
                                                                     (
-                                                                        <span>{`${formatNumber(row.trailtour_points)} (TT)`}</span>
+                                                                        <div className="flex flex-col">
+                                                                            <div className="flex flex-row items-center">
+                                                                                <VscSettings className="min-w-icon min-h-icon mr-1" />
+                                                                                <span>{`${formatNumber(row.trailtour_points, 2)} b. (TT)`}</span>
+                                                                            </div>
+                                                                        </div>
                                                                     ) : (
-                                                                        <span>{formatNumber(row.points)}</span>
+                                                                        <div className="flex flex-col items-center">
+                                                                            <VscSettings className="min-w-icon min-h-icon mr-1" />
+                                                                            <span>{`${formatNumber(row.points, 2)} b.`}</span>
+                                                                        </div>
                                                                     )
                                                             }
                                                         </div>
