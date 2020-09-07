@@ -45,7 +45,7 @@ const SearchBar = () => {
                 <div className="inline-flex flex-col p-2">
                     <p className="text-sm font-bold">Závodníci</p>
                     {
-                        data && data.athletes.map((val, index) => <div onMouseDown={() => navigate(`/zavodnik/${val.id}`)} key={index} className="p-2 text-primary hover:underline cursor-pointer">{`${val.name} ${val.club ? `(${val.club})` : ""}`}</div>)
+                        data && data.athletes.map((val, index) => <div onMouseDown={() => navigate(`/zavodnik/${val.athlete_id}`)} key={index} className="p-2 text-primary hover:underline cursor-pointer">{`${val.athlete_name} ${val.club_name ? `(${val.club_name})` : ""}`}</div>)
                     }
                 </div>
                 <div className="inline-flex flex-col p-2">
