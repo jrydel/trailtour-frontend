@@ -1,5 +1,5 @@
 export const formatNumberWithDefault = (number, defaultValue) => number ? number.toLocaleString("cz") : defaultValue;
-export const formatNumber = (number, digits = 0) => number ? Number(number).toFixed(digits).toLocaleString("cz") : "";
+export const formatNumber = (number, digits = 0, defaultValue = null) => number && !isNaN(number) ? Number(number).toFixed(digits).toLocaleString("cz") : defaultValue;
 export const formatStageNumber = number => number ? (number > 9 ? "#" : "#0") + number : null;
 export const formatPosition = number => number ? `${number}.` : "";
 

@@ -19,6 +19,7 @@ import StravaImage from "../../../assets/images/strava.jpg";
 import StravaKomIcon from "../../../assets/images/strava-kom.png";
 import { icon } from "../../utils/MapUtils";
 import { useStateValue } from "../../StateContext";
+import WinnerMedal from "../../../assets/images/winner.png";
 
 const computeAverage = (arr) => arr.reduce((p, c) => p + (c === null ? 0 : c), 0) / arr.length;
 
@@ -116,7 +117,17 @@ const Athlete = () => {
             <PageBox>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
                     <div className="flex flex-col sm:flex-row items-center">
-                        <PageTitle>{athleteData.athlete_name}</PageTitle>
+                        <PageTitle>
+                            <div className="flex flex-row items-center justify-center">
+                                {athleteData.athlete_id === 27058130 &&
+                                    <div className="tooltip">
+                                        <img className="w-8 h-8" src={WinnerMedal} />
+                                        <span className="tooltip-text border rounded bg-dark text-light">Vítěz MČR ve sprintu 2020</span>
+                                    </div>
+                                }
+                                <span>{athleteData.athlete_name}</span>
+                            </div>
+                        </PageTitle>
                         {
                             athleteData.club_name && <div className="ml-2 text-center"><AppLink to={`/klub/${athleteData.club_id}`}>{athleteData.club_name}</AppLink></div>
                         }
@@ -174,7 +185,7 @@ const Athlete = () => {
                             const result = athleteResultsData.find(val => val.stage_number === item.stage_number);
                             const stageGps = stagesGPSData.find(val => val.stage_number === item.stage_number);
 
-                            const color = result => result ? result.trailtour_points ? applyAverage ? result.trailtour_points > trailtourAverage ? "green" : "orange" : "green" : "blue" : "grey";
+                            const color = result => result ? result.trailtour_points ? result.trailtour_position === 1 ? "gold" : applyAverage ? result.trailtour_points > trailtourAverage ? "green" : "orange" : "green" : "blue" : "grey";
 
                             return <Marker key={`stage-${item.stage_number}`} position={[stageGps.latitude, stageGps.longitude]} icon={icon(color(result))}>
                                 <Popup>

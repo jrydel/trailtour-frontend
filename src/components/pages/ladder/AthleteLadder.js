@@ -28,6 +28,8 @@ const AthleteLadder = ({ gender }) => {
     const maxPoints = firstAthlete.trailtour_points;
     const maxAverage = firstAthlete.trailtour_points / firstAthlete.trailtour_stages_count;
 
+    console.log(maxAverage);
+
     return (
         <PageBox>
             <Box>
@@ -36,13 +38,18 @@ const AthleteLadder = ({ gender }) => {
                         ladderData.sort((a, b) => b.trailtour_points - a.trailtour_points).map((row, index) => {
                             const percent = row.trailtour_points ? row.trailtour_stages_count / 0.5 : 0;
                             const percentText = row.trailtour_points ? `${row.trailtour_stages_count}/50` : "0/50";
+                            const bgColor = percent > 75 ? "bg-success" : percent > 50 ? "bg-yellow-500" : percent > 25 ? "bg-orange-500" : "bg-danger";
+
                             const positionText = row.trailtour_position ? formatPosition(row.trailtour_position) : "---";
+
                             const pointsText = row.trailtour_points ? `${formatNumber(row.trailtour_points, 2)} b.` : "0.00 b.";
                             const pointsDifferenceText = maxPoints === row.trailtour_points ? null : formatNumber(maxPoints - row.trailtour_points, 2);
-                            const bgColor = percent > 75 ? "bg-success" : percent > 50 ? "bg-yellow-500" : percent > 25 ? "bg-orange-500" : "bg-danger";
+
                             const average = row.trailtour_points / row.trailtour_stages_count;
-                            const averageText = average ? `${formatNumber(average, 2)} b.` : "0.00 b.";
-                            const averageDifferenceText = average === maxAverage ? null : formatNumber(maxAverage - average, 2);
+                            const averageText = `${formatNumber(average, 2, "0.00")} b.`;
+                            const averageDifference = average - maxAverage;
+                            const averageDifferenceText = average === maxAverage ? null : `${formatNumber(averageDifference, 2, "0.00")} b.`;
+
                             return (
                                 <div key={index} className="flex flex-col sm:flex-row items-center p-2 border-b border-grey-light">
                                     <div className="flex-1 flex flex-row justify-center p-2">
@@ -81,7 +88,7 @@ const AthleteLadder = ({ gender }) => {
                                         <VscCircleSlash className="min-w-icon min-h-icon mr-2" />
                                         <div className="flex flex-col items-center">
                                             <span>{averageText}</span>
-                                            {averageDifferenceText && <span className="text-sm text-danger">{`-${averageDifferenceText} b.`}</span>}
+                                            <span className={`text-sm ${averageDifference > 0 ? "text-success" : "text-danger"}`}>{averageDifferenceText}</span>
                                         </div>
                                     </div>
                                 </div>
