@@ -7,7 +7,7 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import FullscreenControl from "react-leaflet-fullscreen";
 import { RiTimerLine, RiTimerFlashLine } from "react-icons/ri";
 import { DiGitCompare } from "react-icons/di";
-import { VscCircleSlash } from "react-icons/vsc";
+import { VscFoldUp, VscFoldDown } from "react-icons/vsc";
 
 import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault, formatSecondsWithDefault } from "../../utils/FormatUtils";
 import { AppLink, ExternalLink, pageClasses } from "../../utils/NavUtils";
@@ -32,7 +32,7 @@ const Athlete = () => {
 
     const { data: athleteData, error: athleteDataError } = useSWR(`${API_URL}/getAthlete?database=trailtour&id=${id}`, url => fetcher(url, defaultGetOptions));
     const { data: compareResultsData, error: compareResultsError } = useSWR(user ? `${API_URL}/getAthleteResults?database=trailtour&id=${user.id}` : null, url => fetcher(url, defaultGetOptions));
-    const { data: athleteResultsData, error: athleteResultsError } = useSWR(() => `${API_URL}/getAthleteResults?database=trailtour&id=${athleteData.id}`, url => fetcher(url, defaultGetOptions));
+    const { data: athleteResultsData, error: athleteResultsError } = useSWR(() => `${API_URL}/getAthleteResults?database=trailtour&id=${athleteData.athlete_id}`, url => fetcher(url, defaultGetOptions));
     const { data: komData, error: komError } = useSWR(`${API_URL}/getKomResults?database=trailtour`, url => fetcher(url, defaultGetOptions));
     const { data: stagesGPSData, error: stagesGPSError } = useSWR(`${API_URL}/getAllStagesGPSStart?database=trailtour`, url => fetcher(url, defaultGetOptions));
 
@@ -103,7 +103,8 @@ const Athlete = () => {
         },
     ];
 
-    const average = computeAverage(athleteResultsData.map(item => item.points));
+    const average = formatNumber(athleteData.points / athleteData.stages_count, 2);
+    const trailtourAverage = formatNumber(athleteData.trailtour_points / athleteData.trailtour_stages_count, 2);
 
     let bounds = [];
     stagesGPSData.map(stage => {
@@ -115,24 +116,36 @@ const Athlete = () => {
             <PageBox>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
                     <div className="flex flex-col sm:flex-row items-center">
-                        <PageTitle>{athleteData.name}</PageTitle>
+                        <PageTitle>{athleteData.athlete_name}</PageTitle>
                         {
                             athleteData.club_name && <div className="ml-2 text-center"><AppLink to={`/klub/${athleteData.club_id}`}>{athleteData.club_name}</AppLink></div>
                         }
                     </div>
                     <div className="flex flex-row items-center justify-center sm:justify-end">
-                        <ExternalLink to={`https://www.strava.com/athletes/${athleteData.id}`} className={pageClasses.className}><img className="w-15 h-10 rounded" src={StravaImage} alt="Strava" /></ExternalLink>
-                        <button className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-15 h-10" onClick={() => dispatch({ type: "SET_USER", user: { id: athleteData.id, name: athleteData.name } })}><DiGitCompare className="h-6 w-6" /></button>
+                        <ExternalLink to={`https://www.strava.com/athletes/${athleteData.athlete_id}`} className={pageClasses.className}><img className="w-15 h-10 rounded" src={StravaImage} alt="Strava" /></ExternalLink>
+                        <button className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-15 h-10" onClick={() => dispatch({ type: "SET_USER", user: { id: athleteData.athlete_id, name: athleteData.athlete_name } })}><DiGitCompare className="h-6 w-6" /></button>
                     </div>
                 </div>
             </PageBox>
             <PageBox>
                 <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between">
                     <Box className="p-3 flex flex-col sm:flex-row items-center text-sm">
-                        <p className="px-2">{`Etapy: ${athleteResultsData.length} / ${stagesGPSData.length}`}</p>
-                        <p className="px-2">{`Pozice: ${athleteData.position}`}</p>
-                        <p className="px-2">{`Body: ${athleteData.points}`}</p>
-                        <p className="px-2">{`Průměr: ${average.toFixed(2)}`}</p>
+                        <div className="flex flex-col">
+                            <span className="px-2">{`Etap: ${athleteData.trailtour_stages_count}/50 (TT)`}</span>
+                            <span className="px-2">{`Etap: ${athleteData.stages_count}/50`}</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="px-2">{`Pozice: ${athleteData.trailtour_position} (TT)`}</span>
+                            <span className="px-2">{`Pozice: ${athleteData.position}`}</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="px-2">{`Body: ${athleteData.trailtour_points} (TT)`}</span>
+                            <span className="px-2">{`Body: ${athleteData.points}`}</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="px-2">{`Průměr: ${trailtourAverage} (TT)`}</span>
+                            <span className="px-2">{`Průměr: ${average}`}</span>
+                        </div>
                     </Box>
                     <Box className="p-3">
                         <label className="flex items-center cursor-pointer">
@@ -172,7 +185,7 @@ const Athlete = () => {
                                                 <div className="mb-2 flex flex-row items-center justify-start">
                                                     <div className="tooltip">
                                                         {
-                                                            kom && kom.athlete_id === athleteData.id ? <img src={StravaKomIcon} className="w-5" /> : <RiTimerLine className="w-5 h-5" />
+                                                            kom && kom.athlete_id === athleteData.athlete_id ? <img src={StravaKomIcon} className="w-5" /> : <RiTimerLine className="w-5 h-5" />
                                                         }
                                                         <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-5">Zaběhnutý čas</span>
                                                     </div>
@@ -189,7 +202,7 @@ const Athlete = () => {
 
                                         </div>
                                         {
-                                            kom && kom.athlete_id !== athleteData.id && (
+                                            kom && kom.athlete_id !== athleteData.athlete_id && (
                                                 <div className="flex flex-row items-center justify-start">
                                                     <div className="tooltip">
                                                         <img src={StravaKomIcon} className="w-5" />

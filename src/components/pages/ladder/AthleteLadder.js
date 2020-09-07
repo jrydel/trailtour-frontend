@@ -16,7 +16,7 @@ import BronzeMedal from "../../../assets/images/bronze-medal.svg";
 
 const AthleteLadder = ({ gender }) => {
 
-    const { data: ladderData, error: ladderError } = useSWR(`${API_URL}/getAthleteLadder?database=trailtour&gender=${gender}`, url => fetcher(url, defaultGetOptions));
+    const { data: ladderData, error: ladderError } = useSWR(`${API_URL}/getAthletes?database=trailtour&gender=${gender}`, url => fetcher(url, defaultGetOptions));
 
     if (ladderError) {
         console.log(ladderError);
@@ -24,8 +24,9 @@ const AthleteLadder = ({ gender }) => {
     }
     if (!ladderData) return <PageLoading full={false} />
 
-    const maxPoints = Math.max.apply(Math, ladderData.map(o => o.trailtour_points));
-    const maxAverage = Math.max.apply(Math, ladderData.map(o => o.trailtour_points / o.stage_count));
+    const firstAthlete = ladderData.reduce((a, b) => a.trailtour_points > b.trailtour_points ? a : b);
+    const maxPoints = firstAthlete.trailtour_points;
+    const maxAverage = firstAthlete.trailtour_points / firstAthlete.trailtour_stages_count;
 
     return (
         <PageBox>
@@ -33,13 +34,13 @@ const AthleteLadder = ({ gender }) => {
                 <div className="flex flex-col">
                     {
                         ladderData.sort((a, b) => b.trailtour_points - a.trailtour_points).map((row, index) => {
-                            const percent = row.trailtour_points ? row.stage_count / 0.5 : 0;
-                            const percentText = row.trailtour_points ? `${row.stage_count}/50` : "0/50";
+                            const percent = row.trailtour_points ? row.trailtour_stages_count / 0.5 : 0;
+                            const percentText = row.trailtour_points ? `${row.trailtour_stages_count}/50` : "0/50";
                             const positionText = row.trailtour_position ? formatPosition(row.trailtour_position) : "---";
                             const pointsText = row.trailtour_points ? `${formatNumber(row.trailtour_points, 2)} b.` : "0.00 b.";
                             const pointsDifferenceText = maxPoints === row.trailtour_points ? null : formatNumber(maxPoints - row.trailtour_points, 2);
                             const bgColor = percent > 75 ? "bg-success" : percent > 50 ? "bg-yellow-500" : percent > 25 ? "bg-orange-500" : "bg-danger";
-                            const average = row.trailtour_points / row.stage_count;
+                            const average = row.trailtour_points / row.trailtour_stages_count;
                             const averageText = average ? `${formatNumber(average, 2)} b.` : "0.00 b.";
                             const averageDifferenceText = average === maxAverage ? null : formatNumber(maxAverage - average, 2);
                             return (
