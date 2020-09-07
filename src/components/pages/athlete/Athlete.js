@@ -7,7 +7,7 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import FullscreenControl from "react-leaflet-fullscreen";
 import { RiTimerLine, RiTimerFlashLine } from "react-icons/ri";
 import { DiGitCompare } from "react-icons/di";
-import { VscListOrdered, VscSettings } from "react-icons/vsc";
+import { VscSettings } from "react-icons/vsc";
 import { MdTimer } from "react-icons/md";
 
 import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault, formatSecondsWithDefault, formatPosition } from "../../utils/FormatUtils";
@@ -15,7 +15,6 @@ import { AppLink, ExternalLink, pageClasses } from "../../utils/NavUtils";
 import Page, { PageTitle, PageError, PageLoading, PageBox } from "../layout/Page";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
 import { Box } from "../../utils/LayoutUtils";
-import { Table } from "../../utils/TableUtils";
 import StravaImage from "../../../assets/images/strava.jpg";
 import StravaKomIcon from "../../../assets/images/strava-kom.png";
 import { icon } from "../../utils/MapUtils";
@@ -144,11 +143,9 @@ const Athlete = () => {
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     {
                         stagesGPSData.map(item => {
-                            const kom = komData[item.stage_number][athleteData.gender];
+                            const kom = komData[item.stage_number][athleteData.athlete_gender];
                             const result = athleteResultsData.find(val => val.stage_number === item.stage_number);
                             const stageGps = stagesGPSData.find(val => val.stage_number === item.stage_number);
-
-                            const color = result => result ? result.trailtour_points ? result.trailtour_position === 1 ? "gold" : applyAverage ? result.trailtour_points > trailtourAverage ? "green" : "orange" : "green" : "blue" : "grey";
 
                             return <Marker key={`stage-${item.stage_number}`} position={[stageGps.latitude, stageGps.longitude]} icon={icon(generateColor(result, applyAverage, trailtourAverage))}>
                                 <Popup>
@@ -235,13 +232,11 @@ const Athlete = () => {
                                             </div>
                                             {
                                                 user && row.compare_trailtour_time &&
-                                                <div className="flex flex-row items-center">
-                                                    <div className={`flex flex-row items-center ${row.compare_trailtour_time === row.trailtour_time ? "bg-blue-400" : row.compare_trailtour_time < row.trailtour_time ? "bg-green-400" : "bg-red-400"}`}>
-                                                        <MdTimer className="min-w-icon min-h-icon mr-1" />
-                                                        <span>
-                                                            {formatSeconds(row.compare_trailtour_time)}
-                                                        </span>
-                                                    </div>
+                                                <div className={`flex flex-row items-center ${row.compare_trailtour_time === row.trailtour_time ? "bg-blue-400" : row.compare_trailtour_time < row.trailtour_time ? "bg-green-400" : "bg-red-400"}`}>
+                                                    <MdTimer className="min-w-icon min-h-icon mr-1" />
+                                                    <span>
+                                                        {formatSeconds(row.compare_trailtour_time)}
+                                                    </span>
                                                 </div>
                                             }
                                         </div>

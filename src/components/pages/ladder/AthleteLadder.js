@@ -28,8 +28,6 @@ const AthleteLadder = ({ gender }) => {
     const maxPoints = firstAthlete.trailtour_points;
     const maxAverage = firstAthlete.trailtour_points / firstAthlete.trailtour_stages_count;
 
-    console.log(maxAverage);
-
     return (
         <PageBox>
             <Box>

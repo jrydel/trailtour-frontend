@@ -6,11 +6,11 @@ export const Box = ({ children, className = "" }) => <div className={`${classNam
 
 export const Card = ({ title, children }) => {
 
-    return <div className="bg-light border flex flex-col mt-2">
-        <div class="p-2 border-b">
-            <p className="font-bold text-navbar-dark p-2">{title}</p>
+    return <div className="bg-light border flex flex-col">
+        <div className="flex items-center justify-center p-2 border-b">
+            <span className="font-bold text-navbar-dark">{title}</span>
         </div>
-        <div class="px-6 py-4">
+        <div className="p-2">
             {children}
         </div>
     </div>
