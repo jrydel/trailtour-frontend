@@ -7,9 +7,10 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import FullscreenControl from "react-leaflet-fullscreen";
 import { RiTimerLine, RiTimerFlashLine } from "react-icons/ri";
 import { DiGitCompare } from "react-icons/di";
-import { VscFoldUp, VscFoldDown } from "react-icons/vsc";
+import { VscListOrdered, VscSettings } from "react-icons/vsc";
+import { MdTimer } from "react-icons/md";
 
-import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault, formatSecondsWithDefault } from "../../utils/FormatUtils";
+import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault, formatSecondsWithDefault, formatPosition } from "../../utils/FormatUtils";
 import { AppLink, ExternalLink, pageClasses } from "../../utils/NavUtils";
 import Page, { PageTitle, PageError, PageLoading, PageBox } from "../layout/Page";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
@@ -21,7 +22,16 @@ import { icon } from "../../utils/MapUtils";
 import { useStateValue } from "../../StateContext";
 import WinnerMedal from "../../../assets/images/winner.png";
 
-const computeAverage = (arr) => arr.reduce((p, c) => p + (c === null ? 0 : c), 0) / arr.length;
+const generateColor = (row, applyAverage, trailtourAverage) => {
+    if (!row) return "grey";
+    if (row.trailtour_points) {
+        if (!row.activity_id) return "red";
+        if (applyAverage && row.trailtour_points < trailtourAverage) return "orange";
+        if (row.trailtour_position === 1) return "gold";
+        return "green";
+    }
+    return "blue";
+}
 
 const Athlete = () => {
 
@@ -56,53 +66,6 @@ const Athlete = () => {
             item.compare_position = temp.position;
         }
     });
-
-    const tableOptions = [
-        {
-            header: "Pozice TT (Pozice)", align: "center", sort: { id: "trailtour_position" }, render: row => {
-                return (
-                    <div className="flex flex-col">
-                        <p>{formatNumberWithDefault(row.trailtour_position, " --- ")} ({formatNumberWithDefault(row.position, " --- ")})</p>
-                        {user && row.compare_trailtour_position && row.compare_position &&
-                            < div className={row.trailtour_position === row.compare_trailtour_position ? "bg-blue-400" : row.trailtour_position > row.compare_trailtour_position ? "bg-green-400" : "bg-red-400"}>
-                                <p>{formatNumberWithDefault(row.compare_trailtour_position, " --- ")} ({formatNumberWithDefault(row.compare_position, " --- ")})</p>
-                            </div>
-                        }
-                    </div>
-                )
-            }
-        },
-        { header: 'Etapa', align: "left", sort: { id: "stage_number" }, render: row => <AppLink to={`/etapa/${row.stage_number}`}>{formatStageNumber(row.stage_number) + " - " + row.stage_name}</AppLink> },
-        { header: 'Datum', align: "center", sort: { id: "activity_date", direction: "desc" }, render: row => moment(row.activity_date).format("Do MMMM") },
-        {
-            header: "Čas TT (Čas)", align: "right", sort: { id: "activity_time" }, render: row => {
-                return (
-                    <div className="flex flex-col">
-                        <p>{formatSecondsWithDefault(row.trailtour_time, " --- ")} {row.activity_id ? <ExternalLink to={`https://strava.com/activities/${row.activity_id}`}>{`(${formatSeconds(row.activity_time)})`}</ExternalLink> : " --- "}</p>
-                        {user && row.compare_activity_id &&
-                            < div className={row.activity_time === row.compare_activity_time ? "bg-blue-400" : row.activity_time > row.compare_activity_time ? "bg-green-400" : "bg-red-400"}>
-                                <p>{formatSecondsWithDefault(row.compare_trailtour_time, " --- ")} {row.compare_activity_id ? <ExternalLink to={`https://strava.com/activities/${row.compare_activity_id}`}>{`(${formatSeconds(row.compare_activity_time)})`}</ExternalLink> : " --- "}</p>
-                            </div>
-                        }
-                    </div >
-                );
-            }
-        },
-        {
-            header: "Body TT (Body)", align: "right", sort: { id: "points" }, render: row => {
-                return (
-                    <div className="flex flex-col">
-                        <p>{formatNumberWithDefault(row.trailtour_points, " --- ")} ({formatNumberWithDefault(row.points, " --- ")})</p>
-                        {user && row.compare_trailtour_points && row.compare_points &&
-                            < div className={row.trailtour_points === row.compare_trailtour_points ? "bg-blue-400" : row.trailtour_points > row.compare_trailtour_points ? "bg-red-400" : "bg-green-400"}>
-                                <p>{formatNumberWithDefault(row.compare_trailtour_points, " --- ")} ({formatNumberWithDefault(row.compare_points, " --- ")})</p>
-                            </div>
-                        }
-                    </div >
-                );
-            }
-        },
-    ];
 
     const average = formatNumber(athleteData.points / athleteData.stages_count, 2);
     const trailtourAverage = formatNumber(athleteData.trailtour_points / athleteData.trailtour_stages_count, 2);
@@ -164,7 +127,7 @@ const Athlete = () => {
                                 Zvýraznit podprůměrné výkony
                             </div>
                             <div className="relative">
-                                <input type="checkbox" className="hidden" onClick={() => setApplyAverage(prev => !prev)} />
+                                <input type="checkbox" className="hidden" checked={applyAverage} onChange={() => setApplyAverage(prev => !prev)} />
                                 <div className="toggle__line w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
                                 <div className="toggle__dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-2 left-0"></div>
                             </div>
@@ -187,7 +150,7 @@ const Athlete = () => {
 
                             const color = result => result ? result.trailtour_points ? result.trailtour_position === 1 ? "gold" : applyAverage ? result.trailtour_points > trailtourAverage ? "green" : "orange" : "green" : "blue" : "grey";
 
-                            return <Marker key={`stage-${item.stage_number}`} position={[stageGps.latitude, stageGps.longitude]} icon={icon(color(result))}>
+                            return <Marker key={`stage-${item.stage_number}`} position={[stageGps.latitude, stageGps.longitude]} icon={icon(generateColor(result, applyAverage, trailtourAverage))}>
                                 <Popup>
                                     <div className="flex flex-col p-2 items-start">
                                         <div className="mb-2">
@@ -243,9 +206,81 @@ const Athlete = () => {
             </PageBox>
             <PageBox>
                 <Box>
-                    <Table options={tableOptions} data={athleteResultsData} />
+                    <div className="flex flex-col">
+                        {
+                            athleteResultsData.sort((a, b) => b.activity_date - a.activity_date).map((row, index) => {
+                                return (
+                                    <div key={index} className="flex flex-col sm:flex-row items-center p-2 border-b border-grey-light">
+                                        <div className="flex flex-row w-full sm:w-1/5 items-center justify-center">
+                                            {
+                                                row.trailtour_position ?
+                                                    (
+                                                        <span>{formatPosition(row.trailtour_position)}</span>
+                                                    ) : (
+                                                        <span>{formatPosition(row.position)}</span>
+                                                    )
+                                            }
+                                        </div>
+                                        <div className="flex flex-row w-full sm:w-2/3 items-center justify-center sm:justify-start">
+                                            <img className="w-5 mr-2" src={`https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${generateColor(row, applyAverage, trailtourAverage)}.png`} />
+                                            <AppLink to={`/etapa/${row.stage_number}`}>{formatStageNumber(row.stage_number) + " - " + row.stage_name}</AppLink>
+                                        </div>
+                                        <div className="flex flex-row w-full sm:w-1/3 items-center justify-center">
+                                            {row.activity_date ? moment(row.activity_date).format("Do MMMM YYYY") : "---"}
+                                        </div>
+                                        <div className="flex flex-col w-full sm:w-1/3 items-center justify-center">
+                                            <div className="flex flex-row  items-center justify-center">
+                                                <MdTimer className="min-w-icon min-h-icon mr-1" />
+                                                {row.activity_id ? <ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink> : row.trailtour_time ? formatSeconds(row.trailtour_time) : "---"}
+                                            </div>
+                                            {
+                                                user && row.compare_trailtour_time &&
+                                                <div className="flex flex-row items-center">
+                                                    <div className={`flex flex-row items-center ${row.compare_trailtour_time === row.trailtour_time ? "bg-blue-400" : row.compare_trailtour_time < row.trailtour_time ? "bg-green-400" : "bg-red-400"}`}>
+                                                        <MdTimer className="min-w-icon min-h-icon mr-1" />
+                                                        <span>
+                                                            {formatSeconds(row.compare_trailtour_time)}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div className="flex flex-col w-full sm:w-1/3 items-center justify-center">
+                                            {
+                                                row.trailtour_points ?
+                                                    (
+                                                        <div className="flex flex-row items-center">
+                                                            <div className="flex flex-row items-center">
+                                                                <VscSettings className="min-w-icon min-h-icon mr-1" />
+                                                                <span>{`${formatNumber(row.trailtour_points, 2)} b. (TT)`}</span>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex flex-row items-center">
+                                                            <VscSettings className="min-w-icon min-h-icon mr-1" />
+                                                            <span>{`${formatNumber(row.points, 2)} b.`}</span>
+                                                        </div>
+                                                    )
+                                            }
+                                            {
+                                                user && row.compare_trailtour_points &&
+                                                <div className="flex flex-row items-center">
+                                                    <div className={`flex flex-row items-center ${row.compare_trailtour_points === row.trailtour_points ? "bg-blue-400" : row.compare_trailtour_points > row.trailtour_points ? "bg-green-400" : "bg-red-400"}`}>
+                                                        <VscSettings className="min-w-icon min-h-icon mr-1" />
+                                                        <span>
+                                                            {`${formatNumber(row.compare_trailtour_points, 2)} b. (TT)`}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
                 </Box>
-            </PageBox>
+            </PageBox >
         </Page >
     )
 }
