@@ -86,7 +86,7 @@ const AthleteLadder = ({ gender }) => {
                                         <VscCircleSlash className="min-w-icon min-h-icon mr-2" />
                                         <div className="flex flex-col items-center">
                                             <span>{averageText}</span>
-                                            <span className={`text-sm ${averageDifference > 0 ? "text-success" : "text-danger"}`}>{averageDifferenceText}</span>
+                                            <span className={`text-sm ${averageDifference > 0 ? "text-success" : "text-danger"}`}>{averageDifference > 0 ? `+${averageDifferenceText}` : averageDifferenceText}</span>
                                         </div>
                                     </div>
                                 </div>
