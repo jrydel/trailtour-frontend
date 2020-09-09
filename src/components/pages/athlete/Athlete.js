@@ -107,6 +107,10 @@ const Athlete = () => {
                             <span className="px-2">{`Etap: ${athleteData.trailtour_stages_count}/50 (TT)`}</span>
                             <span className="px-2">{`Etap: ${athleteData.stages_count}/50`}</span>
                         </div>
+                        {/* <div className="flex flex-col">
+                            <span className="px-2">{`Etap: ${athleteData.trailtour_stages_count}/50 (TT)`}</span>
+                            <span className="px-2">{`Etap: ${athleteData.stages_count}/50`}</span>
+                        </div> */}
                         <div className="flex flex-col">
                             <span className="px-2">{`Pozice: ${athleteData.trailtour_position} (TT)`}</span>
                             <span className="px-2">{`Pozice: ${athleteData.position}`}</span>
