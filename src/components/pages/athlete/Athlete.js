@@ -143,7 +143,7 @@ const Athlete = () => {
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     {
                         stagesGPSData.map(item => {
-                            const kom = komData[item.stage_number][athleteData.athlete_gender];
+                            const kom = komData[item.stage_number] ? komData[item.stage_number][[athleteData.athlete_gender]] : null;
                             const result = athleteResultsData.find(val => val.stage_number === item.stage_number);
                             const stageGps = stagesGPSData.find(val => val.stage_number === item.stage_number);
 
