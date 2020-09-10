@@ -101,7 +101,23 @@ const StageList = () => {
                                     </div>
                                     <div className="flex flex-row w-full sm:w-1/5 items-center justify-center">
                                         <MdTimer className="min-w-icon min-h-icon mr-1" />
-                                        {row.activity_id ? <ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink> : row.trailtour_time ? formatSeconds(row.trailtour_time) : "---"}
+                                        {
+                                            showTT ?
+                                                (
+                                                    row.trailtour_time === row.activity_time ?
+                                                        (
+                                                            <ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink>
+                                                        ) : (
+                                                            formatSeconds(row.trailtour_time)
+                                                        )
+                                                ) : (
+                                                    row.activity_time ? (
+                                                        <ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink>
+                                                    ) : (
+                                                            formatSeconds(row.trailtour_time)
+                                                        )
+                                                )
+                                        }
                                     </div>
                                     <div className="flex flex-row w-full sm:w-1/5 items-center justify-center p-2">
                                         <VscSettings className="min-w-icon min-h-icon mr-2" />
