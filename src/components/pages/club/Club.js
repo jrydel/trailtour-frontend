@@ -3,7 +3,7 @@ import React from "react";
 import useSWR from "swr";
 import { useParams } from "react-router";
 
-import { FiUser } from "react-icons/fi";
+import { FiUser, FiUsers } from "react-icons/fi";
 import { VscOutput, VscCircleSlash } from "react-icons/vsc";
 
 import Page, { PageError, PageLoading, PageBox, PageTitle } from "../layout/Page";
@@ -32,18 +32,33 @@ const Club = () => {
     return (
         <Page>
             <PageBox>
-                <div className="flex flex-col sm:flex-row items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-center justify-start">
                     <PageTitle>{clubData.name}</PageTitle>
-                    {
-                        clubData.trailtour_position === 1 ? <img className="w-8 h-8" src={GoldMedal} /> : clubData.trailtour_position === 2 ? <img className="w-8 h-8" src={SilverMedal} /> : clubData.trailtour_position === 3 ? <img className="w-8 h-8" src={BronzeMedal} /> : <span>{clubData.trailtour_position}</span>
-                    }
+                    <div className="mx-3">
+                        {(() => {
+                            switch (clubData.trailtour_position) {
+                                case 1:
+                                    return <img className="w-8 h-8" src={GoldMedal} />;
+                                case 2:
+                                    return <img className="w-8 h-8" src={SilverMedal} />;
+                                case 3:
+                                    return <img className="w-8 h-8" src={BronzeMedal} />;
+                                default:
+                                    return <span>{formatPosition(clubData.trailtour_position)}</span>
+                            }
+                        })()}
+                    </div>
+                    <div className="flex flex-row items-center">
+                        <FiUsers className="min-w-icon min-h-icon mr-2" />
+                        <span>{clubData.athletes_count}</span>
+                    </div>
                 </div>
             </PageBox>
             <PageBox>
                 <Box>
                     <div className="flex flex-col">
                         {
-                            clubAthleteData.sort((a, b) => b.trailtour_stages_count - a.trailtour_stages_count).map((row, index) => {
+                            clubAthleteData.sort((a, b) => (b.trailtour_points != null ? b.trailtour_points : -Infinity) - (a.trailtour_points != null ? a.trailtour_points : -Infinity)).map((row, index) => {
                                 const percent = row.trailtour_points ? row.trailtour_stages_count / 0.5 : 0;
                                 const percentText = row.trailtour_points ? `${row.trailtour_stages_count}/50` : "0/50";
                                 const bgColor = percent > 75 ? "bg-success" : percent > 50 ? "bg-yellow-500" : percent > 25 ? "bg-orange-500" : "bg-danger";
