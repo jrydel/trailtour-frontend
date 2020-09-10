@@ -35,7 +35,7 @@ const ClubLadder = () => {
                             const pointsText = row.trailtour_points ? `${formatNumber(row.trailtour_points, 2)} b.` : "0.00 b.";
                             const pointsDifferenceText = maxPoints === row.trailtour_points ? null : formatNumber(maxPoints - row.trailtour_points);
                             return (
-                                <div key={index} className="flex flex-col sm:flex-row items-center p-2 border-b border-grey-light">
+                                <div key={index} className="flex flex-col sm:flex-row items-center border-b border-grey-light">
                                     <div className="flex-1 flex flex-row justify-center p-2">
                                         {
                                             row.trailtour_position === 1 ? <img className="w-8 h-8" src={GoldMedal} /> : row.trailtour_position === 2 ? <img className="w-8 h-8" src={SilverMedal} /> : row.trailtour_position === 3 ? <img className="w-8 h-8" src={BronzeMedal} /> : <span>{positionText}</span>
