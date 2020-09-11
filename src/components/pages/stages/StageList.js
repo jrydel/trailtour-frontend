@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { PageBox, PageError, PageLoading } from "../layout/Page";
 import { Box } from "../../utils/LayoutUtils";
 import { ExternalLink, AppLink, tableClasses } from "../../utils/NavUtils";
-import { formatSeconds, formatPosition, formatNumber } from "../../utils/FormatUtils";
+import { formatSeconds, formatPosition, formatNumber, formatPositionWithMedal } from "../../utils/FormatUtils";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
 
 import { VscSettings } from "react-icons/vsc";
@@ -77,11 +77,7 @@ const StageList = () => {
 
                             return (
                                 <div key={index} className="flex flex-col sm:flex-row items-center border-b border-grey-light">
-                                    <div className="w-full sm:w-1/12 flex flex-row justify-center p-2">
-                                        {
-                                            position === 1 ? <img className="w-8 h-8" src={GoldMedal} /> : position === 2 ? <img className="w-8 h-8" src={SilverMedal} /> : position === 3 ? <img className="w-8 h-8" src={BronzeMedal} /> : <span>{formatPosition(position)}</span>
-                                        }
-                                    </div>
+                                    <div className="w-full sm:w-1/12 flex flex-row justify-center p-2"> {formatPositionWithMedal(position)}</div>
                                     <div className="flex-1 flex flex-col justify-center items-center sm:items-start p-2">
                                         <div className="flex flex-row items-center sm:items-left">
                                             <FiUser className="min-w-icon min-h-icon mr-2" />
