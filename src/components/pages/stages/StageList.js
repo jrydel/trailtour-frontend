@@ -77,12 +77,12 @@ const StageList = () => {
 
                             return (
                                 <div key={index} className="flex flex-col sm:flex-row items-center border-b border-grey-light">
-                                    <div className="flex flex-row w-full sm:w-1/5 justify-center p-2">
+                                    <div className="w-full sm:w-1/12 flex flex-row justify-center p-2">
                                         {
                                             position === 1 ? <img className="w-8 h-8" src={GoldMedal} /> : position === 2 ? <img className="w-8 h-8" src={SilverMedal} /> : position === 3 ? <img className="w-8 h-8" src={BronzeMedal} /> : <span>{formatPosition(position)}</span>
                                         }
                                     </div>
-                                    <div className="flex flex-col w-full sm:w-2/3 justify-center items-center sm:items-start p-2">
+                                    <div className="flex-1 flex flex-col justify-center items-center sm:items-start p-2">
                                         <div className="flex flex-row items-center sm:items-left">
                                             <FiUser className="min-w-icon min-h-icon mr-2" />
                                             <AppLink to={`/zavodnik/${row.athlete_id}`}>{row.athlete_name}</AppLink>
@@ -96,10 +96,10 @@ const StageList = () => {
                                             )
                                         }
                                     </div>
-                                    <div className="flex flex-row w-full sm:w-1/3 items-center justify-center">
+                                    <div className="flex-1 flex flex-row items-center justify-center">
                                         {row.activity_date ? moment(row.activity_date).format("Do MMMM YYYY") : "---"}
                                     </div>
-                                    <div className="flex flex-row w-full sm:w-1/5 items-center justify-center">
+                                    <div className="flex-1 flex flex-row items-center justify-center">
                                         <MdTimer className="min-w-icon min-h-icon mr-1" />
                                         {
                                             showTT ?
@@ -119,7 +119,7 @@ const StageList = () => {
                                                 )
                                         }
                                     </div>
-                                    <div className="flex flex-row w-full sm:w-1/5 items-center justify-center p-2">
+                                    <div className="flex-1 flex flex-row items-center justify-center p-2">
                                         <VscSettings className="min-w-icon min-h-icon mr-2" />
                                         <div className="flex flex-col items-center">
                                             <span>{points ? `${formatNumber(points, 2)} b.` : "0.00 b."}</span>
