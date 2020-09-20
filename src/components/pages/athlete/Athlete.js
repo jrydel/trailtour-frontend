@@ -148,7 +148,7 @@ const Athlete = () => {
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     {
                         stagesGPSData.map(item => {
-                            const kom = komData[item.stage_number] ? komData[item.stage_number][[athleteData.athlete_gender]] : null;
+                            const kom = komData.find(val => val.athlete_gender === athleteData.athlete_gender && val.stage_number === item.stage_number);
                             const result = athleteResultsData.find(val => val.stage_number === item.stage_number);
                             const stageGps = stagesGPSData.find(val => val.stage_number === item.stage_number);
 
@@ -187,7 +187,7 @@ const Athlete = () => {
                                                         <span className="tooltip-text bg-dark text-light text-xs rounded py-1 px-4 ml-6 -mt-4">Nejrychlejší muž</span>
                                                     </div>
                                                     <div className="ml-2 flex flex-row items-center">
-                                                        <span className="mr-2"><ExternalLink to={`http://strava.com/activities/${kom.athlete_id}`}>{formatSeconds(kom.activity_time)}</ExternalLink></span>
+                                                        <span className="mr-2"><ExternalLink to={`http://strava.com/activities/${kom.activity_id}`}>{formatSeconds(kom.activity_time)}</ExternalLink></span>
                                                         <div className="ml-2 flex flex-col items-start">
                                                             <AppLink to={`/zavodnik/${kom.athlete_id}`}>{kom.athlete_name}</AppLink>
                                                             {
