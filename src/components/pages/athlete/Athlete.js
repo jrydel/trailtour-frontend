@@ -10,7 +10,7 @@ import { DiGitCompare } from "react-icons/di";
 import { VscSettings } from "react-icons/vsc";
 import { MdTimer } from "react-icons/md";
 
-import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault, formatSecondsWithDefault, formatPosition } from "../../utils/FormatUtils";
+import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault, formatSecondsWithDefault, formatPosition, formatPositionWithMedal } from "../../utils/FormatUtils";
 import { AppLink, ExternalLink, pageClasses } from "../../utils/NavUtils";
 import Page, { PageTitle, PageError, PageLoading, PageBox } from "../layout/Page";
 import { fetcher, defaultGetOptions, API_URL } from "../../utils/FetchUtils";
@@ -19,6 +19,7 @@ import StravaImage from "../../../assets/images/strava.jpg";
 import StravaKomIcon from "../../../assets/images/strava-kom.png";
 import { icon } from "../../utils/MapUtils";
 import { useStateValue } from "../../StateContext";
+
 import WinnerMedal from "../../../assets/images/winner.png";
 
 const generateColor = (row, applyAverage, trailtourAverage) => {
@@ -147,7 +148,7 @@ const Athlete = () => {
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     {
                         stagesGPSData.map(item => {
-                            const kom = komData[item.stage_number][athleteData.athlete_gender];
+                            const kom = komData[item.stage_number] ? komData[item.stage_number][[athleteData.athlete_gender]] : null;
                             const result = athleteResultsData.find(val => val.stage_number === item.stage_number);
                             const stageGps = stagesGPSData.find(val => val.stage_number === item.stage_number);
 
@@ -210,26 +211,20 @@ const Athlete = () => {
                     <div className="flex flex-col">
                         {
                             athleteResultsData.sort((a, b) => b.activity_date - a.activity_date).map((row, index) => {
+                                const position = row.trailtour_position ? row.trailtour_position : position;
                                 return (
                                     <div key={index} className="flex flex-col sm:flex-row items-center p-2 border-b border-grey-light">
-                                        <div className="flex flex-row w-full sm:w-1/5 items-center justify-center">
-                                            {
-                                                row.trailtour_position ?
-                                                    (
-                                                        <span>{formatPosition(row.trailtour_position)}</span>
-                                                    ) : (
-                                                        <span>{formatPosition(row.position)}</span>
-                                                    )
-                                            }
+                                        <div className="w-full sm:w-1/12 flex flex-row justify-center p-2">
+                                            {formatPositionWithMedal(position)}
                                         </div>
-                                        <div className="flex flex-row w-full sm:w-2/3 items-center justify-center sm:justify-start">
+                                        <div className="flex-1 flex flex-row items-center justify-center sm:justify-start">
                                             <img className="w-5 mr-2" src={`https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${generateColor(row, applyAverage, trailtourAverage)}.png`} />
                                             <AppLink to={`/etapa/${row.stage_number}`}>{formatStageNumber(row.stage_number) + " - " + row.stage_name}</AppLink>
                                         </div>
-                                        <div className="flex flex-row w-full sm:w-1/3 items-center justify-center">
+                                        <div className="flex-1 flex flex-row items-center justify-center">
                                             {row.activity_date ? moment(row.activity_date).format("Do MMMM YYYY") : "---"}
                                         </div>
-                                        <div className="flex flex-col w-full sm:w-1/3 items-center justify-center">
+                                        <div className="flex-1 flex flex-col items-center justify-center">
                                             <div className="flex flex-row  items-center justify-center">
                                                 <MdTimer className="min-w-icon min-h-icon mr-1" />
                                                 {row.activity_id ? <ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink> : row.trailtour_time ? formatSeconds(row.trailtour_time) : "---"}
@@ -244,7 +239,7 @@ const Athlete = () => {
                                                 </div>
                                             }
                                         </div>
-                                        <div className="flex flex-col w-full sm:w-1/3 items-center justify-center">
+                                        <div className="flex-1 flex flex-col items-center justify-center">
                                             {
                                                 row.trailtour_points ?
                                                     (

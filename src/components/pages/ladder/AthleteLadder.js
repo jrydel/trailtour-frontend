@@ -2,7 +2,7 @@ import React from "react";
 import useSWR from "swr";
 
 import { FiUser, FiUsers } from "react-icons/fi";
-import { VscOutput, VscFold, VscCircleSlash } from "react-icons/vsc";
+import { VscOutput, VscCircleSlash } from "react-icons/vsc";
 
 import { fetcher, API_URL, defaultGetOptions } from "../../utils/FetchUtils";
 import { PageError, PageLoading, PageBox } from "../layout/Page";
@@ -49,8 +49,8 @@ const AthleteLadder = ({ gender }) => {
                             const averageDifferenceText = average === maxAverage ? null : `${formatNumber(averageDifference, 2, "0.00")} b.`;
 
                             return (
-                                <div key={index} className="flex flex-col sm:flex-row items-center p-2 border-b border-grey-light">
-                                    <div className="flex-1 flex flex-row justify-center p-2">
+                                <div key={index} className="flex flex-col sm:flex-row items-center border-b border-grey-light">
+                                    <div className="w-full sm:w-1/12 flex flex-row justify-center p-2">
                                         {
                                             row.trailtour_position === 1 ? <img className="w-8 h-8" src={GoldMedal} /> : row.trailtour_position === 2 ? <img className="w-8 h-8" src={SilverMedal} /> : row.trailtour_position === 3 ? <img className="w-8 h-8" src={BronzeMedal} /> : <span>{positionText}</span>
                                         }

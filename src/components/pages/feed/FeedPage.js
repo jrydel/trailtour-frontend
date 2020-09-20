@@ -9,7 +9,7 @@ import { MdTimer } from "react-icons/md";
 
 import Page, { PageTitle, PageError, PageBox, PageLoading } from "../layout/Page";
 import { defaultGetOptions, fetcher, API_URL } from "../../utils/FetchUtils";
-import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault } from "../../utils/FormatUtils";
+import { formatStageNumber, formatSeconds, formatNumber, formatNumberWithDefault, formatPositionWithMedal, formatPosition } from "../../utils/FormatUtils";
 import { ExternalLink, AppLink } from "../../utils/NavUtils";
 import { Box } from "../../utils/LayoutUtils";
 import { useStateValue } from "../../StateContext";
@@ -91,7 +91,7 @@ const FeedPage = () => {
     data.data.map(item => {
         const temp = compareResultsData?.find(val => val.stage_number === item.stage_number);
         if (temp) {
-            item.compare_trailtour_points = temp.trailtour_points;
+            item.compare_position = temp.position;
             item.compare_points = temp.points;
             item.compare_activity_time = temp.activity_time;
         }
@@ -114,8 +114,16 @@ const FeedPage = () => {
                                 {
                                     data.data.filter(val => moment(val.activity_created).startOf("hour").fromNow() === group).map((row, index2) => {
                                         return (
-                                            <Box key={index2} className="flex flex-col sm:flex-row items-center justify-between p-4">
-                                                <div className="flex flex-col w-full sm:w-1/3 items-center sm:items-start">
+                                            <Box key={index2} className="flex flex-col sm:flex-row items-center justify-between">
+                                                <div className="w-full sm:w-1/12 flex flex-col items-center justify-center p-2">
+                                                    {formatPositionWithMedal(row.position)}
+                                                    {user && row.compare_position &&
+                                                        <div className={`flex flex-row items-center ${row.position === row.compare_position ? "bg-blue-400" : row.position > row.compare_position ? "bg-green-400" : "bg-red-400"}`}>
+                                                            <span>{formatPositionWithMedal(row.compare_position)}</span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div className="flex-1 flex flex-col items-center sm:items-start p-2">
                                                     <div className="flex flex-row items-center">
                                                         <FiUser className="min-w-icon min-h-icon mr-1" />
                                                         <AppLink to={`/zavodnik/${row.athlete_id}`}>{row.athlete_name}</AppLink>
@@ -129,15 +137,14 @@ const FeedPage = () => {
                                                         )
                                                     }
                                                 </div>
-                                                <div className="flex flex-row w-full sm:w-1/3 items-center justify-center sm:justify-start">
+                                                <div className="flex-1 flex flex-row items-center justify-center sm:justify-start p-2">
                                                     <FiMapPin className="min-w-icon min-h-icon mr-1" />
                                                     <AppLink to={`/etapa/${row.stage_number}`}>{formatStageNumber(row.stage_number) + " - " + row.stage_name}</AppLink>
                                                 </div>
-                                                <div className="flex flex-col w-full sm:w-1/3 items-center sm:items-end">
-                                                    <div className="flex flex-row items-center">
+                                                <div className="flex-1 flex flex-col items-center justify-center p-2">
+                                                    <div className="flex flex-row items-center justify-center">
                                                         <MdTimer className="min-w-icon min-h-icon mr-1" />
                                                         <ExternalLink to={`http://strava.com/activities/${row.activity_id}`}>{formatSeconds(row.activity_time)}</ExternalLink>
-                                                        <span className="ml-1">({row.activity_position})</span>
                                                     </div>
                                                     {user && row.compare_activity_time &&
                                                         <div className={`flex flex-row items-center ${row.activity_time === row.compare_activity_time ? "bg-blue-400" : row.activity_time > row.compare_activity_time ? "bg-green-400" : "bg-red-400"}`}>
@@ -145,24 +152,18 @@ const FeedPage = () => {
                                                             <span>{formatSeconds(row.compare_activity_time, " --- ")}</span>
                                                         </div>
                                                     }
-                                                    <div className="flex flex-row items-center">
-                                                        {
-                                                            row.trailtour_points ?
-                                                                (
-                                                                    <div className="flex flex-row items-center">
-                                                                        <div className="flex flex-row items-center">
-                                                                            <VscSettings className="min-w-icon min-h-icon mr-1" />
-                                                                            <span>{`${formatNumber(row.trailtour_points, 2)} b. (TT)`}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex flex-row items-center">
-                                                                        <VscSettings className="min-w-icon min-h-icon mr-1" />
-                                                                        <span>{`${formatNumber(row.points, 2)} b.`}</span>
-                                                                    </div>
-                                                                )
-                                                        }
+                                                </div>
+                                                <div className="flex-1 flex flex-col items-center justify-center p-2">
+                                                    <div className="flex flex-row items-center justify-center">
+                                                        <VscSettings className="min-w-icon min-h-icon mr-1" />
+                                                        <span>{`${formatNumber(row.points, 2)} b.`}</span>
                                                     </div>
+                                                    {user && row.compare_points &&
+                                                        <div className={`flex flex-row items-center ${row.points === row.compare_points ? "bg-blue-400" : row.compare_points > row.points ? "bg-green-400" : "bg-red-400"}`}>
+                                                            <VscSettings className="min-w-icon min-h-icon mr-1" />
+                                                            <span>{`${formatNumber(row.compare_points, 2)} b.`}</span>
+                                                        </div>
+                                                    }
                                                 </div>
                                             </Box>
                                         );

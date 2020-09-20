@@ -70,7 +70,6 @@ const Stage = () => {
                 <div className="flex flex-row items-center justify-center lg:justify-end">
                     <NavLink to="vysledky" component={Link} classes={pageClasses} ><FiList className="mr-2" />{`Výsledky (${countData.activityCount})`}</NavLink>
                     <NavLink to="mapa" component={Link} classes={pageClasses} exact={true} ><FiMapPin className="mr-2" />Mapa</NavLink>
-                    <NavLink to="info" component={Link} classes={pageClasses} ><FiHelpCircle className="mr-2" />{`Info (${countData.infoCount})`}</NavLink>
                 </div>
             </PageBox>
             <Outlet />
