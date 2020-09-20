@@ -58,7 +58,7 @@ const Club = () => {
                 <Box>
                     <div className="flex flex-col">
                         {
-                            clubAthleteData.sort((a, b) => (b.trailtour_position != null) - (a.trailtour_position != null) || a.trailtour_position - b.trailtour_position).map((row, index) => {
+                            clubAthleteData.sort((a, b) => b.trailtour_stages_count - a.trailtour_stages_count).map((row, index) => {
                                 const percent = row.trailtour_points ? row.trailtour_stages_count / 0.5 : 0;
                                 const percentText = row.trailtour_points ? `${row.trailtour_stages_count}/50` : "0/50";
                                 const bgColor = percent > 75 ? "bg-success" : percent > 50 ? "bg-yellow-500" : percent > 25 ? "bg-orange-500" : "bg-danger";
